@@ -105,6 +105,12 @@ Check out the [Table wiki](https://github.com/Voliware/Template/wiki/Table) for 
 
 View the [docs](http://voliware.github.io/Template) for a `jsDoc` documentation, or check out the [Wiki](https://github.com/Voliware/Template/wiki) for step-by-step explinations of how to use all of the classes.
 
+## Installation
+Include the minified or non-minified [production builds](https://github.com/Voliware/Template/tree/master/dist/template) in your web app. For other `Template` libraries, like [Table](https://github.com/Voliware/Template/tree/master/dist/table), [Form](https://github.com/Voliware/Template/tree/master/dist/form), and the [Bootstrap Templates](https://github.com/Voliware/Template/tree/master/dist/bootstrap), include them after the `Template` build files.
+
+## Dependencies
+`Template` depends on the [WebUtil](https://github.com/Voliware/WebUtil) library. This small library is already built into the distribution and does not need to be included.
+
 ## Contributors
 Written by Anthony Agostino.
 
