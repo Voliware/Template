@@ -102,7 +102,7 @@ var tableTemplate =
 
 $(document).ready(function(){
 	var $testTable = $('#testTable');
-	var $dataTable = $('#dataTable');
+	var $renderTable = $('#renderTable');
 	var $body = $('body');
 
 	// templates
@@ -137,14 +137,14 @@ $(document).ready(function(){
 		.build(tableDataObject);
 
 	// data tables
-	var dataTable1 = new DataTable({
-		template : $dataTable,
+	var renderTable1 = new RenderTable({
+		template : $renderTable,
 		identifier : 'player'
 	})
 		.appendTo($body)
 		.build(playerData1);
 
-	class CustomTable extends DataTable {
+	class CustomTable extends RenderTable {
 		constructor(options){
 			super(options);
 			return this;
@@ -174,15 +174,15 @@ $(document).ready(function(){
 		}
 	}
 
-	var dataTable2 = new CustomTable({
-		template : $dataTable,
+	var renderTable2 = new CustomTable({
+		template : $renderTable,
 		identifier : 'player'
 	})
 		.appendTo($body)
 		.build(playerData3);
 
 	setTimeout(function(){
-		dataTable2.build(playerData1);
+		renderTable2.build(playerData1);
 	}, 5000);
 
 });
@@ -256,7 +256,7 @@ describe("Table", function() {
 
 	describe("wipe", function() {
 		it("should empty row manager", function() {
-			var t = new DataTable({
+			var t = new RenderTable({
 				template : tableTemplate,
 				identifier : 'age'
 			})

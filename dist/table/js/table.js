@@ -288,7 +288,7 @@ var Table = function (_Template) {
 	return Table;
 }(Template);
 /*!
- * dataTable
+ * renderTable
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  */
@@ -299,20 +299,20 @@ var Table = function (_Template) {
  */
 
 
-var DataTable = function (_Table) {
-	_inherits(DataTable, _Table);
+var RenderTable = function (_Table) {
+	_inherits(RenderTable, _Table);
 
 	/**
   * Constructor
   * @param {object} [options]
   * @param {string} [options.rowIdentifier='id'] - required for TemplateManager
   * @param {boolean} [options.useObjectNames=false] - required for TemplateManager
-  * @returns {DataTable}
+  * @returns {RenderTable}
   */
-	function DataTable(options) {
+	function RenderTable(options) {
 		var _ret2;
 
-		_classCallCheck(this, DataTable);
+		_classCallCheck(this, RenderTable);
 
 		var defaults = {
 			// to manage objects, they must have
@@ -328,7 +328,7 @@ var DataTable = function (_Table) {
 
 		// row manager to re-build rows instead
 		// of wiping the <tbody> each time
-		var _this2 = _possibleConstructorReturn(this, (DataTable.__proto__ || Object.getPrototypeOf(DataTable)).call(this, $Util.opts(defaults, options)));
+		var _this2 = _possibleConstructorReturn(this, (RenderTable.__proto__ || Object.getPrototypeOf(RenderTable)).call(this, $Util.opts(defaults, options)));
 
 		_this2.rowManager = new TemplateManager({
 			identifier: _this2.settings.identifier,
@@ -344,28 +344,28 @@ var DataTable = function (_Table) {
   * Render via TemplateManager.manage.
   * Cannot use an array of non-object data
   * @param {object|object[]} data
-  * @returns {DataTable}
+  * @returns {RenderTable}
   * @private
   */
 
 
-	_createClass(DataTable, [{
+	_createClass(RenderTable, [{
 		key: '_render',
 		value: function _render(data) {
-			if ($.isArray(data) && !isObject(data[0])) throw new ReferenceError("DataTable._render: data must be an object, or an array of objects");
+			if ($.isArray(data) && !isObject(data[0])) throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
 			this.rowManager.build(data);
 			return this;
 		}
 
 		/**
    * Empty the tbody and clear cached data
-   * @returns {DataTable}
+   * @returns {RenderTable}
    */
 
 	}, {
 		key: 'wipe',
 		value: function wipe() {
-			_get(DataTable.prototype.__proto__ || Object.getPrototypeOf(DataTable.prototype), 'wipe', this).call(this);
+			_get(RenderTable.prototype.__proto__ || Object.getPrototypeOf(RenderTable.prototype), 'wipe', this).call(this);
 			this.rowManager._empty();
 			return this;
 		}
@@ -374,7 +374,7 @@ var DataTable = function (_Table) {
    * Delete a row based on its identifier
    * in the TemplateManager collection of rows
    * @param {number|string} id
-   * @returns {DataTable}
+   * @returns {RenderTable}
    */
 
 	}, {
@@ -386,5 +386,5 @@ var DataTable = function (_Table) {
 		}
 	}]);
 
-	return DataTable;
+	return RenderTable;
 }(Table);

@@ -1,5 +1,5 @@
 /*!
- * dataTable
+ * renderTable
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  */
@@ -8,14 +8,14 @@
  * Updates tables without redrawing them
  * @extends Table
  */
-class DataTable extends Table {
+class RenderTable extends Table {
 
 	/**
 	 * Constructor
 	 * @param {object} [options]
 	 * @param {string} [options.rowIdentifier='id'] - required for TemplateManager
 	 * @param {boolean} [options.useObjectNames=false] - required for TemplateManager
-	 * @returns {DataTable}
+	 * @returns {RenderTable}
 	 */
 	constructor(options){
 		var defaults = {
@@ -47,19 +47,19 @@ class DataTable extends Table {
 	 * Render via TemplateManager.manage.
 	 * Cannot use an array of non-object data
 	 * @param {object|object[]} data
-	 * @returns {DataTable}
+	 * @returns {RenderTable}
 	 * @private
 	 */
 	_render(data){
 		if($.isArray(data) && !isObject(data[0]))
-			throw new ReferenceError("DataTable._render: data must be an object, or an array of objects");
+			throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
 		this.rowManager.build(data);
 		return this;
 	}
 
 	/**
 	 * Empty the tbody and clear cached data
-	 * @returns {DataTable}
+	 * @returns {RenderTable}
 	 */
 	wipe(){
 		super.wipe();
@@ -71,7 +71,7 @@ class DataTable extends Table {
 	 * Delete a row based on its identifier
 	 * in the TemplateManager collection of rows
 	 * @param {number|string} id
-	 * @returns {DataTable}
+	 * @returns {RenderTable}
 	 */
 	deleteRow(id){
 		String(id);

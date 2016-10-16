@@ -103,7 +103,7 @@ function buildFeedback(){
 function buildTable(){
 	var js = [
 		src.table.js + 'table.js',
-		src.table.js + 'dataTable.js'
+		src.table.js + 'renderTable.js'
 	];
 	return buildJs(js, dist.table.js, 'table');
 }
