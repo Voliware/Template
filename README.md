@@ -99,7 +99,7 @@ var table = new Table({
     </tr></tbody>
 </table>
 
-Check out the [Table wiki](https://github.com/Voliware/Template/wiki/Table) for more details, and [DataTable](https://github.com/Voliware/Template/wiki/DataTable) for a powerful way to rebuild tables without wiping the `<tbody>`!
+Check out the [Table wiki](https://github.com/Voliware/Template/wiki/Table) for more details, and [RenderTable](https://github.com/Voliware/Template/wiki/RenderTable) for a powerful way to rebuild tables without wiping the `<tbody>`!
 
 ## Documentation & Tutorials
 
