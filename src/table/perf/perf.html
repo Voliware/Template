@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Table tests</title>
+    </head>
+    <body>
+        <script src="../../../test/jquery/js/jquery-2.2.3.min.js"></script>
+        <script src="../../voli-util/js/util-jquery.js"></script>
+        <script src="../../voli-util/js/util.js"></script>
+        <script src="../js/table.js"></script>
+        <script src="perf.js"></script>
+
+        <div style="display: none;">
+            <table class="table" id="testTable">
+                <thead>
+                    <tr>
+                        <th>Frst Name</th>
+                        <th>Last Name</th>
+                        <th>Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-name="fname">V 1</td>
+                        <td data-name="lname">V 2</td>
+                        <td data-name="age">V 3</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>F 1</th>
+                        <th>F 2</th>
+                        <th>F 3</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </body>
+</html>

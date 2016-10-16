@@ -1,0 +1,18 @@
+/*!
+ * bootstrapLoader
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.loader-text{
+    padding:5px;
+    text-align:center;
+}
+.loader-text.err{
+    color: #ff414b;
+    font-weight:bold;
+}
+.loader-text.success{
+    color: #00c110;
+    font-weight:bold;
+}

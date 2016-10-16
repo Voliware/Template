@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Wizard tests</title>
+        <link rel="stylesheet" media="all" href="../../../assets/mocha/css/style.css"/>
+        <link rel="stylesheet" media="all" href="../../../assets/formvalidation/dist/css/formValidation.min.css"/>
+        <link rel="stylesheet" media="all" href="../../../assets/bootstrap/css/bootstrap.min.css"/>
+        <link rel="stylesheet" media="all" href="../../dist/form/css/form.css"/>
+    </head>
+    <body>
+        <div id="mocha"></div>
+        <div id="messages"></div>
+        <div id="fixtures"></div>
+        <script src="../../../assets/jquery/js/jquery-2.2.3.min.js"></script>
+        <script src="../../../assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../../../assets/formvalidation/dist/js/formValidation.popular.js"></script>
+        <script src="../../../assets/formvalidation/dist/js/framework/bootstrap.min.js"></script>
+        <script src="../../../assets/mocha/js/mocha.js"></script>
+        <script src="../../../assets/chai/js/chai.js"></script>
+        <script src="../../dist/template/js/template.js"></script>
+        <script src="../../dist/feedback/js/feedback.js"></script>
+        <script src="../../dist/bootstrap/js/bootstrap.js"></script>
+        <script src="../../dist/form/js/form.js"></script>
+        <script>mocha.setup('bdd')</script>
+        <script src="test.js"></script>
+        <script>mocha.run();</script>
+
+        <div id="testWizard" class="container wizard">
+            <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="pill" href="#s1">Step 1</a></li>
+                <li><a data-toggle="pill" href="#s2">Step 2</a></li>
+                <li><a data-toggle="pill" href="#s3">Step 3</a></li>
+            </ul>
+            <form>
+                <div class="tab-content">
+                    <div id="s1" class="tab-pane fade in active">
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <input type="text" name="name" class="form-control"/>
+                        </div>
+                    </div>
+                    <div id="s2" class="tab-pane fade">
+                        <div class="form-group">
+                            <label>Age:</label>
+                            <input type="number" name="age" class="form-control" min="1" max="99"/>
+                        </div>
+                    </div>
+                    <div id="s3" class="tab-pane fade">
+                        <div class="form-group">
+                            <label>Gender:</label>
+                            <select name="gender" class="form-control">
+                                <option value="">Please Select a Gender</option>
+                                <option value="0">Male</option>
+                                <option value="1">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <ul class="pager">
+                        <li class="previous"><a href="#">Previous</a></li>
+                        <li class="next"><a href="#">Next</a></li>
+                        <li class="submit"><button type="submit" class="form-submit btn btn-default">Submit</button></li>
+                    </ul>
+                    <div class="form-group">
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

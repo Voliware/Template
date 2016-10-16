@@ -1,0 +1,29 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  },
+  "source": {
+    "include": [
+      "src/js",
+      "src/bootstrap/js",
+      "src/feedback/js",
+      "src/form/js",
+      "src/table/js",
+      "src/wizard/js"
+    ],
+    "exclude": [
+
+    ],
+    "includePattern": ".+\\.js(doc)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+    "destination": "./docs/"
+  },
+  "plugins": [],
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  }
+}

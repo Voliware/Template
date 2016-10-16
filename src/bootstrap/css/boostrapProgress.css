@@ -1,0 +1,20 @@
+/*!
+ * boostrapProgress
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.progress{
+    position:relative;
+}
+.progress-wrapper{
+    padding:10px 20px;
+}
+.progress-percent{
+    position: absolute;
+    left:50%;
+    color:black;
+}
+.progress-percent-white{
+    color:white;
+}

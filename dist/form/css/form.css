@@ -1,0 +1,13 @@
+/*!
+ * wizard
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.wizard-tab.invalid > a{
+    background: rgba(255, 3, 3, 0.71);
+    color: white;
+}
+.wizard button.form-submit{
+    float:right;
+}
