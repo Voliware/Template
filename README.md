@@ -15,7 +15,7 @@ Result
 </div>
 ```
 
-Every instance of `Template` inherits all `jQuery` functions. Each function call is applied to the the `$wrapper` property, while always returning the class itself. This means you can chain `jQuery` with your own methods. `Template` was made in the hopes that the community will provide more `Template` classes to generate common, re-usable HTML elements. A few classes have been created and are available in the `api` or as individual packages: `Table`, `DataTable`, `Form`, `Wizard`, and an increasing variety of `Bootstrap` classes.
+Every instance of `Template` inherits all `jQuery` functions. Each function call is applied to the the `$wrapper` property, while always returning the class itself. This means you can chain `jQuery` with your own methods. `Template` was made in the hopes that the community will provide more `Template` classes to generate common, re-usable HTML elements. A few classes have been created and are available as individual packages: `Table`, `RenderTable`, `Form`, `Wizard`, and an increasing variety of `Bootstrap` classes.
 
 Check out the [Template wiki](https://github.com/Voliware/Template/wiki/Template) for more details.
 
