@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: table/js/renderTable.js</title>
+    <title>JSDoc: Source: bootstrap/js/bootstrapControlTable.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: table/js/renderTable.js</h1>
+    <h1 class="page-title">Source: bootstrap/js/bootstrapControlTable.js</h1>
 
     
 
@@ -27,86 +27,64 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/*!
- * renderTable
+ * bootstrapControlTable
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  */
 
 /**
- * Updates tables without redrawing them
- * @extends Table
+ * Control table with bootstrap buttons
+ * @extends ControlTable
  */
-class RenderTable extends Table {
+class BootstrapControlTable extends ControlTable {
 
 	/**
 	 * Constructor
 	 * @param {object} [options]
-	 * @param {string} [options.identifier='id'] - required for TemplateManager
-	 * @param {boolean} [options.useObjectNames=false] - required for TemplateManager
-	 * @returns {RenderTable}
+	 * @returns {BootstrapControlTable}
 	 */
 	constructor(options){
-		var defaults = {
-			// to manage objects, they must have
-			// a unique id before they get to Manager.
-			// this is their id property name
-			identifier: 'id',
-			// OR instead of using an identifier,
-			// use the name of the object.
-			// this only works when passing
-			// objects of objects to manage()
-			useObjectNames : false
-		};
-		super($Util.opts(defaults, options));
-
-		// row manager to re-build rows instead
-		// of wiping the &lt;tbody> each time
-		this.rowManager = new TemplateManager({
-			identifier : this.settings.identifier,
-			useObjectNames : this.settings.useObjectNames,
-			template : this.$tr,
-			$wrapper  : this.$tbody
-		});
-
-		this.$wrapper.addClass('renderTable');
-
+		super(options);
 		return this;
 	}
 
 	/**
-	 * Render via TemplateManager.manage.
-	 * Cannot use an array of non-object data
-	 * @param {object|object[]} data
-	 * @returns {RenderTable}
+	 * Create a delete button
+	 * @param {object} data
+	 * @returns {jQuery}
 	 * @private
 	 */
-	_render(data){
-		if($.isArray(data) &amp;&amp; !isObject(data[0]))
-			throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
-		this.rowManager.build(data);
-		return this;
+	_createDeleteButton(data){
+		var $btn = super._createDeleteButton(data);
+		$btn.addClass('btn btn-default');
+		$btn.html('&lt;span class="glyphicon glyphicon-trash">&lt;/span>');
+		return $btn;
 	}
 
 	/**
-	 * Empty the tbody and clear cached data
-	 * @returns {RenderTable}
+	 * Create an update button
+	 * @param {object} data
+	 * @returns {jQuery}
+	 * @private
 	 */
-	wipe(){
-		super.wipe();
-		this.rowManager._empty();
-		return this;
+	_createUpdateButton(data){
+		var $btn = super._createUpdateButton(data);
+		$btn.addClass('btn btn-default');
+		$btn.html('&lt;span class="glyphicon glyphicon-edit">&lt;/span>');
+		return $btn;
 	}
 
 	/**
-	 * Delete a row based on its identifier
-	 * in the TemplateManager collection of rows
-	 * @param {number|string} id
-	 * @returns {RenderTable}
+	 * Create a view button
+	 * @param {object} data
+	 * @returns {jQuery}
+	 * @private
 	 */
-	deleteRow(id){
-		String(id);
-		this.rowManager.deleteObject(id);
-		return this;
+	_createViewButton(data){
+		var $btn = super._createViewButton(data);
+		$btn.addClass('btn btn-default');
+		$btn.html('&lt;span class="glyphicon glyphicon-info-sign">&lt;/span>');
+		return $btn;
 	}
 }</code></pre>
         </article>

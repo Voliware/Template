@@ -18,3 +18,12 @@
         transform:rotate(360deg);
     }
 }
+/*!
+ * template
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.template {
+    display:none;
+}

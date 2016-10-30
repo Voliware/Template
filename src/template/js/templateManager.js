@@ -98,7 +98,7 @@ class TemplateManager extends Manager {
 	_create(data){
 		var id = this.getId(data);
 		if(!id)
-			throw new Error("TemplateManager._add: templates must have a " + this.settings.identifier + " property");
+			throw new Error("TemplateManager._create: templates must have a '" + this.settings.identifier + "' property");
 
 		// clone the template and populate it with data
 		var $template = this.$template.clone();
@@ -181,7 +181,7 @@ class TemplateManager extends Manager {
 
 		// set elements that don't want to be updated
 		// to have data-populate="false"
-		// the isFirstUpdate flag was added in _add
+		// the isFirstUpdate flag was added in _create
 		if($template.isFirstUpdate){
 			$template.find('[data-update="false"]').attr('data-populate', false);
 			$template.isFirstUpdate = false;

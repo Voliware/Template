@@ -62,6 +62,7 @@ class Template {
 
 		// attach all jquery functions to $wrapper
 		$Util.jQuerify(this);
+		this.$wrapper.removeClass('template');
 		return this;
 	}
 

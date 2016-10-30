@@ -13,7 +13,7 @@ class RenderTable extends Table {
 	/**
 	 * Constructor
 	 * @param {object} [options]
-	 * @param {string} [options.rowIdentifier='id'] - required for TemplateManager
+	 * @param {string} [options.identifier='id'] - required for TemplateManager
 	 * @param {boolean} [options.useObjectNames=false] - required for TemplateManager
 	 * @returns {RenderTable}
 	 */
@@ -39,6 +39,8 @@ class RenderTable extends Table {
 			template : this.$tr,
 			$wrapper  : this.$tbody
 		});
+
+		this.$wrapper.addClass('renderTable');
 
 		return this;
 	}

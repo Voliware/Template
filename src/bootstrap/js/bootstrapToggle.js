@@ -24,7 +24,7 @@ class BootstrapToggle extends Template {
 	 */
 	constructor(options){
 		if(!isDefined($.fn.bootstrapToggle))
-			throw new Error("BootstrapToggle.constructor: the bootstrap toggle file must be included before voli-bootstrap.");
+			throw new Error("BootstrapToggle.constructor: the bootstrap toggle file must be included before bootstrap.");
 
 		var defaults = {
 			struct : {

@@ -51,7 +51,8 @@ function buildBootstrap(){
 		src.bootstrap.js + 'bootstrapTab.js',
 		src.bootstrap.js + 'bootstrapTabManager.js',
 		src.bootstrap.js + 'bootstrapPanel.js',
-		src.bootstrap.js + 'bootstrapPanelManager.js'
+		src.bootstrap.js + 'bootstrapPanelManager.js',
+		src.bootstrap.js + 'bootstrapControlTable.js'
 	];
 	buildJs(js, dist.bootstrap.js, 'bootstrap');
 
@@ -61,7 +62,8 @@ function buildBootstrap(){
 		src.bootstrap.css + 'bootstrapLoader.css',
 		src.bootstrap.css + 'bootstrapPanel.css',
 		src.bootstrap.css + 'bootstrapProgress.css',
-		src.bootstrap.css + 'bootstrapTab.css'
+		src.bootstrap.css + 'bootstrapTab.css',
+		src.bootstrap.css + 'bootstrapControlTable.css'
 	];
 	return buildCss(css, dist.bootstrap.css, 'bootstrap');
 }
@@ -93,7 +95,12 @@ function buildFeedback(){
 	var js = [
 		src.feedback.js + 'feedback.js'
 	];
-	return buildJs(js, dist.feedback.js, 'feedback');
+	buildJs(js, dist.feedback.js, 'feedback');
+	
+	var css = [
+		src.feedback.css + 'feedback.css'
+	];
+	return buildCss(css, dist.feedback.css, 'feedback');
 }
 
 /**
@@ -103,7 +110,8 @@ function buildFeedback(){
 function buildTable(){
 	var js = [
 		src.table.js + 'table.js',
-		src.table.js + 'renderTable.js'
+		src.table.js + 'renderTable.js',
+		src.table.js + 'controlTable.js'
 	];
 	return buildJs(js, dist.table.js, 'table');
 }
@@ -124,7 +132,8 @@ function builtTemplate(){
 	buildJs(js, dist.template.js, 'template');
 	
 	var css = [
-		webUtilCss + 'util.css'
+		webUtilCss + 'util.css',
+		src.template.css + 'template.css'
 	];
 	return buildCss(css, dist.template.css, 'template');
 }

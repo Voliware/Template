@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: BootstrapTabManager</title>
+    <title>JSDoc: Class: ControlTable</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: BootstrapTabManager</h1>
+    <h1 class="page-title">Class: ControlTable</h1>
 
     
 
@@ -28,9 +28,9 @@
 
 <header>
     
-        <h2>BootstrapTabManager</h2>
+        <h2>ControlTable</h2>
         
-            <div class="class-description">Manages bootstrap tabs</div>
+            <div class="class-description">A table that has view/update/delete support.Buttons are added to the incoming data objectsas if they were part of the data.</div>
         
     
 </header>
@@ -44,7 +44,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="BootstrapTabManager"><span class="type-signature"></span>new BootstrapTabManager<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ControlTable"><span class="type-signature"></span>new ControlTable<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -75,6 +75,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -99,6 +101,70 @@
             
             </td>
 
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>buttons</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -133,13 +199,13 @@
 
         <tr>
             
-                <td class="name"><code>template</code></td>
+                <td class="name"><code>deleteButton</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -160,7 +226,7 @@
             
                 <td class="default">
                 
-                    BootstrapTab
+                    true
                 
                 </td>
             
@@ -172,13 +238,13 @@
 
         <tr>
             
-                <td class="name"><code>$wrapper</code></td>
+                <td class="name"><code>updateButton</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">jQuery</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -199,12 +265,58 @@
             
                 <td class="default">
                 
-                    $('&lt;div class="tab-content">&lt;/div>')
+                    true
                 
                 </td>
             
 
-            <td class="description last">manager wrapper</td>
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewButton</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -252,7 +364,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="bootstrap_js_bootstrapTabManager.js.html">bootstrap/js/bootstrapTabManager.js</a>, <a href="bootstrap_js_bootstrapTabManager.js.html#line11">line 11</a>
+        <a href="table_js_controlTable.js.html">table/js/controlTable.js</a>, <a href="table_js_controlTable.js.html#line13">line 13</a>
     </li></ul></dd>
     
 
@@ -288,7 +400,7 @@
 
 
     <ul>
-        <li>TemplateManager</li>
+        <li><a href="RenderTable.html">RenderTable</a></li>
     </ul>
 
 
@@ -312,14 +424,14 @@
 
     
 
-    <h4 class="name" id="getFirst"><span class="type-signature"></span>getFirst<span class="signature">()</span><span class="type-signature"> &rarr; {jQuery}</span></h4>
+    <h4 class="name" id="deleteRow"><span class="type-signature"></span>deleteRow<span class="signature">(id)</span><span class="type-signature"> &rarr; {<a href="RenderTable.html">RenderTable</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    Get the first tab in the wrapper
+    Delete a row based on its identifierin the TemplateManager collection of rows
 </div>
 
 
@@ -328,6 +440,58 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -340,6 +504,11 @@
 
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="RenderTable.html#deleteRow">RenderTable#deleteRow</a>
+    </li></ul></dd>
     
 
     
@@ -363,7 +532,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="bootstrap_js_bootstrapTabManager.js.html">bootstrap/js/bootstrapTabManager.js</a>, <a href="bootstrap_js_bootstrapTabManager.js.html#line35">line 35</a>
+        <a href="table_js_renderTable.js.html">table/js/renderTable.js</a>, <a href="table_js_renderTable.js.html#line78">line 78</a>
     </li></ul></dd>
     
 
@@ -397,7 +566,112 @@
     </dt>
     <dd>
         
-<span class="param-type">jQuery</span>
+<span class="param-type"><a href="RenderTable.html">RenderTable</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="wipe"><span class="type-signature"></span>wipe<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="RenderTable.html">RenderTable</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Empty the tbody and clear cached data
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="RenderTable.html#wipe">RenderTable#wipe</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="table_js_renderTable.js.html">table/js/renderTable.js</a>, <a href="table_js_renderTable.js.html#line66">line 66</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="RenderTable.html">RenderTable</a></span>
 
 
     </dd>

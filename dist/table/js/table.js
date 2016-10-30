@@ -305,7 +305,7 @@ var RenderTable = function (_Table) {
 	/**
   * Constructor
   * @param {object} [options]
-  * @param {string} [options.rowIdentifier='id'] - required for TemplateManager
+  * @param {string} [options.identifier='id'] - required for TemplateManager
   * @param {boolean} [options.useObjectNames=false] - required for TemplateManager
   * @returns {RenderTable}
   */
@@ -336,6 +336,8 @@ var RenderTable = function (_Table) {
 			template: _this2.$tr,
 			$wrapper: _this2.$tbody
 		});
+
+		_this2.$wrapper.addClass('renderTable');
 
 		return _ret2 = _this2, _possibleConstructorReturn(_this2, _ret2);
 	}
@@ -388,3 +390,198 @@ var RenderTable = function (_Table) {
 
 	return RenderTable;
 }(Table);
+/*!
+ * controlTable
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * A table that has view/update/delete support.
+ * Buttons are added to the incoming data objects
+ * as if they were part of the data.
+ * @extends RenderTable
+ */
+
+
+var ControlTable = function (_RenderTable) {
+	_inherits(ControlTable, _RenderTable);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @param {object} [options.buttons]
+  * @param {boolean} [options.buttons.deleteButton=true]
+  * @param {boolean} [options.buttons.updateButton=true]
+  * @param {boolean} [options.buttons.viewButton=true]
+  * @returns {ControlTable}
+  */
+	function ControlTable(options) {
+		var _ret3;
+
+		_classCallCheck(this, ControlTable);
+
+		var defaults = {
+			buttons: {
+				deleteButton: true,
+				viewButton: true,
+				updateButton: true
+			}
+		};
+
+		var _this3 = _possibleConstructorReturn(this, (ControlTable.__proto__ || Object.getPrototypeOf(ControlTable)).call(this, $Util.opts(defaults, options)));
+
+		_this3._setupButtons();
+		_this3.$wrapper.addClass('controlTable');
+
+		return _ret3 = _this3, _possibleConstructorReturn(_this3, _ret3);
+	}
+
+	// buttons
+
+	/**
+  * Add headers and tds for
+  * each button that is enabled
+  * @private
+  */
+
+
+	_createClass(ControlTable, [{
+		key: '_setupButtons',
+		value: function _setupButtons() {
+			var self = this;
+
+			$.each(this.settings.buttons, function (i, e) {
+				if (e) {
+					addHeader();
+					addTd(i);
+				}
+			});
+
+			/**
+    * Add a blank header
+    */
+			function addHeader() {
+				self.$thead.find('tr').append('<th></th>');
+			}
+
+			/**
+    * Add a td for a button
+    * @param {string} dataName - the data-name attr
+    */
+			function addTd(dataName) {
+				self.$tr.append('<td data-name="' + dataName + '"></td>');
+			}
+		}
+
+		/**
+   * Add each enabled button
+   * @param {object} data
+   * @returns {object}
+   * @private
+   */
+
+	}, {
+		key: '_processRow',
+		value: function _processRow(data) {
+			if (this.settings.buttons.deleteButton) this._addDeleteButton(data);
+			if (this.settings.buttons.updateButton) this._addUpdateButton(data);
+			if (this.settings.buttons.viewButton) this._addViewButton(data);
+			return data;
+		}
+
+		// delete button
+
+		/**
+   * Add a delete button
+   * @param {object} data
+   * @returns {ControlTable}
+   * @private
+   */
+
+	}, {
+		key: '_addDeleteButton',
+		value: function _addDeleteButton(data) {
+			data.deleteButton = this._createDeleteButton(data);
+			return this;
+		}
+
+		/**
+   * Create a delete button
+   * @param {object} data
+   * @returns {jQuery}
+   * @private
+   */
+
+	}, {
+		key: '_createDeleteButton',
+		value: function _createDeleteButton(data) {
+			var self = this;
+			var $btn = $('<button type="button" title="Delete">Delete</button>');
+			$btn.click(function () {
+				self.deleteRow(data[self.settings.identifier]);
+			});
+			return $btn;
+		}
+
+		// update button
+
+		/**
+   * Add an update button
+   * @param {object} data
+   * @returns {ControlTable}
+   * @private
+   */
+
+	}, {
+		key: '_addUpdateButton',
+		value: function _addUpdateButton(data) {
+			data.updateButton = this._createUpdateButton(data);
+			return this;
+		}
+
+		/**
+   * Create an update button
+   * @param {object} data
+   * @returns {jQuery}
+   * @private
+   */
+
+	}, {
+		key: '_createUpdateButton',
+		value: function _createUpdateButton(data) {
+			return $('<button type="button" title="Update">Update</button>');
+		}
+
+		// view button
+
+		/**
+   * Add a view button
+   * @param {object} data
+   * @returns {ControlTable}
+   * @private
+   */
+
+	}, {
+		key: '_addViewButton',
+		value: function _addViewButton(data) {
+			data.viewButton = this._createViewButton(data);
+			return this;
+		}
+
+		/**
+   * Create a view button
+   * @param {object} data
+   * @returns {jQuery}
+   * @private
+   */
+
+	}, {
+		key: '_createViewButton',
+		value: function _createViewButton(data) {
+			return $('<button type="button" title="View">View</button>');
+		}
+	}]);
+
+	return ControlTable;
+}(RenderTable);

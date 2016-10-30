@@ -2,4 +2,8 @@
  * util
  * https://github.com/Voliware/Util
  * Licensed under the MIT license.
- */.spin{animation-name:spin;animation-duration:500ms;animation-iteration-count:infinite;animation-timing-function:linear}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+ */.spin{animation-name:spin;animation-duration:500ms;animation-iteration-count:infinite;animation-timing-function:linear}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}/*!
+ * template
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */.template{display:none}

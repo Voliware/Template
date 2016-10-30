@@ -83,7 +83,7 @@ var BootstrapToggle = function (_Template) {
 
 		_classCallCheck(this, BootstrapToggle);
 
-		if (!isDefined($.fn.bootstrapToggle)) throw new Error("BootstrapToggle.constructor: the bootstrap toggle file must be included before voli-bootstrap.");
+		if (!isDefined($.fn.bootstrapToggle)) throw new Error("BootstrapToggle.constructor: the bootstrap toggle file must be included before bootstrap.");
 
 		var defaults = {
 			struct: {
@@ -1268,3 +1268,85 @@ var BootstrapPanelManager = function (_TemplateManager3) {
 
 	return BootstrapPanelManager;
 }(TemplateManager);
+/*!
+ * bootstrapControlTable
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Control table with bootstrap buttons
+ * @extends ControlTable
+ */
+
+
+var BootstrapControlTable = function (_ControlTable) {
+	_inherits(BootstrapControlTable, _ControlTable);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @returns {BootstrapControlTable}
+  */
+	function BootstrapControlTable(options) {
+		var _ret12;
+
+		_classCallCheck(this, BootstrapControlTable);
+
+		var _this12 = _possibleConstructorReturn(this, (BootstrapControlTable.__proto__ || Object.getPrototypeOf(BootstrapControlTable)).call(this, options));
+
+		return _ret12 = _this12, _possibleConstructorReturn(_this12, _ret12);
+	}
+
+	/**
+  * Create a delete button
+  * @param {object} data
+  * @returns {jQuery}
+  * @private
+  */
+
+
+	_createClass(BootstrapControlTable, [{
+		key: '_createDeleteButton',
+		value: function _createDeleteButton(data) {
+			var $btn = _get(BootstrapControlTable.prototype.__proto__ || Object.getPrototypeOf(BootstrapControlTable.prototype), '_createDeleteButton', this).call(this, data);
+			$btn.addClass('btn btn-default');
+			$btn.html('<span class="glyphicon glyphicon-trash"></span>');
+			return $btn;
+		}
+
+		/**
+   * Create an update button
+   * @param {object} data
+   * @returns {jQuery}
+   * @private
+   */
+
+	}, {
+		key: '_createUpdateButton',
+		value: function _createUpdateButton(data) {
+			var $btn = _get(BootstrapControlTable.prototype.__proto__ || Object.getPrototypeOf(BootstrapControlTable.prototype), '_createUpdateButton', this).call(this, data);
+			$btn.addClass('btn btn-default');
+			$btn.html('<span class="glyphicon glyphicon-edit"></span>');
+			return $btn;
+		}
+
+		/**
+   * Create a view button
+   * @param {object} data
+   * @returns {jQuery}
+   * @private
+   */
+
+	}, {
+		key: '_createViewButton',
+		value: function _createViewButton(data) {
+			var $btn = _get(BootstrapControlTable.prototype.__proto__ || Object.getPrototypeOf(BootstrapControlTable.prototype), '_createViewButton', this).call(this, data);
+			$btn.addClass('btn btn-default');
+			$btn.html('<span class="glyphicon glyphicon-info-sign"></span>');
+			return $btn;
+		}
+	}]);
+
+	return BootstrapControlTable;
+}(ControlTable);
