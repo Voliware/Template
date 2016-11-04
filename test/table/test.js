@@ -144,46 +144,6 @@ $(document).ready(function(){
 		.appendTo($body)
 		.build(playerData1);
 
-	class CustomTable extends RenderTable {
-		constructor(options){
-			super(options);
-			return this;
-		}
-
-		_processData(data){
-			$.each(data, function(i, e){
-				e.active = createSwitch(e.active === 1);
-			});
-
-			function createSwitch(state){
-				var $wrapper = $('<div></div>');
-				var active = new BootstrapToggle({
-					switchOptions : {
-						name : 'active',
-						size : 'small'
-					}
-				})
-					.change(function(){
-						console.log("switch state is " + $(this).prop('checked'));
-					})
-					.appendTo($wrapper)
-					.bootstrapToggle(state ? 'on' : 'off');
-				return $wrapper;
-			}
-			return data;
-		}
-	}
-
-	var renderTable2 = new CustomTable({
-		template : $renderTable,
-		identifier : 'player'
-	})
-		.appendTo($body)
-		.build(playerData3);
-
-	setTimeout(function(){
-		renderTable2.build(playerData1);
-	}, 5000);
 
 });
 

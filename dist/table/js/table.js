@@ -216,7 +216,7 @@ var Table = function (_Template) {
     * Populate a row with data
     * The <td> elements will be populated
     * @param {jQuery} $row - row to populate
-    * @param {array} data - array of data
+    * @param {object[]} data - array of data
     */
 			function populateRow($row, data) {
 				var dataArr = [];
@@ -233,7 +233,7 @@ var Table = function (_Template) {
 
 		/**
    * Build the entire table
-   * @param {object|object[]|array} data
+   * @param {object|object[]} data
    * object: and object of objects, where each object is a row of data
    * All row objects are name-value pairs, where the names equal a [name]
    * or [data-name] attribute within a row DOM element
