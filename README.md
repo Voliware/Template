@@ -1,5 +1,5 @@
 # Template
-`Template` is a simple class that provides an easy way to re-use HTML with `jQuery`. Extend `Template`, provide it a string of HTML, or an HTML object wrapped by `jQuery`, and start writing code like this:
+`Template` is a simple class that provides an easy way to re-use and build HTML with `jQuery`. Extend the `Template` class, provide a string of HTML/`jQuery`, and start writing code like this:
 
 ```js
 var chatMessage = new ChatMessage()
