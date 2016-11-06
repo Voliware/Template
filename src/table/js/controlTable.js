@@ -72,7 +72,7 @@ class ControlTable extends RenderTable {
 
 	/**
 	 * Add each enabled button
-	 * @param {object} data
+	 * @param {object} data - row data
 	 * @returns {object}
 	 * @private
 	 */
@@ -90,7 +90,7 @@ class ControlTable extends RenderTable {
 
 	/**
 	 * Add a delete button
-	 * @param {object} data
+	 * @param {object} data - row data
 	 * @returns {ControlTable}
 	 * @private
 	 */
@@ -101,7 +101,7 @@ class ControlTable extends RenderTable {
 
 	/**
 	 * Create a delete button
-	 * @param {object} data
+	 * @param {object} data - row data
 	 * @returns {jQuery}
 	 * @private
 	 */
@@ -109,7 +109,11 @@ class ControlTable extends RenderTable {
 		var self = this;
 		var $btn = $('<button type="button" title="Delete">Delete</button>');
 		$btn.click(function(){
-			self.deleteRow(data[self.settings.identifier]);
+			self.deleteRow(data);
+			// check if all rows were deleted
+			if(self._isEmptyTable()){
+				self.toggleEmpty();
+			}
 		});
 		return $btn;
 	}
@@ -118,7 +122,7 @@ class ControlTable extends RenderTable {
 
 	/**
 	 * Add an update button
-	 * @param {object} data
+	 * @param {object} data - row data
 	 * @returns {ControlTable}
 	 * @private
 	 */
@@ -129,7 +133,7 @@ class ControlTable extends RenderTable {
 
 	/**
 	 * Create an update button
-	 * @param {object} data
+	 * @param {object} data - row data
 	 * @returns {jQuery}
 	 * @private
 	 */
@@ -141,7 +145,7 @@ class ControlTable extends RenderTable {
 
 	/**
 	 * Add a view button
-	 * @param {object} data
+	 * @param {object} data - row data
 	 * @returns {ControlTable}
 	 * @private
 	 */
@@ -152,7 +156,7 @@ class ControlTable extends RenderTable {
 
 	/**
 	 * Create a view button
-	 * @param {object} data
+	 * @param {object} data - row data
 	 * @returns {jQuery}
 	 * @private
 	 */

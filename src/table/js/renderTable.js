@@ -53,8 +53,14 @@ class RenderTable extends Table {
 	 * @private
 	 */
 	_render(data){
-		if($.isArray(data) && !isObject(data[0]))
+		var dataIsArray = $.isArray(data);
+
+		if(dataIsArray && !isObject(data[0]))
 			throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
+
+		if($.isEmptyObject(data) || !data || (dataIsArray && !data.length))
+			this.toggleEmpty(true);
+
 		this.rowManager.build(data);
 		return this;
 	}
@@ -65,19 +71,18 @@ class RenderTable extends Table {
 	 */
 	wipe(){
 		super.wipe();
-		this.rowManager._empty();
+		this.rowManager.deleteObjects();
 		return this;
 	}
 
 	/**
 	 * Delete a row based on its identifier
 	 * in the TemplateManager collection of rows
-	 * @param {number|string} id
+	 * or simply pass the row data object itself
 	 * @returns {RenderTable}
 	 */
-	deleteRow(id){
-		String(id);
-		this.rowManager.deleteObject(id);
+	deleteRow(){
+		this.rowManager.deleteObject(...arguments);
 		return this;
 	}
 }

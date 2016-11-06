@@ -12,14 +12,15 @@ class FormSerializer {
 	/**
 	 * Construtor
 	 * @param {object} [options]
-	 * @param {number} [options.checkboxMode=FormSerializer.checkboxMode.number] - the
+	 * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
+	 * @param {number} [options.mode=0] - the mode in which to serialize data
 	 * mode in which to serialize checkboxes
 	 * @returns {FormSerializer}
 	 */
 	constructor(options){
 		var defaults = {
-			// mode in which to serialize checkboxes
-			checkboxMode : FormSerializer.checkboxMode.number
+			checkboxMode : FormSerializer.checkboxMode.number,
+			serializeMode : FormSerializer.serializeMode.toString
 		};
 		this.settings = $Util.opts(defaults, options);
 
@@ -71,7 +72,7 @@ class FormSerializer {
 	/**
 	 * Serialize a form
 	 * @param {jQuery} $form
-	 * @returns {FormSerializerData}
+	 * @returns {object|string}
 	 */
 	serialize($form){
 		var self = this;
@@ -137,7 +138,20 @@ class FormSerializer {
 			};
 		});
 
-		return formData.set(data);
+		formData.set(data);
+
+		switch(this.settings.serializeMode){
+			default:
+			case FormSerializer.serializeMode.toString:
+				return formData.toString();
+				break;
+			case FormSerializer.serializeMode.toOrderedString:
+				return formData.toOrderedString();
+				break;
+			case FormSerializer.serializeMode.toObject:
+				return formData.toObject();
+				break;
+		}
 	}
 }
 
@@ -149,4 +163,13 @@ FormSerializer.checkboxMode = {
 	number : 1,
 	string : 2,
 	onOff : 3
+};
+
+/**
+ * Mode in which to serialize data
+ */
+FormSerializer.serializeMode = {
+	toString : 0,
+	toOrderedString : 1,
+	toObject : 2
 };

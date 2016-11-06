@@ -39,6 +39,9 @@ class Table extends Template {
 		this.$rows = [];
 		this._cachedData = {};
 
+		// provide a default empty msg
+		this.$empty = $('<tr class="table-empty"><td>There is no data to display.</td></tr>');
+
 		return this;
 	}
 
@@ -150,6 +153,9 @@ class Table extends Template {
 		// empty the <tbody>
         this.wipe();
 
+		if($.isEmptyObject(data) || !data || (dataIsArray && !data.length))
+			return this.toggleEmpty(true);
+
 		// run through data and create rows
 		Util.each(data, function(i, e){
 			var $row = createRow();
@@ -204,9 +210,21 @@ class Table extends Template {
     }
 
 	/**
+	 * Check if the table is empty based
+	 * on the number of trs in the tbody.
+	 * This may be useful if rows were
+	 * delete from the DOM and not data
+	 * @returns {boolean}
+	 * @private
+	 */
+	_isEmptyTable(){
+		return this.$tbody.find('tr').length === 0;
+	}
+
+	/**
 	 * Build the entire table
 	 * @param {object|object[]} data
-	 * object: and object of objects, where each object is a row of data
+	 * object: an object of objects, where each object is a row of data
 	 * All row objects are name-value pairs, where the names equal a [name]
 	 * or [data-name] attribute within a row DOM element
 	 * object[]: same as object, but instead an object of objects, it is an
@@ -243,6 +261,26 @@ class Table extends Template {
 		if(this.$rows[index]){
 			this.$rows[index].remove();
 			this.$rows.splice(index, 1);
+		}
+		return this;
+	}
+
+	/**
+	 * Toggle the empty table message
+	 * and hide the thead and tfoot
+	 * @param {boolean} [state=true]
+	 * @returns {Table}
+	 */
+	toggleEmpty(state = true){
+		this.$thead.toggle(!state);
+		this.$tfoot.toggle(!state);
+		
+		if(state) {
+			this.$tbody.append(this.$empty);
+			this.$empty.show();
+		}
+		else {
+			this.$empty.remove();
 		}
 		return this;
 	}

@@ -80,9 +80,15 @@ class TemplateManager extends Manager {
 	 * @returns {TemplateManager}
 	 * @private
 	 */
-	_delete(id) {
-		this.templates[id].remove();
-		super._delete(id);
+	_delete() {
+		var template = this._get(...arguments);
+		if(template){
+			template.remove();
+			super._delete(template);
+		}
+		else {
+			console.error("TemplateManager._delete: could not find template object");
+		}
 		return this;
 	}
 

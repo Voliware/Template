@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Form tests</title>
+        <link rel="stylesheet" media="all" href="../../../assets/formvalidation/dist/css/formValidation.min.css"/>
+        <link rel="stylesheet" media="all" href="../../../assets/bootstrap/css/bootstrap.min.css"/>
+        <link rel="stylesheet" media="all" href="../../../Template/dist/form/css/form.css"/>
+    </head>
+    <body>
+        <script src="../../../assets/jquery/js/jquery-2.2.3.min.js"></script>
+        <script src="../../../assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../../../assets/formvalidation/dist/js/formValidation.popular.min.js"></script>
+        <script src="../../../assets/formvalidation/dist/js/framework/bootstrap.min.js"></script>
+        <script src="../../dist/template/js/template.js"></script>
+        <script src="../../dist/feedback/js/feedback.js"></script>
+        <script src="../../dist/form/js/form.js"></script>
+        <script src="example.js"></script>
+
+        <form id="testForm">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" name="name" placeholder="Name"/>
+            </div>
+            <div class="form-group">
+                <label>Age</label>
+                <input type="text" class="form-control" name="age" placeholder="Age" min="10">
+            </div>
+            <div class="form-footer">
+                <div class="form-group">
+                    <button type="submit" class="form-submit btn btn-default">Submit</button>
+                </div>
+            </div>
+        </form>
+
+        <form id="feedbackForm">
+            <div class="form-body">
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" class="form-control" name="location" placeholder="Location"/>
+                </div>
+                <div class="form-group">
+                    <label>Size</label>
+                    <input type="text" class="form-control" name="size" placeholder="Age" min="10">
+                </div>
+            </div>
+            <div class="form-footer">
+                <div class="form-group">
+                    <button type="submit" class="form-submit btn btn-default">Submit</button>
+                </div>
+            </div>
+        </form>
+    </body>
+</html>

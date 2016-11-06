@@ -100,53 +100,6 @@ var tableTemplate =
 	"</tfoot>"+
 "</table>";
 
-$(document).ready(function(){
-	var $testTable = $('#testTable');
-	var $renderTable = $('#renderTable');
-	var $body = $('body');
-
-	// templates
-
-	var tableTemplate1 = new Table({
-		template : $testTable
-	})
-		.build(tableDataArray)
-		.appendTo($body)
-		.fadeOut();
-
-	var tableTemplate2 = new Table({
-		template : tableTemplate
-	})
-		.appendTo($body)
-		.build(tableDataObject);
-
-	var tableTemplate3 = new Table({
-		template : tableTemplate,
-		identifier : 'age'
-	})
-		.appendTo($body)
-		.build(tableDataObject)
-		.build(tableDataObject2);
-
-	// defaults
-
-	var tableDefault1 = new Table({
-		rowHeaders : ['first1','last2','age3']
-	})
-		.appendTo($body)
-		.build(tableDataObject);
-
-	// data tables
-	var renderTable1 = new RenderTable({
-		template : $renderTable,
-		identifier : 'player'
-	})
-		.appendTo($body)
-		.build(playerData1);
-
-
-});
-
 // Table
 
 describe("Table", function() {

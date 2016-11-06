@@ -204,29 +204,6 @@ $Util.populate = {};
 (function ($) {
 
 	/**
-  * Append option(s) to a select
-  * @param {*} arguments - Either an object of key/value pairs, where the key is the
-  * option value and the value is the string within the tags,
-  * or a key and value as two parameters to add one option
-  * @returns {jQuery}
-  */
-	$.fn.addToSelect = function () {
-		var data = {};
-
-		if (arguments.length > 1) data[arguments[0]] = arguments[1];else data = arguments[0];
-
-		var $this = $(this);
-		if ($this.is('select')) {
-			Util.each(data, function (i, e) {
-				var opt = '<option value="' + i + '">' + e + '</option>';
-				$this.append(opt);
-			});
-		}
-
-		return this;
-	};
-
-	/**
   * Checks if an element has an attribute
   * @param {string} attr - attribute name
   * @returns {boolean} - true if it does, false otherwise
@@ -338,6 +315,29 @@ $Util.populate = {};
 		var cb = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
 		if (state) $(this).slideDown(options, cb);else $(this).slideUp(options, cb);
+		return this;
+	};
+
+	/**
+  * Append option(s) to a select
+  * @param {*} arguments - Either an object of key/value pairs, where the key is the
+  * option value and the value is the string within the tags,
+  * or a key and value as two parameters to add one option
+  * @returns {jQuery}
+  */
+	$.fn.addToSelect = function () {
+		var data = {};
+
+		if (arguments.length > 1) data[arguments[0]] = arguments[1];else data = arguments[0];
+
+		var $this = $(this);
+		if ($this.is('select')) {
+			Util.each(data, function (i, e) {
+				var opt = '<option value="' + i + '">' + e + '</option>';
+				$this.append(opt);
+			});
+		}
+
 		return this;
 	};
 
@@ -608,7 +608,7 @@ var Manager = function (_EventSystem) {
    * by id (string/number) or by an object's
    * property as set in this.settings.identifier
    * @param {...(number|object|string)} arguments - the object or the id of the object
-   * @returns {*}
+   * @returns {*|null}
    * @private
    */
 
@@ -616,7 +616,20 @@ var Manager = function (_EventSystem) {
 		key: '_get',
 		value: function _get() {
 			var arg = arguments[0];
-			if (isString(arg) || isNumber(arg)) return this.objects[arg];else return this.objects[arg[this.settings.identifier]];
+			var obj = null;
+			var identifier = this.settings.identifier;
+
+			// an object id was passed
+			if (isString(arg) || isNumber(arg)) {
+				String(arg);
+				if (this.objects[arg]) obj = this.objects[arg];
+			}
+			// an object was passed
+			else if (this.objects[arg[identifier]]) {
+					obj = this.objects[arg[identifier]];
+				}
+
+			return obj;
 		}
 
 		/**
@@ -718,13 +731,7 @@ var Manager = function (_EventSystem) {
 			var obj = null;
 			var identifier = this.settings.identifier;
 
-			// an object id was passed
-			if (isString(arg) || isNumber(arg)) {
-				String(arg);
-				if (this.objects[arg]) obj = this.objects[arg];
-			}
-			// an object was passed
-			else if (this.objects[arg[identifier]]) obj = this.objects[arg[identifier]];else console.warn('Manager._delete: cannot delete an object with no identifier');
+			obj = this._get.apply(this, arguments);
 
 			if (obj) {
 				var id = obj[identifier];
@@ -732,7 +739,8 @@ var Manager = function (_EventSystem) {
 				delete this.objects[id];
 				this.requiresNewSerialize = true;
 				if (this.count > 0) this.count--;
-			}
+			} else console.error('Manager._delete: cannot delete an object with no identifier');
+
 			return this;
 		}
 
@@ -819,6 +827,7 @@ var Manager = function (_EventSystem) {
 	}, {
 		key: 'manage',
 		value: function manage(data) {
+			this._cacheData(data);
 			data = this._processData(data);
 
 			if (!isObject(data) && this.settings.useObjectNames) throw new Error("Manager.manage: to use option useObjectNames, object passed to manage() must be an object.");
@@ -838,7 +847,7 @@ var Manager = function (_EventSystem) {
 
 				// ids must be defined within objects
 				// there is no other way to know if an
-				// object is new or old otherwise
+				// object is new or old
 				if (!isDefined(e[id])) return console.error("Manager.manage: cannot manage objects with no ids");
 
 				// objectIds will always be strings
@@ -1211,9 +1220,14 @@ var TemplateManager = function (_Manager) {
 
 	}, {
 		key: '_delete',
-		value: function _delete(id) {
-			this.templates[id].remove();
-			_get2(TemplateManager.prototype.__proto__ || Object.getPrototypeOf(TemplateManager.prototype), '_delete', this).call(this, id);
+		value: function _delete() {
+			var template = this._get.apply(this, arguments);
+			if (template) {
+				template.remove();
+				_get2(TemplateManager.prototype.__proto__ || Object.getPrototypeOf(TemplateManager.prototype), '_delete', this).call(this, template);
+			} else {
+				console.error("TemplateManager._delete: could not find template object");
+			}
 			return this;
 		}
 

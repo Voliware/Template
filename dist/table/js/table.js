@@ -57,6 +57,9 @@ var Table = function (_Template) {
 		_this.$rows = [];
 		_this._cachedData = {};
 
+		// provide a default empty msg
+		_this.$empty = $('<tr class="table-empty"><td>There is no data to display.</td></tr>');
+
 		return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	}
 
@@ -180,6 +183,8 @@ var Table = function (_Template) {
 			// empty the <tbody>
 			this.wipe();
 
+			if ($.isEmptyObject(data) || !data || dataIsArray && !data.length) return this.toggleEmpty(true);
+
 			// run through data and create rows
 			Util.each(data, function (i, e) {
 				var $row = createRow();
@@ -232,9 +237,24 @@ var Table = function (_Template) {
 		}
 
 		/**
+   * Check if the table is empty based
+   * on the number of trs in the tbody.
+   * This may be useful if rows were
+   * delete from the DOM and not data
+   * @returns {boolean}
+   * @private
+   */
+
+	}, {
+		key: '_isEmptyTable',
+		value: function _isEmptyTable() {
+			return this.$tbody.find('tr').length === 0;
+		}
+
+		/**
    * Build the entire table
    * @param {object|object[]} data
-   * object: and object of objects, where each object is a row of data
+   * object: an object of objects, where each object is a row of data
    * All row objects are name-value pairs, where the names equal a [name]
    * or [data-name] attribute within a row DOM element
    * object[]: same as object, but instead an object of objects, it is an
@@ -280,6 +300,30 @@ var Table = function (_Template) {
 			if (this.$rows[index]) {
 				this.$rows[index].remove();
 				this.$rows.splice(index, 1);
+			}
+			return this;
+		}
+
+		/**
+   * Toggle the empty table message
+   * and hide the thead and tfoot
+   * @param {boolean} [state=true]
+   * @returns {Table}
+   */
+
+	}, {
+		key: 'toggleEmpty',
+		value: function toggleEmpty() {
+			var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+			this.$thead.toggle(!state);
+			this.$tfoot.toggle(!state);
+
+			if (state) {
+				this.$tbody.append(this.$empty);
+				this.$empty.show();
+			} else {
+				this.$empty.remove();
 			}
 			return this;
 		}
@@ -354,7 +398,12 @@ var RenderTable = function (_Table) {
 	_createClass(RenderTable, [{
 		key: '_render',
 		value: function _render(data) {
-			if ($.isArray(data) && !isObject(data[0])) throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
+			var dataIsArray = $.isArray(data);
+
+			if (dataIsArray && !isObject(data[0])) throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
+
+			if ($.isEmptyObject(data) || !data || dataIsArray && !data.length) this.toggleEmpty(true);
+
 			this.rowManager.build(data);
 			return this;
 		}
@@ -368,22 +417,23 @@ var RenderTable = function (_Table) {
 		key: 'wipe',
 		value: function wipe() {
 			_get(RenderTable.prototype.__proto__ || Object.getPrototypeOf(RenderTable.prototype), 'wipe', this).call(this);
-			this.rowManager._empty();
+			this.rowManager.deleteObjects();
 			return this;
 		}
 
 		/**
    * Delete a row based on its identifier
    * in the TemplateManager collection of rows
-   * @param {number|string} id
+   * or simply pass the row data object itself
    * @returns {RenderTable}
    */
 
 	}, {
 		key: 'deleteRow',
-		value: function deleteRow(id) {
-			String(id);
-			this.rowManager.deleteObject(id);
+		value: function deleteRow() {
+			var _rowManager;
+
+			(_rowManager = this.rowManager).deleteObject.apply(_rowManager, arguments);
 			return this;
 		}
 	}]);
@@ -476,7 +526,7 @@ var ControlTable = function (_RenderTable) {
 
 		/**
    * Add each enabled button
-   * @param {object} data
+   * @param {object} data - row data
    * @returns {object}
    * @private
    */
@@ -494,7 +544,7 @@ var ControlTable = function (_RenderTable) {
 
 		/**
    * Add a delete button
-   * @param {object} data
+   * @param {object} data - row data
    * @returns {ControlTable}
    * @private
    */
@@ -508,7 +558,7 @@ var ControlTable = function (_RenderTable) {
 
 		/**
    * Create a delete button
-   * @param {object} data
+   * @param {object} data - row data
    * @returns {jQuery}
    * @private
    */
@@ -519,7 +569,11 @@ var ControlTable = function (_RenderTable) {
 			var self = this;
 			var $btn = $('<button type="button" title="Delete">Delete</button>');
 			$btn.click(function () {
-				self.deleteRow(data[self.settings.identifier]);
+				self.deleteRow(data);
+				// check if all rows were deleted
+				if (self._isEmptyTable()) {
+					self.toggleEmpty();
+				}
 			});
 			return $btn;
 		}
@@ -528,7 +582,7 @@ var ControlTable = function (_RenderTable) {
 
 		/**
    * Add an update button
-   * @param {object} data
+   * @param {object} data - row data
    * @returns {ControlTable}
    * @private
    */
@@ -542,7 +596,7 @@ var ControlTable = function (_RenderTable) {
 
 		/**
    * Create an update button
-   * @param {object} data
+   * @param {object} data - row data
    * @returns {jQuery}
    * @private
    */
@@ -557,7 +611,7 @@ var ControlTable = function (_RenderTable) {
 
 		/**
    * Add a view button
-   * @param {object} data
+   * @param {object} data - row data
    * @returns {ControlTable}
    * @private
    */
@@ -571,7 +625,7 @@ var ControlTable = function (_RenderTable) {
 
 		/**
    * Create a view button
-   * @param {object} data
+   * @param {object} data - row data
    * @returns {jQuery}
    * @private
    */

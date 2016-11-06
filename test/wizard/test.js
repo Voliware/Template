@@ -2,15 +2,6 @@
 
 var expect = chai.expect;
 
-$(document).on('ready', function(){
-	/*var $body = $('body');
-	var $testForm = $('#testForm');
-	var w = new Wizard({
-		validator : Form.validators.formValidation,
-		template : $testForm
-	}).appendTo($body);*/
-});
-
 
 describe("Wizard", function() {
 	describe("constructor", function () {
@@ -55,7 +46,7 @@ describe("Wizard", function() {
 			$testWizard.find('[name="age"]').val('55');
 			$testWizard.find('[name="gender"]').val('1');
 			w.serializer();
-			expect(w._serializedData.toOrderedString()).to.equal('name=bob&age=55&gender=1');
+			expect(w._serializedData).to.equal('name=bob&age=55&gender=1');
 		});
 	});
 });

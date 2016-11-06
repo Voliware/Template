@@ -66,11 +66,12 @@ var Feedback = function (_Template) {
 	_createClass(Feedback, [{
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
-			this.$wrapper = $('<div class="feedback"></div>');
-			this.$icon = $('<span class="feedback-icon"></span>');
-			this.$text = $('<span class="feedback-text"></span>');
-			this.$close = $('<button name="close" type="button">X</div>');
-			this.$wrapper.append(this.$icon, this.$text, this.$close);
+			var template = '<div class="feedback">' + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>' + '<button name="close" type="button">X</div>' + '</div>';
+
+			this.settings.template = $(template);
+			this.settings.useTemplate = true;
+			this._useTemplate();
+
 			this.$wrapper.hide();
 			return this;
 		}

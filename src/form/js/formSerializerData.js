@@ -12,10 +12,11 @@ class FormSerializerData {
 
 	/**
 	 * Constructor
+	 * @param {object} [data={}]
 	 * @returns {FormSerializerData}
 	 */
-	constructor(){
-		this.data = {};
+	constructor(data){
+		this.data = data || {};
 		return this;
 	}
 
@@ -89,7 +90,10 @@ class FormSerializerData {
 	toObject(){
 		var data = {};
 		Util.each(this.data, function(i, e){
-			data[i] = e.val;
+			// convert string numbers to real numbers
+			data[i] = isNaN(e.val)
+				? e.val
+				: parseInt(e.val);
 		});
 		return data;
 	}

@@ -28,6 +28,9 @@ var Form = function (_Template) {
   * @param {object} [options]
   * @param {boolean} [options.feedback=true] - whether to show feedback during submissions
   * @param {string} [options.submitUrl] - the submitUrl or path to submit the form to
+  * @param {function} [options.submitRequest=null] - if set, ignores submitUrl and uses this function to submit data
+  * @param {number} [options.serializeMode=0] - the mode in which to serialize data
+  * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
   * @param {object} [options.validator] - validator setttings
   * @param {string} [options.validator.api] - the validator api to use
   * @param {object} [options.validator.options] - the validator options
@@ -47,7 +50,11 @@ var Form = function (_Template) {
 
 		var defaults = {
 			feedback: true,
+			useTemplate: true,
 			submitUrl: "",
+			submitRequest: null,
+			serializeMode: FormSerializer.serializeMode.toString,
+			checkboxMode: FormSerializer.checkboxMode.number,
 			// jquery elements for each table components
 			struct: {
 				$wrapper: 'form',
@@ -74,7 +81,10 @@ var Form = function (_Template) {
 		_this.$form = _this.$wrapper;
 
 		// components
-		_this.formSerializer = new FormSerializer();
+		_this.formSerializer = new FormSerializer({
+			serializeMode: _this.settings.serializeMode,
+			checkboxMode: _this.settings.checkboxMode
+		});
 		_this.validator = null;
 		_this.feedback = null;
 
@@ -85,7 +95,7 @@ var Form = function (_Template) {
 		});
 
 		// set up validator
-		if (_this.settings.validator) _this._validatorFactory();
+		if (_this.settings.validator) _this._setupValidator();
 
 		// set up feedback
 		if (_this.settings.feedback) _this._setupFeedback();
@@ -119,8 +129,8 @@ var Form = function (_Template) {
    */
 
 	}, {
-		key: '_validatorFactory',
-		value: function _validatorFactory() {
+		key: '_setupValidator',
+		value: function _setupValidator() {
 			var v = this.settings.validator;
 
 			switch (v.api) {
@@ -155,17 +165,15 @@ var Form = function (_Template) {
 		key: '_submit',
 		value: function _submit() {
 			var self = this;
-			var f = this.feedback;
-
-			this.serializer();
 
 			this.trigger('beforeSubmit');
-			if (f) f.setFeedback('processing', 'Processing...');
+
+			if (this.feedback) this.feedback.setFeedback('processing', 'Processing...');
 
 			return this._doSubmit().done(function () {
-				self._onSuccess();
+				self._onDone();
 			}).fail(function () {
-				self._onSuccess();
+				self._onFail();
 			}).always(function () {
 				self._onAlways();
 			});
@@ -180,7 +188,9 @@ var Form = function (_Template) {
 	}, {
 		key: '_doSubmit',
 		value: function _doSubmit() {
-			return $.post(this.submitUrl, this._serializedData);
+			var s = this.settings;
+
+			if (s.submitRequest) return s.submitRequest(this._serializedData);else return $.post(s.submitUrl, this._serializedData);
 		}
 
 		/**
@@ -190,11 +200,10 @@ var Form = function (_Template) {
    */
 
 	}, {
-		key: '_onSuccess',
-		value: function _onSuccess() {
-			var f = this.feedback;
-			this.trigger('submitSuccess');
-			if (f) f.setFeedback('success', ' Operation was successful');
+		key: '_onDone',
+		value: function _onDone() {
+			this.trigger('done');
+			if (this.feedback) this.feedback.setFeedback('success', ' Operation was successful');
 			return this;
 		}
 
@@ -207,9 +216,8 @@ var Form = function (_Template) {
 	}, {
 		key: '_onFail',
 		value: function _onFail() {
-			var f = this.feedback;
-			this.trigger('submitFail');
-			if (f) f.setFeedback('danger', 'Operation has failed');
+			this.trigger('fail');
+			if (this.feedback) this.feedback.setFeedback('danger', 'Operation has failed');
 			return this;
 		}
 
@@ -222,7 +230,7 @@ var Form = function (_Template) {
 	}, {
 		key: '_onAlways',
 		value: function _onAlways() {
-			this.trigger('submitComplete');
+			this.trigger('always');
 			return this;
 		}
 
@@ -304,7 +312,8 @@ var FormSerializer = function () {
 	/**
   * Construtor
   * @param {object} [options]
-  * @param {number} [options.checkboxMode=FormSerializer.checkboxMode.number] - the
+  * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
+  * @param {number} [options.mode=0] - the mode in which to serialize data
   * mode in which to serialize checkboxes
   * @returns {FormSerializer}
   */
@@ -312,8 +321,8 @@ var FormSerializer = function () {
 		_classCallCheck(this, FormSerializer);
 
 		var defaults = {
-			// mode in which to serialize checkboxes
-			checkboxMode: FormSerializer.checkboxMode.number
+			checkboxMode: FormSerializer.checkboxMode.number,
+			serializeMode: FormSerializer.serializeMode.toString
 		};
 		this.settings = $Util.opts(defaults, options);
 
@@ -370,7 +379,7 @@ var FormSerializer = function () {
 		/**
    * Serialize a form
    * @param {jQuery} $form
-   * @returns {FormSerializerData}
+   * @returns {object|string}
    */
 
 	}, {
@@ -434,7 +443,20 @@ var FormSerializer = function () {
 				};
 			});
 
-			return formData.set(data);
+			formData.set(data);
+
+			switch (this.settings.serializeMode) {
+				default:
+				case FormSerializer.serializeMode.toString:
+					return formData.toString();
+					break;
+				case FormSerializer.serializeMode.toOrderedString:
+					return formData.toOrderedString();
+					break;
+				case FormSerializer.serializeMode.toObject:
+					return formData.toObject();
+					break;
+			}
 		}
 	}]);
 
@@ -452,6 +474,15 @@ FormSerializer.checkboxMode = {
 	string: 2,
 	onOff: 3
 };
+
+/**
+ * Mode in which to serialize data
+ */
+FormSerializer.serializeMode = {
+	toString: 0,
+	toOrderedString: 1,
+	toObject: 2
+};
 /*!
  * formSerializerData
  * https://github.com/Voliware/Template
@@ -467,12 +498,13 @@ var FormSerializerData = function () {
 
 	/**
   * Constructor
+  * @param {object} [data={}]
   * @returns {FormSerializerData}
   */
-	function FormSerializerData() {
+	function FormSerializerData(data) {
 		_classCallCheck(this, FormSerializerData);
 
-		this.data = {};
+		this.data = data || {};
 		return this;
 	}
 
@@ -553,7 +585,8 @@ var FormSerializerData = function () {
 		value: function toObject() {
 			var data = {};
 			Util.each(this.data, function (i, e) {
-				data[i] = e.val;
+				// convert string numbers to real numbers
+				data[i] = isNaN(e.val) ? e.val : parseInt(e.val);
 			});
 			return data;
 		}

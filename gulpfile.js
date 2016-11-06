@@ -113,7 +113,12 @@ function buildTable(){
 		src.table.js + 'renderTable.js',
 		src.table.js + 'controlTable.js'
 	];
-	return buildJs(js, dist.table.js, 'table');
+	buildJs(js, dist.table.js, 'table');
+
+	var css = [
+		src.table.css + 'table.css'
+	];
+	return buildCss(css, dist.table.css, 'table');
 }
 
 /**

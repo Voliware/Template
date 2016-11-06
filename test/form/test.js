@@ -99,7 +99,7 @@ describe("Form", function() {
 			$testForm.find('[name="name"]').val('bob');
 			$testForm.find('[name="age"]').val('55');
 			f.serializer();
-			expect(f._serializedData.toOrderedString()).to.equal('name=bob&age=55');
+			expect(f._serializedData).to.equal('name=bob&age=55');
 		});
 	});
 

@@ -15,6 +15,9 @@ class Form extends Template {
 	 * @param {object} [options]
 	 * @param {boolean} [options.feedback=true] - whether to show feedback during submissions
 	 * @param {string} [options.submitUrl] - the submitUrl or path to submit the form to
+	 * @param {function} [options.submitRequest=null] - if set, ignores submitUrl and uses this function to submit data
+	 * @param {number} [options.serializeMode=0] - the mode in which to serialize data
+	 * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
 	 * @param {object} [options.validator] - validator setttings
 	 * @param {string} [options.validator.api] - the validator api to use
 	 * @param {object} [options.validator.options] - the validator options
@@ -30,7 +33,11 @@ class Form extends Template {
 	constructor(options){
 		var defaults = {
 			feedback: true,
+			useTemplate : true,
 			submitUrl: "",
+			submitRequest : null,
+			serializeMode : FormSerializer.serializeMode.toString,
+			checkboxMode : FormSerializer.checkboxMode.number,
 			// jquery elements for each table components
 			struct: {
 				$wrapper: 'form',
@@ -55,7 +62,10 @@ class Form extends Template {
 		this.$form = this.$wrapper;
 
 		// components
-		this.formSerializer = new FormSerializer();
+		this.formSerializer = new FormSerializer({
+			serializeMode : this.settings.serializeMode,
+			checkboxMode : this.settings.checkboxMode
+		});
 		this.validator = null;
 		this.feedback = null;
 
@@ -68,7 +78,7 @@ class Form extends Template {
 
 		// set up validator
 		if(this.settings.validator)
-			this._validatorFactory();
+			this._setupValidator();
 
 		// set up feedback
 		if(this.settings.feedback)
@@ -105,7 +115,7 @@ class Form extends Template {
 	 * @returns {Form}
 	 * @private
 	 */
-	_validatorFactory(){
+	_setupValidator(){
 		var v = this.settings.validator;
 
 		switch(v.api){
@@ -134,19 +144,18 @@ class Form extends Template {
 	 */
 	_submit(){
 		var self = this;
-		var f = this.feedback;
-
-		this.serializer();
 
 		this.trigger('beforeSubmit');
-		if(f) f.setFeedback('processing', 'Processing...');
+		
+		if(this.feedback)
+			this.feedback.setFeedback('processing', 'Processing...');
 
 		return this._doSubmit()
 			.done(function(){
-				self._onSuccess();
+				self._onDone();
 			})
 			.fail(function(){
-				self._onSuccess();
+				self._onFail();
 			})
 			.always(function(){
 				self._onAlways();
@@ -159,7 +168,12 @@ class Form extends Template {
 	 * @private
 	 */
 	_doSubmit(){
-		return $.post(this.submitUrl, this._serializedData)
+		var s = this.settings;
+
+		if(s.submitRequest)
+			return s.submitRequest(this._serializedData);
+		else
+			return $.post(s.submitUrl, this._serializedData);
 	}
 
 	/**
@@ -167,10 +181,10 @@ class Form extends Template {
 	 * @returns {Form}
 	 * @private
 	 */
-	_onSuccess(){
-		var f = this.feedback;
-		this.trigger('submitSuccess');
-		if(f) f.setFeedback('success', ' Operation was successful');
+	_onDone(){
+		this.trigger('done');
+		if(this.feedback)
+			this.feedback.setFeedback('success', ' Operation was successful');
 		return this;
 	}
 
@@ -180,9 +194,9 @@ class Form extends Template {
 	 * @private
 	 */
 	_onFail(){
-		var f = this.feedback;
-		this.trigger('submitFail');
-		if(f) f.setFeedback('danger', 'Operation has failed');
+		this.trigger('fail');
+		if(this.feedback)
+			this.feedback.setFeedback('danger', 'Operation has failed');
 		return this;
 	}
 
@@ -192,7 +206,7 @@ class Form extends Template {
 	 * @private
 	 */
 	_onAlways(){
-		this.trigger('submitComplete');
+		this.trigger('always');
 		return this;
 	}
 
