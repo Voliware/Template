@@ -218,7 +218,7 @@ class Form extends Template {
 	 * @returns {Form}
 	 */
 	populate(data){
-		this.$body.populateChildren(data);
+		this.$wrapper.populateChildren(data);
 		return this;
 	}
 
