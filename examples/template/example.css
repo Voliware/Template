@@ -1,0 +1,32 @@
+/*!
+ * template
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+html, body {
+    height:100%;
+    min-height:100%;
+}
+.template-box{
+    height:100%;
+    width:200px;
+    background-color: rgba(130, 191, 132, 0.37);
+}
+.template-box > div {
+    border-bottom:2px solid grey;
+    padding:10px;
+    cursor:pointer;
+}
+
+/* io */
+.io-conn{
+    width:10px;
+    height:10px;
+    background-color:green;
+}
+.output .io-conn {
+    background-color:red;
+}
+.io-nameInput{
+    display:none;
+}

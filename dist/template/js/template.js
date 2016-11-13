@@ -87,6 +87,15 @@ if (typeof getType === 'undefined') {
 		return Object.prototype.toString.call(x);
 	};
 }
+if (typeof createGuid === 'undefined') {
+	window.createGuid = function createGuid() {
+		function s4() {
+			return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+		}
+		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+	};
+}
+
 // array
 if (typeof Array.diff === 'undefined') {
 	Array.diff = function (a, b) {
@@ -144,63 +153,6 @@ if (typeof isJquery === 'undefined') {
 	};
 }
 
-/**
- * jQuery utility functions
- */
-
-var $Util = function () {
-	function $Util() {
-		_classCallCheck(this, $Util);
-	}
-
-	_createClass($Util, null, [{
-		key: 'jQuerify',
-
-
-		/**
-   * Attaches all jQuery functions to a
-   * $wrapper property of an object, but
-   * always returns the base object
-   * @param {*} obj - some object that has a $wrapper property
-   * @param {jQuery} obj.$wrapper
-   */
-		value: function jQuerify(obj) {
-			if (!obj.$wrapper) throw new ReferenceError('$Util.jQuerify: $wrapper must be a property of the first argument');
-			Util.each($Util.jqueryPrototype, function (i, e) {
-				obj[e] = function () {
-					var _obj$$wrapper;
-
-					(_obj$$wrapper = obj.$wrapper)[e].apply(_obj$$wrapper, arguments);
-					return obj;
-				};
-			});
-		}
-
-		/**
-   * Convenient wrapper for merging defaults
-   * and options object with jquery deep $.extend
-   * @param {object} defaults - the default settings
-   * @param {object} options - set options
-      */
-
-	}, {
-		key: 'opts',
-		value: function opts(defaults, options) {
-			return $.extend(true, defaults, options);
-		}
-	}]);
-
-	return $Util;
-}();
-
-$Util.jqueryPrototype = Object.getOwnPropertyNames($.prototype);
-
-// extensions for $.fn.populate
-// specificy tag name as object name
-// and a prop called populate that is a
-// function that takes some data argument
-$Util.populate = {};
-
 (function ($) {
 
 	/**
@@ -219,11 +171,16 @@ $Util.populate = {};
   */
 	$.fn.populate = function (data) {
 		var $this = $(this);
+
+		if ($this.data('populate') === false) return this;
+
 		var tag = $this.prop("tagName").toLowerCase();
 		var type = $this.attr('type');
 
 		var extension = getExtension(tag);
 		if (extension) extension.call(this, data);else defaultPopulate(tag, type, data);
+
+		if ($this.data('update') === false) this.attr('data-populate', false);
 
 		return this;
 
@@ -375,6 +332,63 @@ $Util.populate = {};
 		return this;
 	};
 })(jQuery);
+
+/**
+ * jQuery utility functions
+ */
+
+var $Util = function () {
+	function $Util() {
+		_classCallCheck(this, $Util);
+	}
+
+	_createClass($Util, null, [{
+		key: 'jQuerify',
+
+
+		/**
+   * Attaches all jQuery functions to a
+   * $wrapper property of an object, but
+   * always returns the base object
+   * @param {*} obj - some object that has a $wrapper property
+   * @param {jQuery} obj.$wrapper
+   */
+		value: function jQuerify(obj) {
+			if (!obj.$wrapper) throw new ReferenceError('$Util.jQuerify: $wrapper must be a property of the first argument');
+			Util.each($Util.jqueryPrototype, function (i, e) {
+				obj[e] = function () {
+					var _obj$$wrapper;
+
+					(_obj$$wrapper = obj.$wrapper)[e].apply(_obj$$wrapper, arguments);
+					return obj;
+				};
+			});
+		}
+
+		/**
+   * Convenient wrapper for merging defaults
+   * and options object with jquery deep $.extend
+   * @param {object} defaults - the default settings
+   * @param {object} options - set options
+      */
+
+	}, {
+		key: 'opts',
+		value: function opts(defaults, options) {
+			return $.extend(true, defaults, options);
+		}
+	}]);
+
+	return $Util;
+}();
+
+$Util.jqueryPrototype = Object.getOwnPropertyNames($.prototype);
+
+// extensions for $.fn.populate
+// specificy tag name as object name
+// and a prop called populate that is a
+// function that takes some data argument
+$Util.populate = {};
 /*!
  * eventSystem
  * https://github.com/Voliware/Util
@@ -409,8 +423,8 @@ var EventSystem = function () {
 
 
 	_createClass(EventSystem, [{
-		key: '_create',
-		value: function _create(name) {
+		key: '_createEvent',
+		value: function _createEvent(name) {
 			return this.events[name] = { callbacks: [] };
 		}
 
@@ -440,7 +454,7 @@ var EventSystem = function () {
 		value: function on(name, callback) {
 			var event = this.events[name];
 
-			if (!isDefined(event)) event = this._create(name);
+			if (!isDefined(event)) event = this._createEvent(name);
 
 			event.callbacks.push(callback);
 			return this;
@@ -1102,7 +1116,7 @@ var Template = function () {
 	}, {
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
-			// implement in child
+
 			return this;
 		}
 
@@ -1145,26 +1159,25 @@ var TemplateManager = function (_Manager) {
 	/**
   * Constructor
   * @param {object} [options]
-  * @param {jQuery|string} [options.template=null] - the template object to create
+  * @param {jQuery|string|Template} [options.template=null] - the template object to create
   * when the manager creates new objects
   * @param {object} [options.$wrapper=$('<div class="manager"></div>')] - the
   * TemplateManager's $wrapper property, where all managed Templates are appended
   * @returns {TemplateManager}
   */
-	function TemplateManager(options) {
+	function TemplateManager() {
 		var _ret2;
+
+		var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 		_classCallCheck(this, TemplateManager);
 
-		if (!isDefined(options.template)) throw new ReferenceError("TemplateManager.constructor: options must have a template property");
-
 		var _this2 = _possibleConstructorReturn(this, (TemplateManager.__proto__ || Object.getPrototypeOf(TemplateManager)).call(this, options));
 
-		_this2.template = options.template;
 		_this2.$wrapper = options.$wrapper ? options.$wrapper : $('<div class="manager"></div>');
 		$Util.jQuerify(_this2);
 
-		_this2.$template = isString(options.template) ? $(options.template) : options.template;
+		_this2.template = isString(options.template) ? $(options.template) : options.template;
 
 		// alias
 		_this2.templates = _this2.objects;
@@ -1195,17 +1208,17 @@ var TemplateManager = function (_Manager) {
 
 		/**
    * Update a template by simply re-populating it
-   * @param {object} template - template data
+   * @param {object} data - template data
    * @returns {TemplateManager}
    * @private
    */
 
 	}, {
 		key: '_update',
-		value: function _update(template) {
-			var id = this.getId(template);
+		value: function _update(data) {
+			var id = this.getId(data);
 			var $template = this.templates[id];
-			this.populateTemplate($template, template);
+			$template.populateChildren(data);
 			this.trigger('update', $template);
 			return this;
 		}
@@ -1233,27 +1246,27 @@ var TemplateManager = function (_Manager) {
 
 		/**
    * Create a template object that this manager manages
-   * @param {object} data - data to populate the template with
-   * Contains keys whos names are identical with [data-name]
-   * or [name] attribute values within the template's elements,
-   * so $.fn.populate may appropriately populate html or inputs
+   * @param {string} id - id of the object to create and then manage
+   * @param {object} [data={}] - data to populate a jquery template with or construct a Template with
    * @returns {*|null|Template}
    * @private
    */
 
 	}, {
 		key: '_create',
-		value: function _create(data) {
-			var id = this.getId(data);
-			if (!id) throw new Error("TemplateManager._create: templates must have a '" + this.settings.identifier + "' property");
+		value: function _create(id) {
+			var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-			// clone the template and populate it with data
-			var $template = this.$template.clone();
-			// add a flag for first updates
-			$template.isFirstUpdate = true;
-			this.populateTemplate($template, data);
+			if (!this.template) throw new ReferenceError("TemplateManager.create: no template option was passed to constructor");
 
-			return this._add($template, id);
+			// create a new template if it is a Template class
+			// or clone it if it is a jquery object
+			var template;
+			if (this.template.prototype instanceof Template) template = new this.template(data);else if (isJquery(this.template)) template = this.template.clone();
+
+			template.populateChildren(data);
+
+			return this._add(template, id);
 		}
 
 		/**
@@ -1292,7 +1305,7 @@ var TemplateManager = function (_Manager) {
 				// objectIds will always be strings
 				var objId = e[id].toString();
 				var obj = self.objects[objId];
-				if (isDefined(obj)) self._update(e);else self._create(e);
+				if (isDefined(obj)) self._update(e);else self._create(objId, e);
 				dataIds.push(objId);
 			}
 
@@ -1307,32 +1320,6 @@ var TemplateManager = function (_Manager) {
 				this._delete(diff[i]);
 			}
 
-			return this;
-		}
-
-		/**
-   * Populate a Template with data.
-   * If any child elements have [data-update] set to
-   * false, set a new attr [data-populate] to false. This way, the
-   * element is only updated the first time.
-   * This prevents controls, like selects from "popping"
-   * @param {jQuery} $template - Template to populate
-   * @param {object} data - template data.
-   * @returns {TemplateManager}
-   */
-
-	}, {
-		key: 'populateTemplate',
-		value: function populateTemplate($template, data) {
-			$template.populateChildren(data);
-
-			// set elements that don't want to be updated
-			// to have data-populate="false"
-			// the isFirstUpdate flag was added in _create
-			if ($template.isFirstUpdate) {
-				$template.find('[data-update="false"]').attr('data-populate', false);
-				$template.isFirstUpdate = false;
-			}
 			return this;
 		}
 
@@ -1370,6 +1357,17 @@ var TemplateManager = function (_Manager) {
 			function show() {
 				t.slideDown();
 			}
+		}
+
+		/**
+   * Public method to create a template
+   * @returns {*}
+   */
+
+	}, {
+		key: 'createTemplate',
+		value: function createTemplate() {
+			return this._create.apply(this, arguments);
 		}
 	}]);
 

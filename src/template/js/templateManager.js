@@ -16,23 +16,19 @@ class TemplateManager extends Manager {
 	/**
 	 * Constructor
 	 * @param {object} [options]
-	 * @param {jQuery|string} [options.template=null] - the template object to create
+	 * @param {jQuery|string|Template} [options.template=null] - the template object to create
 	 * when the manager creates new objects
 	 * @param {object} [options.$wrapper=$('<div class="manager"></div>')] - the
 	 * TemplateManager's $wrapper property, where all managed Templates are appended
 	 * @returns {TemplateManager}
 	 */
-	constructor(options){
-		if(!isDefined(options.template))
-			throw new ReferenceError("TemplateManager.constructor: options must have a template property");
-
+	constructor(options = {}){
 		super(options);
 
-		this.template = options.template;
 		this.$wrapper = options.$wrapper ? options.$wrapper : $('<div class="manager"></div>');
 		$Util.jQuerify(this);
 
-		this.$template = isString(options.template)
+		this.template = isString(options.template)
 			? $(options.template)
 			: options.template;
 
@@ -61,14 +57,14 @@ class TemplateManager extends Manager {
 
 	/**
 	 * Update a template by simply re-populating it
-	 * @param {object} template - template data
+	 * @param {object} data - template data
 	 * @returns {TemplateManager}
 	 * @private
 	 */
-	_update(template) {
-		var id = this.getId(template);
+	_update(data) {
+		var id = this.getId(data);
 		var $template = this.templates[id];
-		this.populateTemplate($template, template);
+		$template.populateChildren(data);
 		this.trigger('update', $template);
 		return this;
 	}
@@ -94,25 +90,26 @@ class TemplateManager extends Manager {
 
 	/**
 	 * Create a template object that this manager manages
-	 * @param {object} data - data to populate the template with
-	 * Contains keys whos names are identical with [data-name]
-	 * or [name] attribute values within the template's elements,
-	 * so $.fn.populate may appropriately populate html or inputs
+	 * @param {string} id - id of the object to create and then manage
+	 * @param {object} [data={}] - data to populate a jquery template with or construct a Template with
 	 * @returns {*|null|Template}
 	 * @private
 	 */
-	_create(data){
-		var id = this.getId(data);
-		if(!id)
-			throw new Error("TemplateManager._create: templates must have a '" + this.settings.identifier + "' property");
+	_create(id, data = {}){
+		if(!this.template)
+			throw new ReferenceError("TemplateManager.create: no template option was passed to constructor");
 
-		// clone the template and populate it with data
-		var $template = this.$template.clone();
-		// add a flag for first updates
-		$template.isFirstUpdate = true;
-		this.populateTemplate($template, data);
+		// create a new template if it is a Template class
+		// or clone it if it is a jquery object
+		var template;
+		if(this.template.prototype instanceof Template)
+			template = new this.template(data);
+		else if(isJquery(this.template))
+			template = this.template.clone();
 
-		return this._add($template, id);
+		template.populateChildren(data);
+
+		return this._add(template, id);
 	}
 
 	/**
@@ -154,7 +151,7 @@ class TemplateManager extends Manager {
 			if (isDefined(obj))
 				self._update(e);
 			else
-				self._create(e);
+				self._create(objId, e);
 			dataIds.push(objId);
 		}
 
@@ -169,29 +166,6 @@ class TemplateManager extends Manager {
 			this._delete(diff[i]);
 		}
 
-		return this;
-	}
-
-	/**
-	 * Populate a Template with data.
-	 * If any child elements have [data-update] set to
-	 * false, set a new attr [data-populate] to false. This way, the
-	 * element is only updated the first time.
-	 * This prevents controls, like selects from "popping"
-	 * @param {jQuery} $template - Template to populate
-	 * @param {object} data - template data.
-	 * @returns {TemplateManager}
-	 */
-	populateTemplate($template, data){
-		$template.populateChildren(data);
-
-		// set elements that don't want to be updated
-		// to have data-populate="false"
-		// the isFirstUpdate flag was added in _create
-		if($template.isFirstUpdate){
-			$template.find('[data-update="false"]').attr('data-populate', false);
-			$template.isFirstUpdate = false;
-		}
 		return this;
 	}
 
@@ -229,5 +203,13 @@ class TemplateManager extends Manager {
 		function show(){
 			t.slideDown();
 		}
+	}
+
+	/**
+	 * Public method to create a template
+	 * @returns {*}
+	 */
+	createTemplate(){
+		return this._create(...arguments);
 	}
 }

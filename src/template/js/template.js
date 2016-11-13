@@ -110,7 +110,7 @@ class Template {
 	 * @private
 	 */
 	_useDefaultTemplate() {
-		// implement in child
+		
 		return this;
 	}
 
