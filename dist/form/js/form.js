@@ -115,9 +115,7 @@ var Form = function (_Template) {
 		value: function _useDefaultTemplate() {
 			var template = '<form class="form">' + '<div class="form-header"></div>' + '<div class="form-body"></div>' + '<div class="form-footer">' + '<button type="submit" class="form-submit">Submit</button>' + '<button type="button" class="form-cancel">Cancel</button>' + '</div>' + '</form>';
 
-			this.settings.template = $(template);
-			this.settings.useTemplate = true;
-			this._useTemplate();
+			this._useTemplate($(template));
 
 			return this;
 		}

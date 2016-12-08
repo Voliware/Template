@@ -85,9 +85,7 @@ class BootstrapPanel extends Template {
 				'<div class="panel-footer"></div>' +
 			'</div>';
 
-		this.settings.template = $(template);
-		this.settings.useTemplate = true;
-		this._useTemplate(template);
+		this._useTemplate($(template));
 
 		if(!this.settings.closeable)
 			this.$close.remove();

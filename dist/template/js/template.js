@@ -1073,6 +1073,8 @@ var Template = function () {
 		/**
    * Deconstructs the template into object
    * properties based on this.settings.struct
+   * @param {jQuery|string} [$template=null] - a string or jquery object to use as the template.
+   * If null, will use what is set in this.settings.template
    * @returns {Template}
    * @private
    */
@@ -1080,7 +1082,9 @@ var Template = function () {
 	}, {
 		key: '_useTemplate',
 		value: function _useTemplate() {
-			var $template = this.settings.template;
+			var $template = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+			$template = $template || this.settings.template;
 			// conver string to jquery
 			if (isString($template)) {
 				$template = $($template);
@@ -1368,6 +1372,73 @@ var TemplateManager = function (_Manager) {
 		key: 'createTemplate',
 		value: function createTemplate() {
 			return this._create.apply(this, arguments);
+		}
+
+		/**
+   * Add many templates to the collection
+   * @param {...object} arguments - one or more objects
+   * @returns {TemplateManager}
+   */
+
+	}, {
+		key: 'addTemplates',
+		value: function addTemplates() {
+			return _get2(TemplateManager.prototype.__proto__ || Object.getPrototypeOf(TemplateManager.prototype), 'addObjects', this).apply(this, arguments);
+		}
+
+		/**
+   * Public method to add a template
+   * @returns {*}
+   */
+
+	}, {
+		key: 'addTemplate',
+		value: function addTemplate() {
+			return this._add.apply(this, arguments);
+		}
+
+		/**
+   * Public method to get a template
+   * @returns {*}
+   */
+
+	}, {
+		key: 'getTemplate',
+		value: function getTemplate() {
+			return this._get.apply(this, arguments);
+		}
+
+		/**
+   * Public method to update a template
+   * @returns {*}
+   */
+
+	}, {
+		key: 'updateTemplate',
+		value: function updateTemplate() {
+			return this._update.apply(this, arguments);
+		}
+
+		/**
+   * Public method to delete a template
+   * @returns {*}
+   */
+
+	}, {
+		key: 'deleteTemplate',
+		value: function deleteTemplate() {
+			return this._delete.apply(this, arguments);
+		}
+
+		/**
+   * Public method to delete all templates
+   * @returns {*}
+   */
+
+	}, {
+		key: 'deleteTemplates',
+		value: function deleteTemplates() {
+			return this._empty();
 		}
 	}]);
 

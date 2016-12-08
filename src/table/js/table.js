@@ -48,11 +48,13 @@ class Table extends Template {
 	/**
 	 * Use the provided template and remove
 	 * the remplate row from the <tbody>
+	 * @param {jQuery|string} [$template=null] - a string or jquery object to use as the template.
+	 * If null, will use what is set in this.settings.template
 	 * @returns {Table}
 	 * @private
 	 */
-	_useTemplate(){
-		super._useTemplate();
+	_useTemplate($template = null){
+		super._useTemplate($template);
 		// remove template row from the DOM
 		this.$tr.remove();
 		return this;
@@ -73,9 +75,7 @@ class Table extends Template {
 				'<tfoot></tfoot>' +
 			'</table>';
 
-		this.settings.template = $(template);
-		this.settings.useTemplate = true;
-		this._useTemplate();
+		this._useTemplate($(template));
 
 		// todo: this is a patch for render 
 		this.settings.template = null;

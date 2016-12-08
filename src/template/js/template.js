@@ -69,11 +69,13 @@ class Template {
 	/**
 	 * Deconstructs the template into object
 	 * properties based on this.settings.struct
+	 * @param {jQuery|string} [$template=null] - a string or jquery object to use as the template.
+	 * If null, will use what is set in this.settings.template
 	 * @returns {Template}
 	 * @private
 	 */
-	_useTemplate(){
-		var $template = this.settings.template;
+	_useTemplate($template = null){
+		$template = $template || this.settings.template;
 		// conver string to jquery
 		if(isString($template)) {
 			$template = $($template);

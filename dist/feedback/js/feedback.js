@@ -68,9 +68,7 @@ var Feedback = function (_Template) {
 		value: function _useDefaultTemplate() {
 			var template = '<div class="feedback">' + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>' + '<button name="close" type="button">X</div>' + '</div>';
 
-			this.settings.template = $(template);
-			this.settings.useTemplate = true;
-			this._useTemplate();
+			this._useTemplate($(template));
 
 			this.$wrapper.hide();
 			return this;

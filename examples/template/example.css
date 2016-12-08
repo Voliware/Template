@@ -1,5 +1,5 @@
 /*!
- * template
+ * template example
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  */
@@ -7,26 +7,76 @@ html, body {
     height:100%;
     min-height:100%;
 }
-.template-box{
+.component-box{
     height:100%;
-    width:200px;
+    width:300px;
     background-color: rgba(130, 191, 132, 0.37);
 }
-.template-box > div {
-    border-bottom:2px solid grey;
-    padding:10px;
-    cursor:pointer;
+
+/* inlineInput */
+.inlineInput-input{
+    display:none;
+}
+
+/* line */
+.line {
+    height:2px;
+    position:absolute;
+    width:2px;
 }
 
 /* io */
-.io-conn{
-    width:10px;
+.io{
+    position:relative;
+}
+.io-io{
+    cursor:pointer;
     height:10px;
+    position:absolute;
+    top: 10px;
+    width: 15px;
+}
+.io-io-input{
+    background-color:green;
+    left: -15px;
+}
+.io-io-output {
+    background-color:red;
+    right: -15px;
+}
+.io-btn-ok{
     background-color:green;
 }
-.output .io-conn {
+.io-btn-cancel{
     background-color:red;
 }
-.io-nameInput{
-    display:none;
+
+/* component */
+.comp{
+    background-color: rgba(188, 206, 230, 0.38);
+    border: rgb(68, 89, 118) 3px solid;
+    border-radius:3px;
+}
+.comp.enabled{
+    border-color:green;
+}
+.comp.disabled{
+    border-color:grey;
+}
+.comp-header{
+    padding:1px;
+}
+h4.comp-title{
+    display:inline-block;
+    font-size:1.2em;
+    font-weight:bold;
+    margin:0;
+    padding: 5px;
+    text-align: left;
+}
+.comp-actions{
+    display:inline-block;
+}
+.comp-body{
+    padding:5px;
 }

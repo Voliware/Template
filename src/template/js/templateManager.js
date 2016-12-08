@@ -212,4 +212,53 @@ class TemplateManager extends Manager {
 	createTemplate(){
 		return this._create(...arguments);
 	}
+
+	/**
+	 * Add many templates to the collection
+	 * @param {...object} arguments - one or more objects
+	 * @returns {TemplateManager}
+	 */
+	addTemplates(){
+		return super.addObjects(...arguments);
+	}
+
+	/**
+	 * Public method to add a template
+	 * @returns {*}
+	 */
+	addTemplate() {
+		return this._add(...arguments);
+	}
+
+	/**
+	 * Public method to get a template
+	 * @returns {*}
+	 */
+	getTemplate(){
+		return this._get(...arguments);
+	}
+
+	/**
+	 * Public method to update a template
+	 * @returns {*}
+	 */
+	updateTemplate() {
+		return this._update(...arguments);
+	}
+
+	/**
+	 * Public method to delete a template
+	 * @returns {*}
+	 */
+	deleteTemplate() {
+		return this._delete(...arguments);
+	}
+
+	/**
+	 * Public method to delete all templates
+	 * @returns {*}
+	 */
+	deleteTemplates() {
+		return this._empty();
+	}
 }

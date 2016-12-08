@@ -102,10 +102,8 @@ class Form extends Template {
 					'<button type="button" class="form-cancel">Cancel</button>' +
 				'</div>' +
 			'</form>';
-
-		this.settings.template = $(template);
-		this.settings.useTemplate = true;
-		this._useTemplate();
+		
+		this._useTemplate($(template));
 
 		return this;
 	}

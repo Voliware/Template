@@ -379,9 +379,7 @@ var BootstrapProgress = function (_Template2) {
 		value: function _useDefaultTemplate() {
 			var template = '<div class="progress-wrapper">' + '<div class="progress">' + '<div class="progress-bar"></div>' + '<div class="progress-percent"></div>' + '</div>' + '</div>';
 
-			this.settings.template = $(template);
-			this.settings.useTemplate = true;
-			this._useTemplate(template);
+			this._useTemplate($(template));
 
 			if (!this.settings.showPercent) this.$percent.remove();
 
@@ -652,7 +650,7 @@ var BootstrapLoader = function (_BootstrapProgress) {
 
 /**
  * Template for a bootstrap modal
- * @extends Progress
+ * @extends Template
  */
 
 
@@ -708,9 +706,7 @@ var BootstrapModal = function (_Template3) {
 		value: function _useDefaultTemplate() {
 			var template = '<div class="modal fade">' + '<div class="modal-dialog" role="document">' + '<div class="modal-content">' + '<div class="modal-header">' + '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' + '<span aria-hidden="true">&times;</span>' + '</button>' + '<h4 class="modal-title"></h4>' + '</div>' + '<div class="modal-body"></div>' + '<div class="modal-footer"></div>' + '</div>' + '</div>' + '</div>';
 
-			this.settings.template = $(template);
-			this.settings.useTemplate = true;
-			this._useTemplate();
+			this._useTemplate($(template));
 
 			$('body').append(this.$wrapper);
 
@@ -779,9 +775,7 @@ var BootstrapNav = function (_Template4) {
 		value: function _useDefaultTemplate() {
 			var template = '<li>' + '<a data-toggle="tab" href="#"></a>' + '</li>';
 
-			this.settings.template = $(template);
-			this.settings.useTemplate = true;
-			this._useTemplate(template);
+			this._useTemplate($(template));
 
 			return this;
 		}
@@ -1184,9 +1178,7 @@ var BootstrapPanel = function (_Template6) {
 		value: function _useDefaultTemplate() {
 			var template = '<div class="panel panel-default">' + '<div class="panel-heading clearfix">' + '<h4 class="panel-title"></h4>' + '<a href="#" class="close panel-close" aria-label="close">&times;</a>' + '<a href="#" class="panel-collapse glyphicon glyphicon-chevron-up" aria-label="collapse"></a>' + '</div>' + '<div class="panel-content collapse in">' + '<div class="panel-body"></div>' + '</div>' + '<div class="panel-footer"></div>' + '</div>';
 
-			this.settings.template = $(template);
-			this.settings.useTemplate = true;
-			this._useTemplate(template);
+			this._useTemplate($(template));
 
 			if (!this.settings.closeable) this.$close.remove();
 			if (!this.settings.collapsible) this.$collapse.remove();

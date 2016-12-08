@@ -48,9 +48,7 @@ class BootstrapNav extends Template {
 				'<a data-toggle="tab" href="#"></a>' +
 			'</li>';
 
-		this.settings.template = $(template);
-		this.settings.useTemplate = true;
-		this._useTemplate(template);
+		this._useTemplate($(template));
 
 		return this;
 	}

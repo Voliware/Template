@@ -66,6 +66,8 @@ var Table = function (_Template) {
 	/**
   * Use the provided template and remove
   * the remplate row from the <tbody>
+  * @param {jQuery|string} [$template=null] - a string or jquery object to use as the template.
+  * If null, will use what is set in this.settings.template
   * @returns {Table}
   * @private
   */
@@ -74,7 +76,9 @@ var Table = function (_Template) {
 	_createClass(Table, [{
 		key: '_useTemplate',
 		value: function _useTemplate() {
-			_get(Table.prototype.__proto__ || Object.getPrototypeOf(Table.prototype), '_useTemplate', this).call(this);
+			var $template = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+			_get(Table.prototype.__proto__ || Object.getPrototypeOf(Table.prototype), '_useTemplate', this).call(this, $template);
 			// remove template row from the DOM
 			this.$tr.remove();
 			return this;
@@ -91,9 +95,7 @@ var Table = function (_Template) {
 		value: function _useDefaultTemplate() {
 			var template = '<table class="table">' + '<thead></thead>' + '<tbody>' + '<tr></tr>' + '</tbody>' + '<tfoot></tfoot>' + '</table>';
 
-			this.settings.template = $(template);
-			this.settings.useTemplate = true;
-			this._useTemplate();
+			this._useTemplate($(template));
 
 			// todo: this is a patch for render 
 			this.settings.template = null;

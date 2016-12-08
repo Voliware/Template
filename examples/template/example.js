@@ -1,10 +1,184 @@
-class TemplateBox extends TemplateManager {
+class ComponentBox extends TemplateManager {
 	constructor(options){
 		var defaults = {
-			$wrapper : $('<div class="template-box"></div>')
+			$wrapper : $('<div class="component-box"></div>')
 		};
 		super($Util.opts(defaults, options));
 
+		this.lines = new LineManager();
+		this._add(new MouseCoords());
+
+		// listen to component creation
+		// to attach clicks for connections
+
+		// listen to components movements to redraw lines
+
+		return this;
+	}
+}
+
+class Line extends Template {
+	constructor(options) {
+		var defaults = {
+			struct: {
+				$wrapper: '.line'
+			}
+		};
+		super($Util.opts(defaults, options));
+
+		// properties
+		this.color = 'black';
+		this.dashColor = 'transparent';
+
+		// states
+		this.isDashed = false;
+
+		this.setColor(this.color);
+
+		return this;
+	}
+
+	_useDefaultTemplate(){
+		this.settings.template =
+			'<div class="line"></div>';
+		return this._useTemplate();
+	}
+
+	setColor(color){
+		this.color = color;
+		if(this.isDashed)
+			this.setDashed(true);
+		else
+			this.$wrapper.css('background', color);
+
+		return this;
+	}
+
+	setDashColor(color){
+		this.dashColor = color;
+		if(this.isDashed)
+			this.setDashed(true);
+		return this;
+	}
+
+	setDashed(state){
+		this.isDashed = state;
+		if(state)
+			this.$wrapper.css(
+				'background',
+				'repeating-linear-gradient(to right, ' + this.color + ', ' + this.color +  ' 2px,' + this.dashColor + ' 2px, ' + this.dashColor + ' 4px )'
+			);
+		else
+			this.setColor(this.color);
+		return this;
+	}
+
+	setWidth(width){
+		this.$wrapper.css('width', width + "px");
+		return this;
+	}
+
+	setHeight(height){
+		this.$wrapper.css('height', height + "px");
+		return this;
+	}
+}
+
+class LineManager extends TemplateManager{
+	constructor(options){
+		super(options);
+		var self = this;
+
+		// alias
+		this.lines = this.objects;
+
+		// properties
+		this.mouseX = 0;
+		this.mouseY = 0;
+
+		// handlers
+		$("html").on('mousemove.mousecoords', function(e) {
+			self.mouseX = e.pageX;
+			self.mouseY = e.pageY;
+		});
+
+		return this;
+	}
+
+	createLine(){
+
+	}
+}
+
+class InlineInput extends Template {
+	constructor(options){
+		var defaults = {
+			struct : {
+				$wrapper : '.inlineInput',
+				$value : '.inlineInput-value',
+				$inputContainer : '.inlineInput-input',
+				$input : 'input',
+				$ok : '.inlineInput-btn-ok',
+				$cancel : '.inlineInput-btn-cancel'
+			}
+		};
+		super($Util.opts(defaults, options));
+		var self = this;
+
+		// properties
+		this.value = "";
+
+		// states
+		this.inputIsHidden = true;
+
+		// handlers
+		this.$value.click(function(){
+			self._toggleInput()
+		});
+
+		this.$ok.click(function(){
+			self.$value.html(self.$input.val());
+			self._toggleInput()
+		});
+
+		this.$cancel.click(function(){
+			self._toggleInput()
+		});
+
+		this.$input.on('input', function(){
+			self.value = $(this).val();
+		});
+
+		return this;
+	}
+
+	_useDefaultTemplate() {
+		this.settings.template =
+			'<div class="inputBox">' +
+				'<span class="inlineInput-value"></span>' +
+				'<div class="inlineInput-input">' +
+					'<input type="text" name="value"/>' +
+					'<button type="button" class="inlineInput-btn-ok">OK</button>' +
+					'<button type="button" class="inlineInput-btn-cancel">X</button>' +
+				'</div>' +
+			'</div>';
+
+		return this._useTemplate();
+	}
+
+	_toggleInput(state){
+		this.inputIsHidden = isDefined(state)
+			? state
+			: !this.inputIsHidden;
+		this.$inputContainer.toggle(!this.inputIsHidden);
+		this.$value.toggle(this.inputIsHidden);
+		this.$input.val(this.value);
+		return this;
+	}
+
+	setValue(value){
+		this.value = value;
+		this.$value.html(value);
 		return this;
 	}
 }
@@ -14,14 +188,13 @@ class Draggable extends Template {
 		super(options);
 		var self = this;
 
-		// properties
-		this.x = 0;
-		this.y = 0;
-		this.guid = createGuid();
+		// states
 		this.hasBeenDragged = false;
 
+		// set the wrapper to be HTML5 draggable
 		this.$wrapper.attr('draggable', true);
 
+		// handlers
 		this.$wrapper.on('dragstart.draggable', function(e){
 			if(!self.hasBeenDragged){
 				$(this).css('position', 'fixed');
@@ -49,31 +222,41 @@ class Draggable extends Template {
 class Component extends Draggable {
 	constructor(options){
 		var defaults = {
+			struct : {
+				$wrapper : '.comp',
+				$header : '.comp-header',
+				$title : '.comp-title',
+				$body : '.comp-body',
+				$display : '.comp-display',
+				$actions : '.comp-actions'
+			}
+		};
+		super($Util.opts(defaults, options));
 
-		}
-		super(options);
-		var self = this;
+		this.ioManager = new TemplateManager()
+			.appendTo(this.$body);
 
-		// components
-		this.inputs = new TemplateManager({
-			template : Input
-		});
-		this.$container = $('<div class="component-container"></div>');
-		this.$addInput = $('<button type="button" class="btn btn-sm btn-primary">IN +</button>');
-		this.$addOuput = $('<button type="button" class="btn btn-sm btn-primary">OUT +</button>');
+		return this;
+	}
 
-		// handlers
-		this.$addInput.click(function(){
-			self.inputs.createTemplate(createGuid());
-		});
-		this.$addOuput.click(function(){
-			self.outputs.createTemplate(createGuid());
-		});
+	_useDefaultTemplate(){
+		this.settings.template =
+			'<div class="comp">' +
+				'<div class="comp-header">' +
+					'<h4 class="comp-title"></h4>' +
+					'<div class="comp-actions">' +
+					'</div>' +
+				'</div>' +
+				'<div class="comp-body">' +
+					'<div class="comp-display"></div>' +
+				'</div>' +
+			'</div>';
 
-		// add buttons to the component
-		this.$container.append(this.$addInput, this.$addOuput, this.inputs.$wrapper, this.outputs.$wrapper);
-		this.$wrapper.append(this.$container);
+		return this._useTemplate();
+	}
 
+	setTitle(title){
+		this.$title.html(title);
 		return this;
 	}
 }
@@ -83,70 +266,69 @@ class Io extends Template {
 		var defaults = {
 			struct : {
 				$wrapper : '.io',
-				$name : '.io-name',
-				$nameInputContainer : '.io-nameInput',
-				$nameInput : '[name="name"]',
-				$nameConfirm : '[name="submit"]',
-				$nameCancel : '[name="cancel"]',
-				$connector : '.io-conn'
+				$value : '.io-value',
+				$input : '.io-io-input',
+				$output : '.io-io-output'
 			}
 		};
 		super($Util.opts(defaults, options));
-		var self = this;
 
 		// properties
-		this.nameInputIsHidden = true;
+		this.value = 0;
 
-		// handlers
-		this.$name.click(function(){
-			self._toggleInput()
-		});
-
-		this.$nameConfirm.click(function(){
-			self.$name.html(self.$nameInput.val());
-			self._toggleInput()
-		});
-
-		this.$nameCancel.click(function(){
-			self._toggleInput()
-		});
+		// components
+		this.nameInput = new InlineInput()
+			.appendTo(this.$wrapper);
 
 		return this;
 	}
 
 	_useDefaultTemplate(){
-		var template =
+		this.settings.template =
 			'<div class="template io">' +
-				'<div class="io-name">IO</div>' +
-				'<div class="io-nameInput">' +
-					'<input type="text" name="name"/>' +
-					'<button type="button" class="btn btn-xs btn-success" name="submit">OK</button>' +
-					'<button type="button" class="btn btn-xs btn-danger" name="cancel">X</button>' +
-				'</div>' +
-				'<div class="io-conn"></div>' +
+				'<div class="io-io io-io-input"></div>' +
+				'<div class="io-value"></div>' +
+				'<div class="io-io io-io-output"></div>' +
 			'</div>';
 
-		this.settings.template = $(template);
-		this.settings.useTemplate = true;
-		this._useTemplate();
-		return this;
+		return this._useTemplate();
 	}
 
-	_toggleInput(state){
-		this.nameInputIsHidden = isDefined(state)
-			? state
-			: !this.nameInputIsHidden;
-		this.$nameInputContainer.toggle(!this.nameInputIsHidden);
-		this.$name.toggle(this.nameInputIsHidden);
+	_setValue(value){
+		this.value = value;
+		this.$value.html(value);
+		this.trigger('value', value);
 		return this;
 	}
 }
 
-class Input extends Io {
+class MouseCoordX extends Io {
 	constructor(options){
 		super(options);
+		var self = this;
 
-		this.$wrapper.addClass('input');
+		// handlers
+		$("html").on('mousemove.mousecoords', function(e) {
+			self._setValue(e.pageX);
+		});
+
+		this.nameInput.setValue('Mouse X');
+
+		return this;
+	}
+}
+
+class MouseCoordY extends Io {
+	constructor(options){
+		super(options);
+		var self = this;
+
+		// handlers
+		$("html").on('mousemove.mousecoords', function(e) {
+			self._setValue(e.pageY);
+		});
+
+		this.nameInput.setValue('Mouse Y');
 
 		return this;
 	}
@@ -154,73 +336,33 @@ class Input extends Io {
 
 class MouseCoords extends Component {
 	constructor(options){
-		var defaults = {
-			struct : {
-				$wrapper : '.mouse-coords',
-				$x : '.mouse-coords-x',
-				$y : '.mouse-coords-y'
-			}
-		};
-		super($Util.opts(defaults, options));
-		var self = this;
+		super(options);
 
-		// properties
-		this.x = 0;
-		this.y = 0;
+		this.mouseCordsX = new MouseCoordX();
+		this.mouseCordsY = new MouseCoordY();
+		
+		this.ioManager.addTemplate(this.mouseCordsX, 'mouseCordsX');
+		this.ioManager.addTemplate(this.mouseCordsY, 'mouseCordsY');
 
-		// handlers
-		$("html").on('mousemove.mousecoords', function(e) {
-			self._setX(e.pageX);
-			self._setY(e.pageY);
-		});
+		this.setTitle('Mouse Coords');
 
-		this._setX(0);
-		this._setY(0);
-
-		return this;
-	}
-
-	_useDefaultTemplate(){
-		var template =
-			'<div class="template mouse-coords">' +
-				'<span>x: </span>' +
-				'<span class="mouse-coords-x"></span>' +
-				'<span> y: </span>' +
-				'<span class="mouse-coords-y"></span>' +
-			'</div>';
-
-		this.settings.template = $(template);
-		this.settings.useTemplate = true;
-		this._useTemplate();
-		return this;
-	}
-
-	_setX(x){
-		this.x = x;
-		this.$x.html(x);
-		return this;
-	}
-
-	_setY(y){
-		this.y = y;
-		this.$y.html(y);
 		return this;
 	}
 }
 
-class Adder extends Draggable {
-	constructor(){
-		super();
+class Variable extends Io {
+	constructor(options){
+		super(options);
+
+		this.$value.click(function(){
+
+		});
 
 		return this;
 	}
 }
 
 var templateBox;
-var mouseCoords;
 $(document).on('ready', function(){
-	templateBox = new TemplateBox().appendTo('body');
-	mouseCoords = new MouseCoords();
-
-	templateBox.addObject(mouseCoords, 'mouseCoords');
+	templateBox = new ComponentBox().appendTo('body');
 });

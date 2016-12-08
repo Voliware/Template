@@ -6,7 +6,7 @@
 
 /**
  * Template for a bootstrap modal
- * @extends Progress
+ * @extends Template
  */
 class BootstrapModal extends Template {
 
@@ -64,9 +64,7 @@ class BootstrapModal extends Template {
 				'</div>'+
 			'</div>';
 
-		this.settings.template = $(template);
-		this.settings.useTemplate = true;
-		this._useTemplate();
+		this._useTemplate($(template));
 
 		$('body').append(this.$wrapper);
 

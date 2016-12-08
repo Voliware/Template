@@ -51,11 +51,8 @@ class BootstrapProgress extends Template {
 					'<div class="progress-percent"></div>' +
 				'</div>' +
 			'</div>';
-
-
-		this.settings.template = $(template);
-		this.settings.useTemplate = true;
-		this._useTemplate(template);
+		
+		this._useTemplate($(template));
 
 		if(!this.settings.showPercent)
 			this.$percent.remove();
