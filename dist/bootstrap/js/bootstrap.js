@@ -796,7 +796,7 @@ var BootstrapProgress = function (_Template4) {
   * @param {boolean} [options.showPercent=true] - whether to show percent value
   * @param {object} [options.struct]
   * @param {string} [options.struct.$wrapper='.progress'] - the wrapper element
-  * @param {string} [options.struct.$bar='.progress'] - the bootstrap progress element
+  * @param {string} [options.struct.$progress='.progress'] - the bootstrap progress element
   * @param {string} [options.struct.$bar='.progress-bar'] - the bootstrap progress bar
   * @param {string} [options.struct.$percent='.progress-percent'] - the progress bar percent
   * @returns {BootstrapProgress}
@@ -809,7 +809,7 @@ var BootstrapProgress = function (_Template4) {
 		var defaults = {
 			struct: {
 				$wrapper: '.progress-wrapper',
-				$container: '.progress',
+				$progress: '.progress',
 				$bar: '.progress-bar',
 				$percent: '.progress-percent'
 			},
@@ -833,7 +833,7 @@ var BootstrapProgress = function (_Template4) {
 	_createClass(BootstrapProgress, [{
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
-			var template = '<div class="progress-wrapper">' + '<div class="progress-percent"></div>' + '<div class="progress">' + '<div class="progress-bar"></div>' + '</div>' + '</div>';
+			var template = '<div class="progress-wrapper">' + '<div class="progress">' + '<div class="progress-bar"></div>' + '<div class="progress-percent"></div>' + '</div>' + '</div>';
 
 			this._useTemplate($(template));
 
@@ -852,9 +852,25 @@ var BootstrapProgress = function (_Template4) {
 	}, {
 		key: '_setPercent',
 		value: function _setPercent(percent) {
-			this.percent = percent;
+			this.percent = Math.floor(percent);
 			this.$percent.html(percent + "%");
 			this.$percent.toggleClass('progress-percent-white', percent > 50);
+			this._centerPercent();
+			return this;
+		}
+
+		/**
+   * Center the percent text
+   * @returns {BootstrapProgress}
+   * @private
+   */
+
+	}, {
+		key: '_centerPercent',
+		value: function _centerPercent() {
+			// 20 px is approx the text sie of "0%"
+			var w = this.$percent.width() || 20;
+			this.$percent.css('margin-left', w / 2 * -1 + "px");
 			return this;
 		}
 
@@ -867,6 +883,7 @@ var BootstrapProgress = function (_Template4) {
 	}, {
 		key: 'setProgress',
 		value: function setProgress(percent) {
+			percent = Math.floor(percent);
 			this.$bar.css('width', percent + "%");
 			this.$bar.toggleClass('progress-bar-success', percent === 100);
 			if (this.settings.showPercent) this._setPercent(percent);
@@ -898,7 +915,10 @@ var BootstrapLoader = function (_BootstrapProgress) {
   * @param {object[]} options.steps - an array of steps. A step is a simple
   * object with a 'text' and 'err' property that are simple strings
   * @param {object} [options.struct]
-  * @param {string} [options.struct.$text='.loader-text'] - the text selector
+  * @param {string} [options.struct.$wrapper='.loader'] - the loader wrapper
+  * @param {string} [options.struct.$progressWrapper='.progress'] - the progress wrapper
+  * @param {string} [options.struct.$container='.loader-container'] - the progress bar container
+  * @param {string} [options.struct.$text='.loader-text'] - the loader text
   * @returns {BootstrapLoader}
   */
 	function BootstrapLoader(options) {
@@ -908,6 +928,8 @@ var BootstrapLoader = function (_BootstrapProgress) {
 
 		var defaults = {
 			struct: {
+				$wrapper: '.loader',
+				$container: '.loader-container',
 				$text: '.loader-text'
 			},
 			steps: []
@@ -918,8 +940,6 @@ var BootstrapLoader = function (_BootstrapProgress) {
 
 		_this10.stepCount = _this10.settings.steps.length;
 		_this10.step = 0;
-
-		if (!_this10.settings.showPercent) _this10.$text.css('top', '-5px');
 
 		return _ret10 = _this10, _possibleConstructorReturn(_this10, _ret10);
 	}
@@ -934,10 +954,10 @@ var BootstrapLoader = function (_BootstrapProgress) {
 	_createClass(BootstrapLoader, [{
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
-			_get(BootstrapLoader.prototype.__proto__ || Object.getPrototypeOf(BootstrapLoader.prototype), '_useDefaultTemplate', this).call(this);
-			this.$text = $('<div class="loader-text"></div>');
+			var template = '<div class="loader" id="pageLoader">' + '<div class="loader-container">' + '<div class="loader-text"></div>' + '<div class="progress">' + '<div class="progress-bar"></div>' + '<div class="progress-percent"></div>' + '</div>' + '</div>' + '</div>';
 
-			this.$wrapper.prepend(this.$text).addClass('loader');
+			this._useTemplate($(template));
+
 			return this;
 		}
 

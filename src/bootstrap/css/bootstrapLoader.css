@@ -5,13 +5,15 @@
  */
 .loader{
     height:100%;
-    width:100%;
-}
-.loader-text{
-    position: relative;
+    position:fixed;
     text-align:center;
-    top: 10px;
     width:100%;
+    z-index:1000;
+}
+.loader-container{
+    position: absolute;
+    top: 50%;
+    width: 100%;
 }
 .loader-text.err{
     color: #ff414b;

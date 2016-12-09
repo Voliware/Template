@@ -17,12 +17,17 @@ class BootstrapLoader extends BootstrapProgress {
 	 * @param {object[]} options.steps - an array of steps. A step is a simple
 	 * object with a 'text' and 'err' property that are simple strings
 	 * @param {object} [options.struct]
-	 * @param {string} [options.struct.$text='.loader-text'] - the text selector
+	 * @param {string} [options.struct.$wrapper='.loader'] - the loader wrapper
+	 * @param {string} [options.struct.$progressWrapper='.progress'] - the progress wrapper
+	 * @param {string} [options.struct.$container='.loader-container'] - the progress bar container
+	 * @param {string} [options.struct.$text='.loader-text'] - the loader text
 	 * @returns {BootstrapLoader}
 	 */
 	constructor(options){
 		var defaults = {
 			struct : {
+				$wrapper : '.loader',
+				$container : '.loader-container',
 				$text : '.loader-text'
 			},
 			steps : []
@@ -33,9 +38,6 @@ class BootstrapLoader extends BootstrapProgress {
 		this.stepCount = this.settings.steps.length;
 		this.step = 0;
 
-		if(!this.settings.showPercent)
-			this.$text.css('top','-5px');
-
 		return this;
 	}
 
@@ -45,12 +47,19 @@ class BootstrapLoader extends BootstrapProgress {
 	 * @private
 	 */
 	_useDefaultTemplate(){
-		super._useDefaultTemplate();
-		this.$text = $('<div class="loader-text"></div>');
+		var template =
+			'<div class="loader" id="pageLoader">' +
+				'<div class="loader-container">' +
+					'<div class="loader-text"></div>' +
+					'<div class="progress">' +
+						'<div class="progress-bar"></div>' +
+						'<div class="progress-percent"></div>' +
+					'</div>' +
+				'</div>' +
+			'</div>';
 
-		this.$wrapper
-			.prepend(this.$text)
-			.addClass('loader');
+		this._useTemplate($(template));
+
 		return this;
 	}
 

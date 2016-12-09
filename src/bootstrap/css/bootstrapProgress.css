@@ -4,11 +4,13 @@
  * Licensed under the MIT license.
  */
 
+.progress{
+    text-align:center;
+}
 .progress-percent{
     color:black;
-    position: relative;
-    top: 20px;
-    text-align:center;
+    position: absolute;
+    left:50%;
     width:100%;
 }
 .progress-percent-white{

@@ -414,7 +414,7 @@ var FormSerializer = function () {
 
 					switch (type) {
 						case 'checkbox':
-							val = self._convertCheckbox($el, this.settings.checkboxMode);
+							val = self._convertCheckbox($el, self.settings.checkboxMode);
 							break;
 						case 'file':
 							var files = $el.get(0).files;
@@ -481,6 +481,7 @@ FormSerializer.serializeMode = {
 	toOrderedString: 1,
 	toObject: 2
 };
+
 /*!
  * formSerializerData
  * https://github.com/Voliware/Template
