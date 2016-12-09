@@ -110,7 +110,7 @@ class FormSerializer {
 
 				switch(type){
 					case 'checkbox':
-						val = self._convertCheckbox($el, this.settings.checkboxMode);
+						val = self._convertCheckbox($el, self.settings.checkboxMode);
 						break;
 					case 'file':
 						var files = $el.get(0).files;
