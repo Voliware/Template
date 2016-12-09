@@ -3,10 +3,15 @@
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  */
-
+.loader{
+    height:100%;
+    width:100%;
+}
 .loader-text{
-    padding:5px;
+    position: relative;
     text-align:center;
+    top: 10px;
+    width:100%;
 }
 .loader-text.err{
     color: #ff414b;

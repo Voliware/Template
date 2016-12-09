@@ -17,18 +17,19 @@ class BootstrapLoader extends BootstrapProgress {
 	 * @param {object[]} options.steps - an array of steps. A step is a simple
 	 * object with a 'text' and 'err' property that are simple strings
 	 * @param {object} [options.struct]
-	 * @param {string} [options.struct.$text='.progress-text'] - the text selector
+	 * @param {string} [options.struct.$text='.loader-text'] - the text selector
 	 * @returns {BootstrapLoader}
 	 */
 	constructor(options){
 		var defaults = {
 			struct : {
-				$text : '.progress-text'
+				$text : '.loader-text'
 			},
 			steps : []
 		};
 		super($Util.opts(defaults, options));
 
+		// properties
 		this.stepCount = this.settings.steps.length;
 		this.step = 0;
 
@@ -44,7 +45,9 @@ class BootstrapLoader extends BootstrapProgress {
 		super._useDefaultTemplate();
 		this.$text = $('<div class="loader-text"></div>');
 
-		this.$wrapper.prepend(this.$text);
+		this.$wrapper
+			.append(this.$text)
+			.addClass('loader');
 		return this;
 	}
 
@@ -110,17 +113,34 @@ class BootstrapLoader extends BootstrapProgress {
 	/**
 	 * Move the loader to an error
 	 * Or set the current step to error state
-	 * @param {number} [id] - step index
+	 * @param {number|string} [arguments] - optional arguments
+	 * number - pass a step id to grab the error from
+	 * string - pass a string error
+	 * void - sets the error to the current step's error
 	 * @returns {BootstrapLoader}
 	 */
-	setErr(id){
-		// if no id, set current step into error
-		if(!isDefined(id))
-			id = this.step;
-		var step = this._getStep(id);
-		this.setText(step.err);
+	setErr(){
+		var arg = arguments ? arguments[0] : null;
+		var step;
+
+		// arg is a step id
+		if(isNumber(arg)){
+			step = this._getStep(arg);
+			this.setText(step.err);
+		}
+
+		// arg is a string
+		if(isString(arg))
+			this.setText(arg);
+
+		// no arg
+		if(isNull(arg)){
+			step = this._getStep(this.step);
+			this.setText(step.err);
+		}
+
 		this.$text.addClass('err');
-		this.$progress.addClass('progress-bar-danger');
+		this.$bar.addClass('progress-bar-danger');
 		return this;
 	}
 

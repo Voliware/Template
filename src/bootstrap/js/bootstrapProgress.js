@@ -15,10 +15,10 @@ class BootstrapProgress extends Template {
 	 * @param {object} [options]
 	 * @param {boolean} [options.showPercent=true] - whether to show percent value
 	 * @param {object} [options.struct]
-	 * @param {string} [options.struct.$wrapper='.progress-wrapper'] - the wrapper element
-	 * @param {string} [options.struct.$container='.progress'] - the progress container
-	 * @param {string} [options.struct.$progress='.progress-bar'] - the progress bar
-	 * @param {string} [options.struct.$percent='.progress-percent'] - the progress percent
+	 * @param {string} [options.struct.$wrapper='.progress'] - the wrapper element
+	 * @param {string} [options.struct.$bar='.progress'] - the bootstrap progress element
+	 * @param {string} [options.struct.$bar='.progress-bar'] - the bootstrap progress bar
+	 * @param {string} [options.struct.$percent='.progress-percent'] - the progress bar percent
 	 * @returns {BootstrapProgress}
 	 */
 	constructor(options){
@@ -26,7 +26,7 @@ class BootstrapProgress extends Template {
 			struct : {
 				$wrapper : '.progress-wrapper',
 				$container : '.progress',
-				$progress : '.progress-bar',
+				$bar : '.progress-bar',
 				$percent : '.progress-percent'
 			},
 			showPercent : true
@@ -46,9 +46,9 @@ class BootstrapProgress extends Template {
 	_useDefaultTemplate(){
 		var template = 
 			'<div class="progress-wrapper">' +
+			'<div class="progress-percent"></div>' +
 				'<div class="progress">' +
 					'<div class="progress-bar"></div>' +
-					'<div class="progress-percent"></div>' +
 				'</div>' +
 			'</div>';
 		
@@ -57,19 +57,6 @@ class BootstrapProgress extends Template {
 		if(!this.settings.showPercent)
 			this.$percent.remove();
 
-
-		return this;
-	}
-
-	/**
-	 * Center the percent text
-	 * @returns {BootstrapProgress}
-	 * @private
-	 */
-	_centerPercent(){
-		// 20 px is approx the text sie of "0%"
-		var w = this.$percent.width() || 20;
-		this.$percent.css('margin-left', w / 2 * -1 + "px");
 		return this;
 	}
 
@@ -83,7 +70,6 @@ class BootstrapProgress extends Template {
 		this.percent = percent;
 		this.$percent.html(percent + "%");
 		this.$percent.toggleClass('progress-percent-white', percent > 50);
-		this._centerPercent();
 		return this;
 	}
 
@@ -93,8 +79,8 @@ class BootstrapProgress extends Template {
 	 * @returns {BootstrapProgress}
 	 */
 	setProgress(percent){
-		this.$progress.css('width', percent + "%");
-		this.$progress.toggleClass('progress-bar-success', percent === 100);
+		this.$bar.css('width', percent + "%");
+		this.$bar.toggleClass('progress-bar-success', percent === 100);
 		if(this.settings.showPercent)
 			this._setPercent(percent);
 		return this;

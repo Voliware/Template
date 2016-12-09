@@ -84,7 +84,7 @@ class Line extends Template {
 	}
 }
 
-class LineManager extends TemplateManager{
+class LineDrawer extends TemplateManager{
 	constructor(options){
 		super(options);
 		var self = this;
@@ -96,17 +96,38 @@ class LineManager extends TemplateManager{
 		this.mouseX = 0;
 		this.mouseY = 0;
 
+		// states
+		this.isDrawing = false;
+
 		// handlers
-		$("html").on('mousemove.mousecoords', function(e) {
+		this.$wrapper.on('mousemove.mousecoords', function(e) {
 			self.mouseX = e.pageX;
 			self.mouseY = e.pageY;
+		});
+
+		this.$wrapper.click(function(){
+			if(self.isDrawing){
+				self.stopDrawing();
+			}
+			else {
+				self.startDrawing();
+			}
 		});
 
 		return this;
 	}
 
 	createLine(){
+		return new Line();
+	}
 
+	stopDrawing(){
+
+	}
+
+	startDrawing(){
+		var line = this.createLine();
+		
 	}
 }
 

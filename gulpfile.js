@@ -41,29 +41,30 @@ var webUtilCss = 'C:/Voliware/Web/WebUtil/src/css/';
 function buildBootstrap(){
 	var js = [
 		src.bootstrap.js + 'bootstrap.js',
-		src.bootstrap.js + 'bootstrapToggle.js',
+		src.bootstrap.js + 'bootstrapControlTable.js',
 		src.bootstrap.js + 'bootstrapFeedback.js',
-		src.bootstrap.js + 'bootstrapProgress.js',
-		src.bootstrap.js + 'bootstrapLoader.js',
+		src.bootstrap.js + 'bootstrapForm.js',
 		src.bootstrap.js + 'bootstrapModal.js',
 		src.bootstrap.js + 'bootstrapNav.js',
 		src.bootstrap.js + 'bootstrapNavManager.js',
-		src.bootstrap.js + 'bootstrapTab.js',
-		src.bootstrap.js + 'bootstrapTabManager.js',
 		src.bootstrap.js + 'bootstrapPanel.js',
 		src.bootstrap.js + 'bootstrapPanelManager.js',
-		src.bootstrap.js + 'bootstrapControlTable.js'
+		src.bootstrap.js + 'bootstrapProgress.js',
+		src.bootstrap.js + 'bootstrapLoader.js',
+		src.bootstrap.js + 'bootstrapTab.js',
+		src.bootstrap.js + 'bootstrapTabManager.js',
+		src.bootstrap.js + 'bootstrapToggle.js'
 	];
 	buildJs(js, dist.bootstrap.js, 'bootstrap');
 
 	var css = [
 		src.bootstrap.css + 'bootstrap.css',
+		src.bootstrap.css + 'bootstrapControlTable.css',
 		src.bootstrap.css + 'bootstrapFeedback.css',
 		src.bootstrap.css + 'bootstrapLoader.css',
 		src.bootstrap.css + 'bootstrapPanel.css',
 		src.bootstrap.css + 'bootstrapProgress.css',
-		src.bootstrap.css + 'bootstrapTab.css',
-		src.bootstrap.css + 'bootstrapControlTable.css'
+		src.bootstrap.css + 'bootstrapTab.css'
 	];
 	return buildCss(css, dist.bootstrap.css, 'bootstrap');
 }
