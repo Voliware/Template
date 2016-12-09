@@ -33,6 +33,9 @@ class BootstrapLoader extends BootstrapProgress {
 		this.stepCount = this.settings.steps.length;
 		this.step = 0;
 
+		if(!this.settings.showPercent)
+			this.$text.css('top','-5px');
+
 		return this;
 	}
 
@@ -46,7 +49,7 @@ class BootstrapLoader extends BootstrapProgress {
 		this.$text = $('<div class="loader-text"></div>');
 
 		this.$wrapper
-			.append(this.$text)
+			.prepend(this.$text)
 			.addClass('loader');
 		return this;
 	}

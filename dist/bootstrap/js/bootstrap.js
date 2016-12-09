@@ -919,6 +919,8 @@ var BootstrapLoader = function (_BootstrapProgress) {
 		_this10.stepCount = _this10.settings.steps.length;
 		_this10.step = 0;
 
+		if (!_this10.settings.showPercent) _this10.$text.css('top', '-5px');
+
 		return _ret10 = _this10, _possibleConstructorReturn(_this10, _ret10);
 	}
 
@@ -935,7 +937,7 @@ var BootstrapLoader = function (_BootstrapProgress) {
 			_get(BootstrapLoader.prototype.__proto__ || Object.getPrototypeOf(BootstrapLoader.prototype), '_useDefaultTemplate', this).call(this);
 			this.$text = $('<div class="loader-text"></div>');
 
-			this.$wrapper.append(this.$text).addClass('loader');
+			this.$wrapper.prepend(this.$text).addClass('loader');
 			return this;
 		}
 
