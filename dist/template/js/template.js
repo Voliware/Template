@@ -253,7 +253,7 @@ if (typeof isJquery === 'undefined') {
   */
 	$.fn.populateChildren = function (data) {
 		var $this = $(this);
-		Util.each(data, function (i, e) {
+		$.each(data, function (i, e) {
 			var $el = $this.find('[name="' + i + '"]');
 			if ($el.length === 0) $el = $this.find('[data-name="' + i + '"]');
 			if ($el.length > 0 && $el.data('populate') !== false) $el.populate(e);

@@ -215,7 +215,7 @@ class Form extends Template {
 	 * whos value is appropriate for that field
 	 * @returns {Form}
 	 */
-	populate(data){
+	populateForm(data){
 		this.$wrapper.populateChildren(data);
 		return this;
 	}
