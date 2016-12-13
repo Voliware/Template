@@ -241,8 +241,8 @@ var Form = function (_Template) {
    */
 
 	}, {
-		key: 'populate',
-		value: function populate(data) {
+		key: 'populateForm',
+		value: function populateForm(data) {
 			this.$wrapper.populateChildren(data);
 			return this;
 		}
