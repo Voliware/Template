@@ -64,7 +64,8 @@ function buildBootstrap(){
 		src.bootstrap.css + 'bootstrapLoader.css',
 		src.bootstrap.css + 'bootstrapPanel.css',
 		src.bootstrap.css + 'bootstrapProgress.css',
-		src.bootstrap.css + 'bootstrapTab.css'
+		src.bootstrap.css + 'bootstrapTab.css',
+		src.bootstrap.css + 'bootstrapTable.css'
 	];
 	return buildCss(css, dist.bootstrap.css, 'bootstrap');
 }

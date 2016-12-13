@@ -215,3 +215,12 @@ div.input-help {
 .responsive-tabs.nav-tabs.open > li:last-of-type a {
     border-radius: 0 0 2px 2px;
 }
+/*!
+ * bootstrapTable
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.table-empty > td {
+    border-top:none;
+}

@@ -46,6 +46,16 @@ class BootstrapFeedback extends Feedback {
 	}
 
 	/**
+	 * Create a default icon based on feedback class
+	 * @param {string} cls - the alert- bootstrap class to set
+	 * @returns {string}
+	 * @private
+	 */
+	_createDefaultIcon(cls){
+		return '<span class="glyphicon ' + BootstrapFeedback.icon[cls] + '"></span>';
+	}
+
+	/**
 	 * Set the class using of the feedback
 	 * Automatically removes other "alert-" classes
 	 * and prepends "alert-" to the new class
@@ -62,6 +72,11 @@ class BootstrapFeedback extends Feedback {
 		return this;
 	}
 
+	_setIcon($icon){
+		this.$icon.html($icon);
+		return this;
+	}
+
 	/**
 	 * Set the feedback elegantly
 	 * @param {string} cls - wrapper class to set
@@ -71,7 +86,7 @@ class BootstrapFeedback extends Feedback {
 	 * @returns {Feedback}
 	 */
 	_animateFeedback(cls, text, icon){
-		var $icon = icon ? icon : '<span class="glyphicon ' + BootstrapFeedback.icon[cls] + '"></span>';
+		var $icon = icon ? icon : this._createDefaultIcon(cls);
 		this._setClass(cls);
 		this.$text.fadeOut(function(){
 			$(this).html(text).fadeIn();
@@ -92,12 +107,10 @@ class BootstrapFeedback extends Feedback {
 	 */
 	setFeedback(cls, text, icon){
 		if(this.is(':hidden')){
-			var $icon = icon ? icon : '<span class="glyphicon ' + BootstrapFeedback.icon[cls] + '"></span>';
+			var $icon = icon ? icon : this._createDefaultIcon(cls);
 			this._setClass(cls);
 			this.$text.html(text);
-			if(icon){
-				this.$icon.html($icon);
-			}
+			this.$icon.html($icon);
 			this.slideDown();
 		}
 		else {

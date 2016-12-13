@@ -1,0 +1,9 @@
+/*!
+ * bootstrapTable
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.table-empty > td {
+    border-top:none;
+}
