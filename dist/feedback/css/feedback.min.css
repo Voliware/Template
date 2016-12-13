@@ -2,4 +2,4 @@
  * feedback
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
- */.feedback{padding:20px;position:relative;text-align:center;transition:background-color 600ms}.feedback-icon,.feedback-text{vertical-align:middle;padding:0 5px}.feedback-icon{font-size:16px;line-height:16px;margin-right:10px}.feedback-close{float:right;padding:5px}
+ */.feedback{padding:20px;position:relative;text-align:center;transition:background-color 600ms}.feedback-icon,.feedback-text{vertical-align:middle;padding:0 5px}.feedback-icon{font-size:16px;line-height:16px}.feedback-close{float:right;padding:5px}

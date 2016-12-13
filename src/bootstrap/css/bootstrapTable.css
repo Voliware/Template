@@ -4,6 +4,6 @@
  * Licensed under the MIT license.
  */
 
-.table-empty > td {
+table>tbody>tr.table-empty>td {
     border-top:none;
 }
