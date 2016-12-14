@@ -40,6 +40,7 @@ var Form = function (_Template) {
   * @param {string} [options.struct.$body='.form-body'] - the body selector
   * @param {string} [options.struct.$footer='.form-footer'] - the footer selector
   * @param {string} [options.struct.$cancel='.form-cancel'] - the cancel button selector
+  * @param {string} [options.struct.$reset='.form-reset'] - the reset button selector
   * @param {string} [options.struct.$submit='button[type="submit"]'] - the submit button selector
   * @returns {Form}
   */
@@ -62,6 +63,7 @@ var Form = function (_Template) {
 				$body: '.form-body',
 				$footer: '.form-footer',
 				$cancel: '.form-cancel',
+				$reset: '.form-reset',
 				$submit: 'button[type="submit"]'
 			},
 			validator: null
@@ -73,6 +75,8 @@ var Form = function (_Template) {
 
 		// store serialized data
 		_this._serializedData = {};
+		// cache populated data for reset button
+		_this._populatedData = {};
 
 		// alias
 		// this alias just happens to be integral
@@ -88,10 +92,16 @@ var Form = function (_Template) {
 		_this.validator = null;
 		_this.feedback = null;
 
+		// handlers
 		// default submit handler
 		_this.$wrapper.on('submit', function (e) {
 			e.preventDefault();
 			self.serializer()._submit();
+		});
+
+		// reset
+		_this.$reset.click(function () {
+			self._reset();
 		});
 
 		// set up validator
@@ -113,7 +123,7 @@ var Form = function (_Template) {
 	_createClass(Form, [{
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
-			var template = '<form class="form">' + '<div class="form-header"></div>' + '<div class="form-body"></div>' + '<div class="form-footer">' + '<button type="submit" class="form-submit">Submit</button>' + '<button type="button" class="form-cancel">Cancel</button>' + '</div>' + '</form>';
+			var template = '<form class="form">' + '<div class="form-header"></div>' + '<div class="form-body"></div>' + '<div class="form-footer">' + '<button type="submit" class="form-submit">Submit</button>' + '<button type="button" class="form-reset">Reset</button>' + '<button type="button" class="form-cancel">Cancel</button>' + '</div>' + '</form>';
 
 			this._useTemplate($(template));
 
@@ -150,6 +160,26 @@ var Form = function (_Template) {
 		value: function _setupFeedback() {
 			this.feedback = new Feedback();
 			this.feedback.$wrapper.prependTo(this.$body);
+			return this;
+		}
+
+		/**
+   * Reset the form, using populated data
+   * or setting to default values
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: '_reset',
+		value: function _reset() {
+			if (!$.isEmptyObject(this._populatedData)) this.populateForm(this._populatedData);else this.$wrapper[0].reset();
+
+			// todo: implement reset for alternative validators
+			if (this.validator) {
+				this.validator.resetForm();
+			}
+
 			return this;
 		}
 
@@ -233,6 +263,33 @@ var Form = function (_Template) {
 		}
 
 		/**
+   * Cache incoming form data
+   * @param {object} data
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: '_cacheFormData',
+		value: function _cacheFormData(data) {
+			this._populatedData = $.extend(true, {}, data);
+			return this;
+		}
+
+		/**
+   * Process incoming form data
+   * @param {object} data
+   * @returns {*}
+   * @private
+   */
+
+	}, {
+		key: '_processFormData',
+		value: function _processFormData(data) {
+			return data;
+		}
+
+		/**
    * Populate form fields
    * @param {object} data - collection of properties whos
    * key match an input or select name, and
@@ -243,6 +300,8 @@ var Form = function (_Template) {
 	}, {
 		key: 'populateForm',
 		value: function populateForm(data) {
+			this._cacheFormData(data);
+			this._processFormData(data);
 			this.$wrapper.populateChildren(data);
 			return this;
 		}

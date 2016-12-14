@@ -27,6 +27,7 @@ class Form extends Template {
 	 * @param {string} [options.struct.$body='.form-body'] - the body selector
 	 * @param {string} [options.struct.$footer='.form-footer'] - the footer selector
 	 * @param {string} [options.struct.$cancel='.form-cancel'] - the cancel button selector
+	 * @param {string} [options.struct.$reset='.form-reset'] - the reset button selector
 	 * @param {string} [options.struct.$submit='button[type="submit"]'] - the submit button selector
 	 * @returns {Form}
 	 */
@@ -45,6 +46,7 @@ class Form extends Template {
 				$body: '.form-body',
 				$footer: '.form-footer',
 				$cancel: '.form-cancel',
+				$reset: '.form-reset',
 				$submit: 'button[type="submit"]'
 			},
 			validator: null
@@ -54,6 +56,8 @@ class Form extends Template {
 
 		// store serialized data
 		this._serializedData = {};
+		// cache populated data for reset button
+		this._populatedData = {};
 
 		// alias
 		// this alias just happens to be integral
@@ -69,11 +73,17 @@ class Form extends Template {
 		this.validator = null;
 		this.feedback = null;
 
+		// handlers
 		// default submit handler
 		this.$wrapper.on('submit', function(e){
 			e.preventDefault();
 			self.serializer()
 				._submit();
+		});
+
+		// reset
+		this.$reset.click(function(){
+			self._reset();
 		});
 
 		// set up validator
@@ -99,6 +109,7 @@ class Form extends Template {
 				'<div class="form-body"></div>' +
 				'<div class="form-footer">' +
 					'<button type="submit" class="form-submit">Submit</button>' +
+					'<button type="button" class="form-reset">Reset</button>' +
 					'<button type="button" class="form-cancel">Cancel</button>' +
 				'</div>' +
 			'</form>';
@@ -132,6 +143,26 @@ class Form extends Template {
 	_setupFeedback(){
 		this.feedback = new Feedback();
 		this.feedback.$wrapper.prependTo(this.$body);
+		return this;
+	}
+
+	/**
+	 * Reset the form, using populated data
+	 * or setting to default values
+	 * @returns {Form}
+	 * @private
+	 */
+	_reset(){
+		if(!$.isEmptyObject(this._populatedData))
+			this.populateForm(this._populatedData);
+		else
+			this.$wrapper[0].reset();
+
+		// todo: implement reset for alternative validators
+		if(this.validator){
+			this.validator.resetForm();
+		}
+
 		return this;
 	}
 
@@ -209,6 +240,27 @@ class Form extends Template {
 	}
 
 	/**
+	 * Cache incoming form data
+	 * @param {object} data
+	 * @returns {Form}
+	 * @private
+	 */
+	_cacheFormData(data){
+		this._populatedData = $.extend(true, {}, data);
+		return this;
+	}
+
+	/**
+	 * Process incoming form data
+	 * @param {object} data
+	 * @returns {*}
+	 * @private
+	 */
+	_processFormData(data){
+		return data;
+	}
+
+	/**
 	 * Populate form fields
 	 * @param {object} data - collection of properties whos
 	 * key match an input or select name, and
@@ -216,6 +268,8 @@ class Form extends Template {
 	 * @returns {Form}
 	 */
 	populateForm(data){
+		this._cacheFormData(data);
+		this._processFormData(data);
 		this.$wrapper.populateChildren(data);
 		return this;
 	}
