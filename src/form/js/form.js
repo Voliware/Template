@@ -180,8 +180,8 @@ class Form extends Template {
 			this.feedback.setFeedback('processing', 'Processing...');
 
 		return this._doSubmit()
-			.done(function(){
-				self._onDone();
+			.done(function(data){
+				self._onDone(data);
 			})
 			.fail(function(){
 				self._onFail();
@@ -207,11 +207,12 @@ class Form extends Template {
 
 	/**
 	 * Form submission success handler
+	 * @param {object} data
 	 * @returns {Form}
 	 * @private
 	 */
-	_onDone(){
-		this.trigger('done');
+	_onDone(data){
+		this.trigger('done', data);
 		if(this.feedback)
 			this.feedback.setFeedback('success', ' Operation was successful');
 		return this;

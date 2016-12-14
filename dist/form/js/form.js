@@ -198,8 +198,8 @@ var Form = function (_Template) {
 
 			if (this.feedback) this.feedback.setFeedback('processing', 'Processing...');
 
-			return this._doSubmit().done(function () {
-				self._onDone();
+			return this._doSubmit().done(function (data) {
+				self._onDone(data);
 			}).fail(function () {
 				self._onFail();
 			}).always(function () {
@@ -223,14 +223,15 @@ var Form = function (_Template) {
 
 		/**
    * Form submission success handler
+   * @param {object} data
    * @returns {Form}
    * @private
    */
 
 	}, {
 		key: '_onDone',
-		value: function _onDone() {
-			this.trigger('done');
+		value: function _onDone(data) {
+			this.trigger('done', data);
 			if (this.feedback) this.feedback.setFeedback('success', ' Operation was successful');
 			return this;
 		}
