@@ -505,11 +505,22 @@ var ControlTable = function (_RenderTable) {
 			var self = this;
 
 			$.each(this.settings.buttons, function (i, e) {
-				if (e) {
+				if (e && !findTd(i)) {
 					addHeader();
 					addTd(i);
 				}
 			});
+
+			/**
+    * Determine if an element has already been
+    * created in the template for this button
+    * @param {string} i - button name
+    */
+			function findTd(i) {
+				var $btnName = self.$tr.find('[data-name="' + i + '"]');
+				var $btnDataName = self.$tr.find('[name="' + i + '"]');
+				return $btnName.length || $btnDataName.length;
+			}
 
 			/**
     * Add a blank header
