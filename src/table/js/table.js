@@ -111,24 +111,25 @@ class Table extends Template {
 
 	/**
 	 * Optionally process data
-	 * @param {object} data
+	 * @param {number[]|object|object[]|string[]} data
 	 * @returns {object}
 	 * @private
 	 */
 	_processData(data){
 		var self = this;
-		var tData = $.extend(true, {}, data);
 		$.each(data, function(i, e){
-			// add a private _id
-			tData[i]._id = i;
-			tData[i] = self._processRow(e);
+			// add a private _id for objects
+			if(isObject(e)){
+				data[i]._id = i;
+			}
+			data[i] = self._processRow(e);
 		});
-		return tData;
+		return data;
 	}
 
 	/**
 	 * Optionally process row
-	 * @param {object} data
+	 * @param {*} data
 	 * @returns {*}
 	 * @private
 	 */

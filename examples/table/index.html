@@ -13,16 +13,26 @@
 	<body>
 		<!-- Main -->
 		<ul class="nav nav-tabs">
-			<li class="active"><a href="#basic">Basic</a></li>
+			<li class="active"><a href="#basic" data-toggle="tab">Data from Objects</a></li>
+			<li><a href="#array" data-toggle="tab">Data from Arrays</a></li>
 		</ul>
 		<div class="tab-content">
 			<div id="basic" class="tab-pane fade in active">
-				<div id="playerTableContainer"></div>
+				<div class="well">
+					<span>Data built from objects of objects</span>
+				</div>
+				<div id="objectTableContainer"></div>
+			</div>
+			<div id="array" class="tab-pane fade out">
+				<div class="well">
+					<span>Data built from an array of mixed data</span>
+				</div>
+				<div id="arrayTableContainer"></div>
 			</div>
 		</div>
 
-		<!-- Templates -->
-		<table class="template table" id="playerTableTemplate">
+		<!-- object table -->
+		<table class="template table" id="objectTableTemplate">
 			<thead>
 				<tr>
 					<th>Player</th>

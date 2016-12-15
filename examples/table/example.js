@@ -4,10 +4,10 @@
  * Licensed under the MIT license.
  */
 
-// data
+// object data
 // object names are irrelevant unless
 // option useObjectNames is set
-var playerData1 = {
+var objectData = {
 	Crosby : {
 		name : "Sid the Kid",
 		goals : 300,
@@ -25,17 +25,37 @@ var playerData1 = {
 	}
 };
 
-var playerTable;
+// array data
+var arrayData = [
+	['Sid the Kid', 311, 302],
+	['8 the Greate', 440, 240],
+	['Auston Matthews', 7, 5]
+];
+
+var objectTable;
+var arrayTable;
+
 $(document).on('ready', function(){
 
-	// where to append the table
-	var $playerTableContainer = $('#playerTableContainer');
-	// the table template found in the HTML
-	var $playerTableTemplate = $('#playerTableTemplate');
-	// the ControlTable
-	playerTable = new Table({
-		template : $playerTableTemplate
+	// where to append the tables
+	var $objectTableContainer = $('#objectTableContainer');
+	var $arrayTableContainer = $('#arrayTableContainer');
+	
+	// the table object template found in the HTML
+	var $objectTableTemplate = $('#objectTableTemplate');
+	
+	// the object table
+	objectTable = new Table({
+		template : $objectTableTemplate
 	})
-		.build(playerData1)
-		.appendTo($playerTableContainer)
+		.build(objectData)
+		.appendTo($objectTableContainer);
+	
+	// the array table
+	arrayTable = new Table({
+		template : $objectTableTemplate,
+		rowHeaders : ['Player', 'Goals', 'Asssts']
+	})
+		.build(arrayData)
+		.appendTo($arrayTableContainer);
 });

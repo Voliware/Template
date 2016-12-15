@@ -158,6 +158,10 @@ class Form extends Template {
 		else
 			this.$wrapper[0].reset();
 
+		if(this.feedback){
+			this.feedback.slideUp();
+		}
+
 		// todo: implement reset for alternative validators
 		if(this.validator){
 			this.validator.resetForm();

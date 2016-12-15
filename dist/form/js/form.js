@@ -175,6 +175,10 @@ var Form = function (_Template) {
 		value: function _reset() {
 			if (!$.isEmptyObject(this._populatedData)) this.populateForm(this._populatedData);else this.$wrapper[0].reset();
 
+			if (this.feedback) {
+				this.feedback.slideUp();
+			}
+
 			// todo: implement reset for alternative validators
 			if (this.validator) {
 				this.validator.resetForm();
