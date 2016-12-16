@@ -31,17 +31,6 @@ div.input-help {
     content: '\e114';
 }
 /*!
- * bootstrapControlTable
- * https://github.com/Voliware/Template
- * Licensed under the MIT license.
- */
-
-.controlTable td button {
-    border:0;
-    font-size: 16px;
-    padding:0;
-}
-/*!
  * bootstrapFeedback
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.

@@ -59,7 +59,6 @@ function buildBootstrap(){
 
 	var css = [
 		src.bootstrap.css + 'bootstrap.css',
-		src.bootstrap.css + 'bootstrapControlTable.css',
 		src.bootstrap.css + 'bootstrapFeedback.css',
 		src.bootstrap.css + 'bootstrapLoader.css',
 		src.bootstrap.css + 'bootstrapPanel.css',

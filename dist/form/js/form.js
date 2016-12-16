@@ -204,8 +204,8 @@ var Form = function (_Template) {
 
 			return this._doSubmit().done(function (data) {
 				self._onDone(data);
-			}).fail(function () {
-				self._onFail();
+			}).fail(function (err) {
+				self._onFail(err);
 			}).always(function () {
 				self._onAlways();
 			});
@@ -242,14 +242,15 @@ var Form = function (_Template) {
 
 		/**
    * Form submission fail handler
+   * @param {object} err
    * @returns {Form}
    * @private
    */
 
 	}, {
 		key: '_onFail',
-		value: function _onFail() {
-			this.trigger('fail');
+		value: function _onFail(err) {
+			this.trigger('fail', err);
 			if (this.feedback) this.feedback.setFeedback('danger', 'Operation has failed');
 			return this;
 		}
