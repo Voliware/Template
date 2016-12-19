@@ -96,7 +96,12 @@ var Form = function (_Template) {
 		// default submit handler
 		_this.$wrapper.on('submit', function (e) {
 			e.preventDefault();
-			self.serializer()._submit();
+			self.serializeForm()._submit();
+		});
+
+		// cancel
+		_this.$cancel.click(function () {
+			self._reset();
 		});
 
 		// reset
@@ -313,14 +318,28 @@ var Form = function (_Template) {
 		}
 
 		/**
-   * Serialize the form
+   * Public function to serialize the form,
+   * as jQuery uses serialize already
    * @returns {Form}
    */
 
 	}, {
-		key: 'serializer',
-		value: function serializer() {
+		key: 'serializeForm',
+		value: function serializeForm() {
 			this._serializedData = this.formSerializer.serialize(this.$wrapper);
+			return this;
+		}
+
+		/**
+   * Public function to reset the form,
+   * as jQuery uses reset already
+   * @returns {Form}
+   */
+
+	}, {
+		key: 'resetForm',
+		value: function resetForm() {
+			this._reset();
 			return this;
 		}
 	}]);
@@ -354,7 +373,7 @@ Form.validators = {
 			form.$wrapper.off('submit');
 			form.$wrapper.formValidation(options).on('success.form.fv', function (e) {
 				e.preventDefault();
-				form.serializer()._submit();
+				form.serializeForm()._submit();
 			});
 			form.validator = form.$wrapper.data('formValidation');
 		}

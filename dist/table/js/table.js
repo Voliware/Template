@@ -272,6 +272,7 @@ var Table = function (_Template) {
 		value: function build(data) {
 			this._cacheData(data);
 			data = this._processData(data);
+			this.toggleEmpty(false);
 			this._render(data);
 			return this;
 		}
@@ -303,6 +304,10 @@ var Table = function (_Template) {
 			if (this.$rows[index]) {
 				this.$rows[index].remove();
 				this.$rows.splice(index, 1);
+			}
+			// check if all rows were deleted
+			if (this._isEmptyTable()) {
+				this.toggleEmpty();
 			}
 			return this;
 		}
@@ -437,6 +442,10 @@ var RenderTable = function (_Table) {
 			var _rowManager;
 
 			(_rowManager = this.rowManager).deleteObject.apply(_rowManager, arguments);
+			// check if all rows were deleted
+			if (this._isEmptyTable()) {
+				this.toggleEmpty();
+			}
 			return this;
 		}
 	}]);
@@ -584,10 +593,6 @@ var ControlTable = function (_RenderTable) {
 			var $btn = $('<button type="button" title="Delete">Delete</button>');
 			$btn.click(function () {
 				self.deleteRow(data);
-				// check if all rows were deleted
-				if (self._isEmptyTable()) {
-					self.toggleEmpty();
-				}
 			});
 			return $btn;
 		}

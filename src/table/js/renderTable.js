@@ -83,6 +83,10 @@ class RenderTable extends Table {
 	 */
 	deleteRow(){
 		this.rowManager.deleteObject(...arguments);
+		// check if all rows were deleted
+		if(this._isEmptyTable()){
+			this.toggleEmpty();
+		}
 		return this;
 	}
 }

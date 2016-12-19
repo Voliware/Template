@@ -121,10 +121,6 @@ class ControlTable extends RenderTable {
 		var $btn = $('<button type="button" title="Delete">Delete</button>');
 		$btn.click(function(){
 			self.deleteRow(data);
-			// check if all rows were deleted
-			if(self._isEmptyTable()){
-				self.toggleEmpty();
-			}
 		});
 		return $btn;
 	}

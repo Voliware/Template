@@ -77,8 +77,13 @@ class Form extends Template {
 		// default submit handler
 		this.$wrapper.on('submit', function(e){
 			e.preventDefault();
-			self.serializer()
+			self.serializeForm()
 				._submit();
+		});
+
+		// cancel
+		this.$cancel.click(function(){
+			self._reset();
 		});
 
 		// reset
@@ -281,11 +286,22 @@ class Form extends Template {
 	}
 
 	/**
-	 * Serialize the form
+	 * Public function to serialize the form,
+	 * as jQuery uses serialize already
 	 * @returns {Form}
 	 */
-	serializer(){
+	serializeForm(){
 		this._serializedData = this.formSerializer.serialize(this.$wrapper);
+		return this;
+	}
+
+	/**
+	 * Public function to reset the form,
+	 * as jQuery uses reset already
+	 * @returns {Form}
+	 */
+	resetForm(){
+		this._reset();
 		return this;
 	}
 }
@@ -317,7 +333,7 @@ Form.validators = {
 			form.$wrapper.formValidation(options)
 				.on('success.form.fv', function(e) {
 					e.preventDefault();
-					form.serializer()
+					form.serializeForm()
 						._submit();
 				});
 			form.validator = form.$wrapper.data('formValidation');

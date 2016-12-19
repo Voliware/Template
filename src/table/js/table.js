@@ -237,6 +237,7 @@ class Table extends Template {
 	build(data){
 		this._cacheData(data);
 		data = this._processData(data);
+		this.toggleEmpty(false);
 		this._render(data);
 		return this;
 	}
@@ -262,6 +263,10 @@ class Table extends Template {
 		if(this.$rows[index]){
 			this.$rows[index].remove();
 			this.$rows.splice(index, 1);
+		}
+		// check if all rows were deleted
+		if(this._isEmptyTable()){
+			this.toggleEmpty();
 		}
 		return this;
 	}
