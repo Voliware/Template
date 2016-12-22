@@ -183,7 +183,7 @@ var BootstrapFeedback = function (_Feedback) {
 			_get(BootstrapFeedback.prototype.__proto__ || Object.getPrototypeOf(BootstrapFeedback.prototype), '_useDefaultTemplate', this).call(this);
 
 			// redo the close button
-			var $close = $('<a href="#" class="close" aria-label="close">&times;</a>');
+			var $close = $('<button type="button" class="close">&times;</button>');
 			this.$close.replaceWith($close);
 			this.$close = $close;
 

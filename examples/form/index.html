@@ -17,39 +17,74 @@
         <script src="../../dist/form/js/form.js"></script>
         <script src="example.js"></script>
 
-        <form id="testForm">
-            <div class="form-group">
-                <label>Name</label>
-                <input type="text" class="form-control" name="name" placeholder="Name"/>
-            </div>
-            <div class="form-group">
-                <label>Age</label>
-                <input type="text" class="form-control" name="age" placeholder="Age" min="10">
-            </div>
-            <div class="form-footer">
-                <div class="form-group">
-                    <button type="submit" class="form-submit btn btn-default">Submit</button>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#basic" data-toggle="tab">Basic Form</a></li>
+            <li><a href="#feedback" data-toggle="tab">Feedback Form</a></li>
+            <li><a href="#singleValue" data-toggle="tab">Single Value Form</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="basic" class="tab-pane fade in active">
+                <div class="well">
+                    <span>Basic form</span>
                 </div>
+                <form id="testForm">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="name" placeholder="Name"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="text" class="form-control" name="age" placeholder="Age" min="10">
+                    </div>
+                    <div class="form-footer">
+                        <div class="form-group">
+                            <button type="submit" class="form-submit btn btn-default">Submit</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
-
-        <form id="feedbackForm">
-            <div class="form-body">
-                <div class="form-group">
-                    <label>Location</label>
-                    <input type="text" class="form-control" name="location" placeholder="Location"/>
+            <div id="feedback" class="tab-pane fade out">
+                <div class="well">
+					<span>Form with feedback and validation.</span>
                 </div>
-                <div class="form-group">
-                    <label>Size</label>
-                    <input type="text" class="form-control" name="age" placeholder="Age" min="10">
-                </div>
+                <form id="feedbackForm">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" class="form-control" name="location" placeholder="Location"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Size</label>
+                            <input type="text" class="form-control" name="size" placeholder="Size" min="10">
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <div class="form-group">
+                            <button type="button" class="form-submit btn btn-default form-reset">Reset</button>
+                            <button type="submit" class="form-submit btn btn-default">Submit</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="form-footer">
-                <div class="form-group">
-                    <button type="button" class="form-submit btn btn-default form-reset">Reset</button>
-                    <button type="submit" class="form-submit btn btn-default">Submit</button>
+            <div id="singleValue" class="tab-pane fade out">
+                <div class="well">
+					<span>Form with a single input serialized as a simple value.</span>
                 </div>
+                <form id="singleValueForm">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="text" class="form-control" name="date" placeholder="Date"/>
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <div class="form-group">
+                            <button type="button" class="form-submit btn btn-default form-reset">Reset</button>
+                            <button type="submit" class="form-submit btn btn-default">Submit</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </body>
 </html>

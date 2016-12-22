@@ -500,6 +500,9 @@ var FormSerializer = function () {
 						case 'checkbox':
 							val = self._convertCheckbox($el, self.settings.checkboxMode);
 							break;
+						case 'radio':
+							val = $el.filter(':checked').val();
+							break;
 						case 'file':
 							var files = $el.get(0).files;
 							if (files.length === 0) {
@@ -538,6 +541,9 @@ var FormSerializer = function () {
 				case FormSerializer.serializeMode.toObject:
 					return formData.toObject();
 					break;
+				case FormSerializer.serializeMode.toValue:
+					return formData.toValue();
+					break;
 			}
 		}
 	}]);
@@ -563,7 +569,8 @@ FormSerializer.checkboxMode = {
 FormSerializer.serializeMode = {
 	toString: 0,
 	toOrderedString: 1,
-	toObject: 2
+	toObject: 2,
+	toValue: 3
 };
 
 /*!
@@ -670,6 +677,25 @@ var FormSerializerData = function () {
 			Util.each(this.data, function (i, e) {
 				// convert string numbers to real numbers
 				data[i] = isNaN(e.val) ? e.val : parseInt(e.val);
+			});
+			return data;
+		}
+
+		/**
+   * Convert the data into a single value.
+   * This is only useful if the form only has one input.
+   * @returns {*}
+   */
+
+	}, {
+		key: 'toValue',
+		value: function toValue() {
+			var data = null;
+			// data will be the last iterated object value
+			// using this function though, the form is
+			// expected to only have one input anyway
+			Util.each(this.data, function (i, e) {
+				data = e.val;
 			});
 			return data;
 		}
@@ -828,6 +854,8 @@ var Wizard = function (_Form) {
 			var v = this.settings.validator;
 			switch (v.api) {
 				case 'formValidation':
+					// must validate hidden tabs
+					v.options.excluded = [':disabled'];
 					Wizard.validators.formValidation.setup(this, v.options);
 					break;
 			}
@@ -1132,8 +1160,3 @@ var Wizard = function (_Form) {
 
 	return Wizard;
 }(Form);
-
-// must validate hidden tabs 
-
-
-Wizard.validators.formValidation.options.excluded = [':disabled'];

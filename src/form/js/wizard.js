@@ -131,6 +131,8 @@ class Wizard extends Form {
 		var v = this.settings.validator;
 		switch(v.api){
 			case 'formValidation':
+				// must validate hidden tabs
+				v.options.excluded = [':disabled'];
 				Wizard.validators.formValidation.setup(this, v.options);
 				break;
 		}
@@ -376,6 +378,3 @@ class Wizard extends Form {
 		return this;
 	}
 }
-
-// must validate hidden tabs 
-Wizard.validators.formValidation.options.excluded = [':disabled'];

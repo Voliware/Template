@@ -97,4 +97,20 @@ class FormSerializerData {
 		});
 		return data;
 	}
+
+	/**
+	 * Convert the data into a single value.
+	 * This is only useful if the form only has one input.
+	 * @returns {*}
+	 */
+	toValue(){
+		var data = null;
+		// data will be the last iterated object value
+		// using this function though, the form is
+		// expected to only have one input anyway
+		Util.each(this.data, function(i, e){
+			data = e.val;
+		});
+		return data;
+	}
 }

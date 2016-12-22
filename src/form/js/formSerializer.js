@@ -112,6 +112,9 @@ class FormSerializer {
 					case 'checkbox':
 						val = self._convertCheckbox($el, self.settings.checkboxMode);
 						break;
+					case 'radio':
+						val = $el.filter(':checked').val();
+						break;
 					case 'file':
 						var files = $el.get(0).files;
 						if (files.length === 0) {
@@ -151,6 +154,9 @@ class FormSerializer {
 			case FormSerializer.serializeMode.toObject:
 				return formData.toObject();
 				break;
+			case FormSerializer.serializeMode.toValue:
+				return formData.toValue();
+				break;
 		}
 	}
 }
@@ -171,5 +177,6 @@ FormSerializer.checkboxMode = {
 FormSerializer.serializeMode = {
 	toString : 0,
 	toOrderedString : 1,
-	toObject : 2
+	toObject : 2,
+	toValue : 3
 };
