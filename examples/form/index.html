@@ -21,6 +21,7 @@
             <li class="active"><a href="#basic" data-toggle="tab">Basic Form</a></li>
             <li><a href="#feedback" data-toggle="tab">Feedback Form</a></li>
             <li><a href="#singleValue" data-toggle="tab">Single Value Form</a></li>
+            <li><a href="#populate" data-toggle="tab">Server Populated Form</a></li>
         </ul>
         <div class="tab-content">
             <div id="basic" class="tab-pane fade in active">
@@ -75,6 +76,46 @@
                         <div class="form-group">
                             <label>Date</label>
                             <input type="text" class="form-control" name="date" placeholder="Date"/>
+                        </div>
+                    </div>
+                    <div class="form-footer">
+                        <div class="form-group">
+                            <button type="button" class="form-submit btn btn-default form-reset">Reset</button>
+                            <button type="submit" class="form-submit btn btn-default">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="populate" class="tab-pane fade out">
+                <div class="well">
+					<span>Form populated by backend data.</span>
+                </div>
+                <form id="populateForm">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="name" placeholder="Name"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Age</label>
+                            <input type="number" class="form-control" name="age" placeholder="Age"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select name="gender" class="form-control">
+                                <option value="0">Male</option>
+                                <option value="1">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Vegetarian</label>
+                            <input type="checkbox" class="form-control" name="vegetarian"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Height</label>
+                            <input type="radio" value="0" class="form-control" name="height"/>Small
+                            <input type="radio" value="1" class="form-control" name="height"/>Tall
+                            <input type="radio" value="2" class="form-control" name="height"/>Giant
                         </div>
                     </div>
                     <div class="form-footer">
