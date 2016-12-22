@@ -109,7 +109,10 @@ class FormSerializerData {
 		// using this function though, the form is
 		// expected to only have one input anyway
 		Util.each(this.data, function(i, e){
-			data = e.val;
+			// convert string numbers to real numbers
+			data = isNaN(e.val)
+				? e.val
+				: parseInt(e.val);
 		});
 		return data;
 	}

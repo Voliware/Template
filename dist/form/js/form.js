@@ -501,7 +501,7 @@ var FormSerializer = function () {
 							val = self._convertCheckbox($el, self.settings.checkboxMode);
 							break;
 						case 'radio':
-							val = $el.filter(':checked').val();
+							if ($el.is(':checked')) val = $el.val();else return true;
 							break;
 						case 'file':
 							var files = $el.get(0).files;
@@ -695,7 +695,8 @@ var FormSerializerData = function () {
 			// using this function though, the form is
 			// expected to only have one input anyway
 			Util.each(this.data, function (i, e) {
-				data = e.val;
+				// convert string numbers to real numbers
+				data = isNaN(e.val) ? e.val : parseInt(e.val);
 			});
 			return data;
 		}

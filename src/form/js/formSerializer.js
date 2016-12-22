@@ -113,7 +113,10 @@ class FormSerializer {
 						val = self._convertCheckbox($el, self.settings.checkboxMode);
 						break;
 					case 'radio':
-						val = $el.filter(':checked').val();
+						if($el.is(':checked'))
+							val = $el.val();
+						else
+							return true;
 						break;
 					case 'file':
 						var files = $el.get(0).files;
