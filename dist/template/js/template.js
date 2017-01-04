@@ -165,11 +165,14 @@ if (typeof isJquery === 'undefined') {
 	};
 
 	/**
-  * Popualte a DOM object in the appropriate way.
+  * Populate a DOM object in the appropriate way.
   * Extend with $Util.populate object
   * @param {string|number|jQuery} data
+  * @param {boolean} [trigger=true] - whether to call change and input events
   */
 	$.fn.populate = function (data) {
+		var trigger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
 		var $this = $(this);
 
 		// don't popualte if data-populate=false
@@ -184,6 +187,9 @@ if (typeof isJquery === 'undefined') {
 
 		// prevent further populates if update is set to false
 		if ($this.data('update') === false) this.attr('data-populate', false);
+
+		// trigger input and change events
+		if (trigger) $this.trigger('change').trigger('input');
 
 		return this;
 
@@ -253,14 +259,17 @@ if (typeof isJquery === 'undefined') {
   * Uses $.populate(data) to appropriately fill in the
   * found element.
   * @param {object} data
+  * @param {boolean} [trigger=true] - whether to call change and input events
   * @returns {jQuery}
   */
 	$.fn.populateChildren = function (data) {
+		var trigger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
 		var $this = $(this);
 		Util.each(data, function (i, e) {
 			var $el = $this.find('[name="' + i + '"]');
 			if ($el.length === 0) $el = $this.find('[data-name="' + i + '"]');
-			if ($el.length > 0 && $el.data('populate') !== false) $el.populate(e);
+			if ($el.length > 0 && $el.data('populate') !== false) $el.populate(e, trigger);
 		});
 		return this;
 	};
