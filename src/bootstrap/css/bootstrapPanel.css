@@ -4,19 +4,10 @@
  * Licensed under the MIT license.
  */
 
-.panel-close,
-.panel-collapse {
+.panel-close {
     color:black;
     float: right;
     opacity: .2;
-}
-.panel-collapse{
-    margin-top: 2px;
-}
-.panel-collapse,
-.panel-collapse:visited,
-.panel-collapse:hover{
-    text-decoration: none;
 }
 .panel-close{
     margin-left: 10px;

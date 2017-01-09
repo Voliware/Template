@@ -266,7 +266,7 @@ if (typeof isJquery === 'undefined') {
 		var trigger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
 		var $this = $(this);
-		Util.each(data, function (i, e) {
+		$.each(data, function (i, e) {
 			var $el = $this.find('[name="' + i + '"]');
 			if ($el.length === 0) $el = $this.find('[data-name="' + i + '"]');
 			if ($el.length > 0 && $el.data('populate') !== false) $el.populate(e, trigger);
