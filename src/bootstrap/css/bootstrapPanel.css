@@ -12,3 +12,6 @@
 .panel-close{
     margin-left: 10px;
 }
+.panel-heading[data-toggle="collapse"]{
+    cursor:pointer;
+}
