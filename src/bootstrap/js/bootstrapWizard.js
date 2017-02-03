@@ -1,19 +1,19 @@
 /*!
- * bootstrapForm
+ * bootstrapWizard
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  */
 
 /**
- * A form with bootstrap feedback
- * @extends Form
+ * A wizard with bootstrap feedback
+ * @extends Wizard
  */
-class BootstrapForm extends Form {
+class BootstrapWizard extends Wizard {
 
 	/**
 	 * Constructor
 	 * @param {object} options
-	 * @returns {BootstrapForm}
+	 * @returns {BootstrapWizard}
 	 */
 	constructor(options){
 		super(options);
@@ -23,12 +23,14 @@ class BootstrapForm extends Form {
 
 	/**
 	 * Setup the feedback
-	 * @returns {BootstrapForm}
+	 * @returns {BootstrapWizard}
 	 * @private
 	 */
 	_setupFeedback(){
 		this.feedback = new BootstrapFeedback();
-		this.feedback.prependTo(this.$body);
+		this.feedback.prependTo(this.$wrapper);
 		return this;
 	}
+
+
 }

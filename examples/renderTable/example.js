@@ -58,26 +58,29 @@ class CustomTable extends RenderTable {
 		return this;
 	}
 
-	_processData(data){
-		$.each(data, function(i, e){
-			e.active = createSwitch(e.active === 1);
-		});
+	_addActiveButton(data){
+		data.activeButton = this._createActiveButton(data);
+		return this;
+	}
 
-		function createSwitch(state){
-			var $wrapper = $('<div></div>');
-			var active = new BootstrapToggle({
-				switchOptions : {
-					name : 'active',
-					size : 'small'
-				}
-			})
-				.change(function(){
-					console.log("switch state is " + $(this).prop('checked'));
-				})
-				.appendTo($wrapper)
-				.bootstrapToggle(state ? 'on' : 'off');
-			return $wrapper;
-		}
+	_createActiveButton(data){
+		var $wrapper = $('<div></div>');
+		var active = new BootstrapToggle({
+			switchOptions : {
+				name : 'active',
+				size : 'small'
+			}
+		})
+		.bootstrapToggle(data.state ? 'on' : 'off')
+		.change(function(){
+			console.log("switch state is " + $(this).prop('checked'));
+		})
+		.appendTo($wrapper);
+		return $wrapper;
+	}
+
+	_processRow(data){
+		this._addActiveButton(data);
 		return data;
 	}
 }

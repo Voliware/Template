@@ -320,7 +320,7 @@ var BootstrapForm = function (_Form) {
 
 	/**
   * Setup the feedback
-  * @returns {Form}
+  * @returns {BootstrapForm}
   * @private
   */
 
@@ -329,7 +329,7 @@ var BootstrapForm = function (_Form) {
 		key: '_setupFeedback',
 		value: function _setupFeedback() {
 			this.feedback = new BootstrapFeedback();
-			this.feedback.$wrapper.prependTo(this.$body);
+			this.feedback.prependTo(this.$body);
 			return this;
 		}
 	}]);
@@ -1430,3 +1430,52 @@ var BootstrapToggle = function (_Template6) {
 
 	return BootstrapToggle;
 }(Template);
+
+/*!
+ * bootstrapWizard
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * A wizard with bootstrap feedback
+ * @extends Wizard
+ */
+
+
+var BootstrapWizard = function (_Wizard) {
+	_inherits(BootstrapWizard, _Wizard);
+
+	/**
+  * Constructor
+  * @param {object} options
+  * @returns {BootstrapWizard}
+  */
+	function BootstrapWizard(options) {
+		var _ret14;
+
+		_classCallCheck(this, BootstrapWizard);
+
+		var _this14 = _possibleConstructorReturn(this, (BootstrapWizard.__proto__ || Object.getPrototypeOf(BootstrapWizard)).call(this, options));
+
+		return _ret14 = _this14, _possibleConstructorReturn(_this14, _ret14);
+	}
+
+	/**
+  * Setup the feedback
+  * @returns {BootstrapWizard}
+  * @private
+  */
+
+
+	_createClass(BootstrapWizard, [{
+		key: '_setupFeedback',
+		value: function _setupFeedback() {
+			this.feedback = new BootstrapFeedback();
+			this.feedback.prependTo(this.$wrapper);
+			return this;
+		}
+	}]);
+
+	return BootstrapWizard;
+}(Wizard);

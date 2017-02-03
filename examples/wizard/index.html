@@ -15,29 +15,31 @@
         <script src="../../dist/template/js/template.js"></script>
         <script src="../../dist/feedback/js/feedback.js"></script>
         <script src="../../dist/form/js/form.js"></script>
+        <script src="../../dist/table/js/table.js"></script>
+        <script src="../../dist/bootstrap/js/bootstrap.js"></script>
         <script src="example.js"></script>
 
         <div id="testWizard" class="container wizard">
             <ul class="nav nav-pills">
-                <li class="active"><a data-toggle="pill" href="#s1">Step 1</a></li>
-                <li><a data-toggle="pill" href="#s2">Step 2</a></li>
-                <li><a data-toggle="pill" href="#s3">Step 3</a></li>
+                <li class="active"><a data-toggle="pill" href="#s-1">Step 1</a></li>
+                <li><a data-toggle="pill" href="#s-2">Step 2</a></li>
+                <li><a data-toggle="pill" href="#s-3">Step 3</a></li>
             </ul>
             <form>
                 <div class="tab-content">
-                    <div id="s1" class="tab-pane fade in active">
+                    <div id="s-1" class="tab-pane fade in active">
                         <div class="form-group">
                             <label>Name:</label>
-                            <input type="text" name="name" class="form-control"/>
+                            <input type="text" name="name" class="form-control" value="defaultName"/>
                         </div>
                     </div>
-                    <div id="s2" class="tab-pane fade">
+                    <div id="s-2" class="tab-pane fade">
                         <div class="form-group">
                             <label>Age:</label>
-                            <input type="number" name="age" class="form-control" min="1" max="99"/>
+                            <input type="number" name="age" class="form-control" min="1" max="99" value="2"/>
                         </div>
                     </div>
-                    <div id="s3" class="tab-pane fade">
+                    <div id="s-3" class="tab-pane fade">
                         <div class="form-group">
                             <label>Gender:</label>
                             <select name="gender" class="form-control" required>

@@ -14,7 +14,7 @@
  * bootstrapPanel
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
- */.panel-close{color:black;float:right;opacity:.2}.panel-close{margin-left:10px}/*!
+ */.panel-close{color:black;float:right;opacity:.2}.panel-close{margin-left:10px}.panel-heading[data-toggle="collapse"]{cursor:pointer}/*!
  * boostrapProgress
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.

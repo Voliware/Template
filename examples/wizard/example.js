@@ -1,7 +1,7 @@
-
+var wizard;
 $(document).on('ready', function(){
 	var $testWizard = $('#testWizard');
-	var w = new Wizard({
+	wizard = new BootstrapWizard({
 		validator : Wizard.validators.formValidation,
 		template : $testWizard,
 		useTemplate : true

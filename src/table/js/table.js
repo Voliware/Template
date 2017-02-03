@@ -36,8 +36,12 @@ class Table extends Template {
 		};
 		super($Util.opts(defaults, options));
 
+		// components
 		this.$rows = [];
 		this._cachedData = {};
+
+		// states
+		this.isFirstBuild = true;
 
 		// provide a default empty msg
 		this.$empty = $('<tr class="table-empty"><td>There is no data to display.</td></tr>');
@@ -239,6 +243,7 @@ class Table extends Template {
 		data = this._processData(data);
 		this.toggleEmpty(false);
 		this._render(data);
+		this.isFirstBuild = false;
 		return this;
 	}
 

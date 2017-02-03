@@ -27,16 +27,20 @@ class RenderTable extends Table {
 			// use the name of the object.
 			// this only works when passing
 			// objects of objects to manage()
-			useObjectNames : false
+			useObjectNames : false,
+			// instead of using a jquery object
+			// such as a tr, use a Template class
+			rowTemplate : null
 		};
 		super($Util.opts(defaults, options));
 
+		// components
 		// row manager to re-build rows instead
 		// of wiping the <tbody> each time
 		this.rowManager = new TemplateManager({
 			identifier : this.settings.identifier,
 			useObjectNames : this.settings.useObjectNames,
-			template : this.$tr,
+			template : this.settings.rowTemplate || this.$tr,
 			$wrapper  : this.$tbody
 		});
 

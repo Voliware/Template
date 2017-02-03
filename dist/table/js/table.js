@@ -52,10 +52,14 @@ var Table = function (_Template) {
 			rowHeaders: []
 		};
 
+		// components
 		var _this = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
 
 		_this.$rows = [];
 		_this._cachedData = {};
+
+		// states
+		_this.isFirstBuild = true;
 
 		// provide a default empty msg
 		_this.$empty = $('<tr class="table-empty"><td>There is no data to display.</td></tr>');
@@ -274,6 +278,7 @@ var Table = function (_Template) {
 			data = this._processData(data);
 			this.toggleEmpty(false);
 			this._render(data);
+			this.isFirstBuild = false;
 			return this;
 		}
 
@@ -375,9 +380,13 @@ var RenderTable = function (_Table) {
 			// use the name of the object.
 			// this only works when passing
 			// objects of objects to manage()
-			useObjectNames: false
+			useObjectNames: false,
+			// instead of using a jquery object
+			// such as a tr, use a Template class
+			rowTemplate: null
 		};
 
+		// components
 		// row manager to re-build rows instead
 		// of wiping the <tbody> each time
 		var _this2 = _possibleConstructorReturn(this, (RenderTable.__proto__ || Object.getPrototypeOf(RenderTable)).call(this, $Util.opts(defaults, options)));
@@ -385,7 +394,7 @@ var RenderTable = function (_Table) {
 		_this2.rowManager = new TemplateManager({
 			identifier: _this2.settings.identifier,
 			useObjectNames: _this2.settings.useObjectNames,
-			template: _this2.$tr,
+			template: _this2.settings.rowTemplate || _this2.$tr,
 			$wrapper: _this2.$tbody
 		});
 

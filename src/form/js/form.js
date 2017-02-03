@@ -51,6 +51,7 @@ class Form extends Template {
 			},
 			validator: null
 		};
+
 		super($Util.opts(defaults, options));
 		var self = this;
 
@@ -60,10 +61,11 @@ class Form extends Template {
 		this._populatedData = {};
 
 		// alias
-		// this alias just happens to be integral
-		// to Wizard, which inherits Form, but
-		// overrides $wrapper and thus loses a <form> ref
-		this.$form = this.$wrapper;
+		// this exists solely for Wizard !!
+		var $form = this.$wrapper.find('form');
+		this.$form = $form.length > 0
+			? $form
+			: this.$wrapper;
 
 		// components
 		this.formSerializer = new FormSerializer({
@@ -75,7 +77,7 @@ class Form extends Template {
 
 		// handlers
 		// default submit handler
-		this.$wrapper.on('submit', function(e){
+		this.$form.on('submit', function(e){
 			e.preventDefault();
 			self.serializeForm()
 				._submit();
@@ -83,12 +85,12 @@ class Form extends Template {
 
 		// cancel
 		this.$cancel.click(function(){
-			self._reset();
+			self.resetForm();
 		});
 
 		// reset
 		this.$reset.click(function(){
-			self._reset();
+			self.resetForm();
 		});
 
 		// set up validator
@@ -101,6 +103,8 @@ class Form extends Template {
 
 		return this;
 	}
+
+	// setup
 
 	/**
 	 * Default form template
@@ -131,10 +135,9 @@ class Form extends Template {
 	 */
 	_setupValidator(){
 		var v = this.settings.validator;
-
 		switch(v.api){
 			case 'formValidation':
-				Form.validators.formValidation.setup(this, v.options);
+				Form.validators.formValidation.setup(this, this.$form, v.options);
 				break;
 		}
 		return this;
@@ -147,33 +150,11 @@ class Form extends Template {
 	 */
 	_setupFeedback(){
 		this.feedback = new Feedback();
-		this.feedback.$wrapper.prependTo(this.$body);
+		this.feedback.prependTo(this.$body);
 		return this;
 	}
 
-	/**
-	 * Reset the form, using populated data
-	 * or setting to default values
-	 * @returns {Form}
-	 * @private
-	 */
-	_reset(){
-		if(!$.isEmptyObject(this._populatedData))
-			this.populateForm(this._populatedData);
-		else
-			this.$wrapper[0].reset();
-
-		if(this.feedback){
-			this.feedback.slideUp();
-		}
-
-		// todo: implement reset for alternative validators
-		if(this.validator){
-			this.validator.resetForm();
-		}
-
-		return this;
-	}
+	// submit
 
 	/**
 	 * Submits the form
@@ -214,6 +195,8 @@ class Form extends Template {
 			return $.post(s.submitUrl, this._serializedData);
 	}
 
+	// submit handlers
+
 	/**
 	 * Form submission success handler
 	 * @param {object} data
@@ -247,7 +230,19 @@ class Form extends Template {
 	 */
 	_onAlways(){
 		this.trigger('always');
+		this.toggleButtons(true);
 		return this;
+	}
+
+	// data
+
+	/**
+	 * Get form data from the backend
+	 * @returns {jQuery}
+	 * @private
+	 */
+	_getFormData(){
+		return $.Deferred().resolve().promise();
 	}
 
 	/**
@@ -271,6 +266,20 @@ class Form extends Template {
 		return data;
 	}
 
+	// public
+
+	/**
+	 * Toggle the button states
+	 * @param {boolean} state
+	 * @returns {Form}
+	 */
+	toggleButtons(state){
+		this.$cancel.prop('disabled', !state);
+		this.$reset.prop('disabled', !state);
+		this.$submit.prop('disabled', !state).toggleClass('disabled', !state);
+		return this;
+	}
+
 	/**
 	 * Populate form fields
 	 * @param {object} data - collection of properties whos
@@ -281,7 +290,7 @@ class Form extends Template {
 	populateForm(data){
 		this._cacheFormData(data);
 		this._processFormData(data);
-		this.$wrapper.populateChildren(data);
+		this.$form.populateChildren(data);
 		return this;
 	}
 
@@ -291,18 +300,85 @@ class Form extends Template {
 	 * @returns {Form}
 	 */
 	serializeForm(){
-		this._serializedData = this.formSerializer.serialize(this.$wrapper);
+		this._serializedData = this.formSerializer.serialize(this.$form);
 		return this;
 	}
 
 	/**
-	 * Public function to reset the form,
-	 * as jQuery uses reset already
+	 * Reset the form, using populated data
+	 * or setting to default values
 	 * @returns {Form}
 	 */
 	resetForm(){
-		this._reset();
+		if(!$.isEmptyObject(this._populatedData))
+			this.populateForm(this._populatedData);
+		else
+			this.$form[0].reset();
+
+		if(this.feedback)
+			this.feedback.slideUp();
+
+		// todo: implement for alternative validators
+		if(this.validator){
+			switch(this.settings.validator.api) {
+				case 'formValidation':
+					this.validator.resetForm();
+					break;
+			}
+		}
+
 		return this;
+	}
+
+	/**
+	 * Validate the form
+	 * @returns {boolean}
+	 */
+	validate(){
+		var isValid = false;
+		if(this.validator){
+			// todo: implement for alternative validators
+			switch(this.settings.validator.api){
+				case 'formValidation':
+					this.validator.resetForm();
+					this.validator.validateContainer(this.$form);
+					isValid = this.validator.isValidContainer(this.$form);
+					break;
+			}
+		}
+		return isValid;
+	}
+
+	// initializers
+
+	/**
+	 * Initialize as a clean form with
+	 * default values from the DOM
+	 * @returns {Form}
+	 */
+	initialize(){
+		this._populatedData = {};
+		this.resetForm();
+		return this;
+	}
+
+	/**
+	 * Initialize as a form with
+	 * pre-populated values from the backend
+	 * @returns {jQuery}
+	 */
+	initializeUpdate(){
+		var self = this;
+		this.resetForm();
+		this.$form.hide();
+		this.feedback.setFeedback('processing', 'Getting data...');
+		return this._getFormData()
+			.done(function(data){
+				self.populateForm(data);
+				self.feedback.slideUp(function(){
+					self.$form.slideDown();
+				});
+			});
 	}
 }
 
@@ -326,17 +402,19 @@ Form.validators = {
 		/**
 		 * formValidation setup
 		 * @param {Form} form
+		 * @param {jQuery} $form
 		 * @param {object} options
 		 */
-		setup : function(form, options){
-			form.$wrapper.off('submit');
-			form.$wrapper.formValidation(options)
+		setup : function(form, $form, options){
+			$form.off('submit');
+			$form.formValidation(options)
 				.on('success.form.fv', function(e) {
 					e.preventDefault();
+					form.toggleButtons(false);
 					form.serializeForm()
 						._submit();
 				});
-			form.validator = form.$wrapper.data('formValidation');
+			form.validator = $form.data('formValidation');
 		}
 	}
 };

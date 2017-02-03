@@ -79,10 +79,9 @@ var Form = function (_Template) {
 		_this._populatedData = {};
 
 		// alias
-		// this alias just happens to be integral
-		// to Wizard, which inherits Form, but
-		// overrides $wrapper and thus loses a <form> ref
-		_this.$form = _this.$wrapper;
+		// this exists solely for Wizard !!
+		var $form = _this.$wrapper.find('form');
+		_this.$form = $form.length > 0 ? $form : _this.$wrapper;
 
 		// components
 		_this.formSerializer = new FormSerializer({
@@ -94,19 +93,19 @@ var Form = function (_Template) {
 
 		// handlers
 		// default submit handler
-		_this.$wrapper.on('submit', function (e) {
+		_this.$form.on('submit', function (e) {
 			e.preventDefault();
 			self.serializeForm()._submit();
 		});
 
 		// cancel
 		_this.$cancel.click(function () {
-			self._reset();
+			self.resetForm();
 		});
 
 		// reset
 		_this.$reset.click(function () {
-			self._reset();
+			self.resetForm();
 		});
 
 		// set up validator
@@ -117,6 +116,8 @@ var Form = function (_Template) {
 
 		return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	}
+
+	// setup
 
 	/**
   * Default form template
@@ -145,10 +146,9 @@ var Form = function (_Template) {
 		key: '_setupValidator',
 		value: function _setupValidator() {
 			var v = this.settings.validator;
-
 			switch (v.api) {
 				case 'formValidation':
-					Form.validators.formValidation.setup(this, v.options);
+					Form.validators.formValidation.setup(this, this.$form, v.options);
 					break;
 			}
 			return this;
@@ -164,33 +164,11 @@ var Form = function (_Template) {
 		key: '_setupFeedback',
 		value: function _setupFeedback() {
 			this.feedback = new Feedback();
-			this.feedback.$wrapper.prependTo(this.$body);
+			this.feedback.prependTo(this.$body);
 			return this;
 		}
 
-		/**
-   * Reset the form, using populated data
-   * or setting to default values
-   * @returns {Form}
-   * @private
-   */
-
-	}, {
-		key: '_reset',
-		value: function _reset() {
-			if (!$.isEmptyObject(this._populatedData)) this.populateForm(this._populatedData);else this.$wrapper[0].reset();
-
-			if (this.feedback) {
-				this.feedback.slideUp();
-			}
-
-			// todo: implement reset for alternative validators
-			if (this.validator) {
-				this.validator.resetForm();
-			}
-
-			return this;
-		}
+		// submit
 
 		/**
    * Submits the form
@@ -229,6 +207,8 @@ var Form = function (_Template) {
 
 			if (s.submitRequest) return s.submitRequest(this._serializedData);else return $.post(s.submitUrl, this._serializedData);
 		}
+
+		// submit handlers
 
 		/**
    * Form submission success handler
@@ -270,7 +250,22 @@ var Form = function (_Template) {
 		key: '_onAlways',
 		value: function _onAlways() {
 			this.trigger('always');
+			this.toggleButtons(true);
 			return this;
+		}
+
+		// data
+
+		/**
+   * Get form data from the backend
+   * @returns {jQuery}
+   * @private
+   */
+
+	}, {
+		key: '_getFormData',
+		value: function _getFormData() {
+			return $.Deferred().resolve().promise();
 		}
 
 		/**
@@ -300,6 +295,23 @@ var Form = function (_Template) {
 			return data;
 		}
 
+		// public
+
+		/**
+   * Toggle the button states
+   * @param {boolean} state
+   * @returns {Form}
+   */
+
+	}, {
+		key: 'toggleButtons',
+		value: function toggleButtons(state) {
+			this.$cancel.prop('disabled', !state);
+			this.$reset.prop('disabled', !state);
+			this.$submit.prop('disabled', !state).toggleClass('disabled', !state);
+			return this;
+		}
+
 		/**
    * Populate form fields
    * @param {object} data - collection of properties whos
@@ -313,7 +325,7 @@ var Form = function (_Template) {
 		value: function populateForm(data) {
 			this._cacheFormData(data);
 			this._processFormData(data);
-			this.$wrapper.populateChildren(data);
+			this.$form.populateChildren(data);
 			return this;
 		}
 
@@ -326,21 +338,92 @@ var Form = function (_Template) {
 	}, {
 		key: 'serializeForm',
 		value: function serializeForm() {
-			this._serializedData = this.formSerializer.serialize(this.$wrapper);
+			this._serializedData = this.formSerializer.serialize(this.$form);
 			return this;
 		}
 
 		/**
-   * Public function to reset the form,
-   * as jQuery uses reset already
+   * Reset the form, using populated data
+   * or setting to default values
    * @returns {Form}
    */
 
 	}, {
 		key: 'resetForm',
 		value: function resetForm() {
-			this._reset();
+			if (!$.isEmptyObject(this._populatedData)) this.populateForm(this._populatedData);else this.$form[0].reset();
+
+			if (this.feedback) this.feedback.slideUp();
+
+			// todo: implement for alternative validators
+			if (this.validator) {
+				switch (this.settings.validator.api) {
+					case 'formValidation':
+						this.validator.resetForm();
+						break;
+				}
+			}
+
 			return this;
+		}
+
+		/**
+   * Validate the form
+   * @returns {boolean}
+   */
+
+	}, {
+		key: 'validate',
+		value: function validate() {
+			var isValid = false;
+			if (this.validator) {
+				// todo: implement for alternative validators
+				switch (this.settings.validator.api) {
+					case 'formValidation':
+						this.validator.resetForm();
+						this.validator.validateContainer(this.$form);
+						isValid = this.validator.isValidContainer(this.$form);
+						break;
+				}
+			}
+			return isValid;
+		}
+
+		// initializers
+
+		/**
+   * Initialize as a clean form with
+   * default values from the DOM
+   * @returns {Form}
+   */
+
+	}, {
+		key: 'initialize',
+		value: function initialize() {
+			this._populatedData = {};
+			this.resetForm();
+			return this;
+		}
+
+		/**
+   * Initialize as a form with
+   * pre-populated values from the backend
+   * @returns {jQuery}
+   */
+
+	}, {
+		key: 'initializeUpdate',
+		value: function initializeUpdate() {
+			var self = this;
+			this.resetForm();
+			this.$form.hide();
+			this.feedback.setFeedback('processing', 'Getting data...');
+			return this._getFormData().done(function (data) {
+				self.populateForm(data);
+				self.feedback.slideUp(function () {
+					self.$form.slideDown();
+				});
+			});
 		}
 	}]);
 
@@ -367,15 +450,17 @@ Form.validators = {
 		/**
    * formValidation setup
    * @param {Form} form
+   * @param {jQuery} $form
    * @param {object} options
    */
-		setup: function setup(form, options) {
-			form.$wrapper.off('submit');
-			form.$wrapper.formValidation(options).on('success.form.fv', function (e) {
+		setup: function setup(form, $form, options) {
+			$form.off('submit');
+			$form.formValidation(options).on('success.form.fv', function (e) {
 				e.preventDefault();
+				form.toggleButtons(false);
 				form.serializeForm()._submit();
 			});
-			form.validator = form.$wrapper.data('formValidation');
+			form.validator = $form.data('formValidation');
 		}
 	}
 };
@@ -850,17 +935,19 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_validatorFactory',
-		value: function _validatorFactory() {
+		key: '_setupValidator',
+		value: function _setupValidator() {
 			var v = this.settings.validator;
 			switch (v.api) {
 				case 'formValidation':
+					// clone to not affect Form refs
+					var options = $.extend(true, {}, v.options);
 					// must validate hidden tabs
-					v.options.excluded = [':disabled'];
-					Wizard.validators.formValidation.setup(this, v.options);
+					options.excluded = [':disabled'];
+					Wizard.validators.formValidation.setup(this, this.$form, options);
 					break;
 			}
-			return _get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), '_validatorFactory', this).call(this);
+			return this;
 		}
 
 		// control
@@ -1034,6 +1121,8 @@ var Wizard = function (_Form) {
 			return this.step > 0 ? $(this.$tabs.get(this.step - 1)) : null;
 		}
 
+		// validation
+
 		/**
    * Validate a tab
    * @param {jQuery} $tab
@@ -1045,12 +1134,15 @@ var Wizard = function (_Form) {
 		value: function validateTab($tab) {
 			var api = this.settings.validator.api;
 			var valid = true;
-			if (api === 'formValidation') {
-				this.validator.validateContainer($tab);
-				valid = this.validator.isValidContainer($tab);
-			} else {
-				console.log("Wizard.validateTab: no support for api: " + api);
+
+			// todo: add support for other validators
+			switch (api) {
+				case 'formValidation':
+					this.validator.validateContainer($tab);
+					valid = this.validator.isValidContainer($tab);
+					break;
 			}
+
 			var $nav = this._getNavFromTab($tab);
 			this._toggleNavInvalid($nav, !valid);
 			return valid;
@@ -1102,7 +1194,7 @@ var Wizard = function (_Form) {
 		value: function validateAllTabs() {
 			var self = this;
 			var valid = true;
-			$.each(this.tabs, function (i, e) {
+			$.each(this.$tabs, function (i, e) {
 				var $tab = $(e);
 				self.validator.validateContainer($tab);
 				valid = self.validator.isValidContainer($tab);
@@ -1156,6 +1248,86 @@ var Wizard = function (_Form) {
 
 			this.$submit.toggle(state);
 			return this;
+		}
+
+		/**
+   * Toggle wizard components
+   * @param {boolean} state
+   * @returns {Wizard}
+   */
+
+	}, {
+		key: 'toggleWizardComponents',
+		value: function toggleWizardComponents(state) {
+			this.$form.slideToggleState(state);
+			this.$navs.slideToggleState(state);
+			return this;
+		}
+
+		// resets
+
+		/**
+   * Reset nav validation
+   * @returns {Wizard}
+   */
+
+	}, {
+		key: 'resetNavValidation',
+		value: function resetNavValidation() {
+			for (var i = 0; i < this.$navs.length; i++) {
+				var $nav = $(this.$navs[i]);
+				this._toggleNavInvalid($nav, false);
+			}
+			return this;
+		}
+
+		/**
+   * Reset the wizard
+   * @returns {Wizard}
+   */
+
+	}, {
+		key: 'resetWizard',
+		value: function resetWizard() {
+			var $nav = $(this.$navs[0]);
+			$nav.find('a').click();
+			this.resetNavValidation();
+			return this.resetForm();
+		}
+		// initializers
+
+		/**
+   * Initialize as a clean form with
+   * default values from the DOM
+   * @returns {Form}
+   */
+
+	}, {
+		key: 'initialize',
+		value: function initialize() {
+			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'initialize', this).call(this);
+			return this.resetWizard();
+		}
+
+		/**
+   * Initialize as a form with
+   * pre-populated values from the backend
+   * @returns {jQuery}
+   */
+
+	}, {
+		key: 'initializeUpdate',
+		value: function initializeUpdate() {
+			var self = this;
+			this.resetWizard();
+			this.toggleWizardComponents(false);
+			this.feedback.setFeedback('processing', 'Getting data...');
+			return this._getFormData().done(function (data) {
+				self.populateForm(data);
+				self.feedback.slideUp(function () {
+					self.toggleWizardComponents(true);
+				});
+			});
 		}
 	}]);
 

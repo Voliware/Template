@@ -53,7 +53,8 @@ function buildBootstrap(){
 		src.bootstrap.js + 'bootstrapLoader.js',
 		src.bootstrap.js + 'bootstrapTab.js',
 		src.bootstrap.js + 'bootstrapTabManager.js',
-		src.bootstrap.js + 'bootstrapToggle.js'
+		src.bootstrap.js + 'bootstrapToggle.js',
+		src.bootstrap.js + 'bootstrapWizard.js'
 	];
 	buildJs(js, dist.bootstrap.js, 'bootstrap');
 

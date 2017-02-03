@@ -127,16 +127,18 @@ class Wizard extends Form {
 	 * @returns {Form}
 	 * @private
 	 */
-	_validatorFactory(){
+	_setupValidator(){
 		var v = this.settings.validator;
 		switch(v.api){
 			case 'formValidation':
+				// clone to not affect Form refs
+				var options = $.extend(true, {}, v.options);
 				// must validate hidden tabs
-				v.options.excluded = [':disabled'];
-				Wizard.validators.formValidation.setup(this, v.options);
+				options.excluded = [':disabled'];
+				Wizard.validators.formValidation.setup(this, this.$form, options);
 				break;
 		}
-		return super._validatorFactory();
+		return this;
 	}
 
 	// control
@@ -283,6 +285,8 @@ class Wizard extends Form {
 			: null;
 	}
 
+	// validation
+
 	/**
 	 * Validate a tab
 	 * @param {jQuery} $tab
@@ -291,13 +295,15 @@ class Wizard extends Form {
 	validateTab($tab){
 		var api = this.settings.validator.api;
 		var valid = true;
-		if(api === 'formValidation'){
-			this.validator.validateContainer($tab);
-			valid = this.validator.isValidContainer($tab);
+
+		// todo: add support for other validators
+		switch(api){
+			case 'formValidation':
+				this.validator.validateContainer($tab);
+				valid = this.validator.isValidContainer($tab);
+				break;
 		}
-		else {
-			console.log("Wizard.validateTab: no support for api: " + api);
-		}
+
 		var $nav = this._getNavFromTab($tab);
 		this._toggleNavInvalid($nav, !valid);
 		return valid;
@@ -337,7 +343,7 @@ class Wizard extends Form {
 	validateAllTabs(){
 		var self = this;
 		var valid = true;
-		$.each(this.tabs, function(i, e){
+		$.each(this.$tabs, function(i, e){
 			var $tab = $(e);
 			self.validator.validateContainer($tab);
 			valid = self.validator.isValidContainer($tab);
@@ -376,5 +382,71 @@ class Wizard extends Form {
 	toggleSubmitButton(state = true){
 		this.$submit.toggle(state);
 		return this;
+	}
+
+	/**
+	 * Toggle wizard components
+	 * @param {boolean} state
+	 * @returns {Wizard}
+	 */
+	toggleWizardComponents(state){
+		this.$form.slideToggleState(state);
+		this.$navs.slideToggleState(state);
+		return this;
+	}
+
+	// resets
+
+	/**
+	 * Reset nav validation
+	 * @returns {Wizard}
+	 */
+	resetNavValidation(){
+		for(var i = 0; i < this.$navs.length; i++){
+			var $nav = $(this.$navs[i]);
+			this._toggleNavInvalid($nav, false);
+		}
+		return this;
+	}
+
+	/**
+	 * Reset the wizard
+	 * @returns {Wizard}
+	 */
+	resetWizard(){
+		var $nav = $(this.$navs[0]);
+		$nav.find('a').click();
+		this.resetNavValidation();
+		return this.resetForm();
+	}
+	// initializers
+
+	/**
+	 * Initialize as a clean form with
+	 * default values from the DOM
+	 * @returns {Form}
+	 */
+	initialize(){
+		super.initialize();
+		return this.resetWizard();
+	}
+
+	/**
+	 * Initialize as a form with
+	 * pre-populated values from the backend
+	 * @returns {jQuery}
+	 */
+	initializeUpdate(){
+		var self = this;
+		this.resetWizard();
+		this.toggleWizardComponents(false);
+		this.feedback.setFeedback('processing', 'Getting data...');
+		return this._getFormData()
+			.done(function(data){
+				self.populateForm(data);
+				self.feedback.slideUp(function(){
+					self.toggleWizardComponents(true);
+				});
+			});
 	}
 }
