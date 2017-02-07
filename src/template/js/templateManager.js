@@ -64,7 +64,7 @@ class TemplateManager extends Manager {
 	_update(data) {
 		var id = this.getId(data);
 		var $template = this.templates[id];
-		$template.populateChildren(data);
+		this._populateTemplate($template, data);
 		this.trigger('update', $template);
 		return this;
 	}
@@ -107,9 +107,21 @@ class TemplateManager extends Manager {
 		else if(isJquery(this.template))
 			template = this.template.clone();
 
-		template.populateChildren(data);
+		this._populateTemplate(template, data);
 
 		return this._add(template, id);
+	}
+
+	/**
+	 * Populate the template
+	 * @param {jQuery|Template} template
+	 * @param {*} data
+	 * @returns {TemplateManager}
+	 * @private
+	 */
+	_populateTemplate(template, data){
+		template.populateChildren(data);
+		return this;
 	}
 
 	/**

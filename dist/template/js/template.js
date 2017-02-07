@@ -364,11 +364,18 @@ var $Util = function () {
    * $wrapper property of an object, but
    * always returns the base object
    * @param {*} obj - some object that has a $wrapper property
+   * @param {boolean} [override=false] - whether to override any already-named properties
    * @param {jQuery} obj.$wrapper
    */
 		value: function jQuerify(obj) {
+			var override = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
 			if (!obj.$wrapper) throw new ReferenceError('$Util.jQuerify: $wrapper must be a property of the first argument');
+
 			Util.each($Util.jqueryPrototype, function (i, e) {
+				// continue if override is false
+				if (isDefined(obj[e]) && !override) return true;
+
 				obj[e] = function () {
 					var _obj$$wrapper;
 
@@ -1077,9 +1084,11 @@ var Template = function () {
 		value: function _template() {
 			if (this.settings.template) this._useTemplate();else this._useDefaultTemplate();
 
-			// attach all jquery functions to $wrapper
-			$Util.jQuerify(this);
 			this.$wrapper.removeClass('template');
+
+			// attach all jquery functions to Template
+			$Util.jQuerify(this);
+
 			return this;
 		}
 
@@ -1235,7 +1244,7 @@ var TemplateManager = function (_Manager) {
 		value: function _update(data) {
 			var id = this.getId(data);
 			var $template = this.templates[id];
-			$template.populateChildren(data);
+			this._populateTemplate($template, data);
 			this.trigger('update', $template);
 			return this;
 		}
@@ -1281,9 +1290,24 @@ var TemplateManager = function (_Manager) {
 			var template;
 			if (this.template.prototype instanceof Template) template = new this.template(data);else if (isJquery(this.template)) template = this.template.clone();
 
-			template.populateChildren(data);
+			this._populateTemplate(template, data);
 
 			return this._add(template, id);
+		}
+
+		/**
+   * Populate the template
+   * @param {jQuery|Template} template
+   * @param {*} data
+   * @returns {TemplateManager}
+   * @private
+   */
+
+	}, {
+		key: '_populateTemplate',
+		value: function _populateTemplate(template, data) {
+			template.populateChildren(data);
+			return this;
 		}
 
 		/**

@@ -60,9 +60,11 @@ class Template {
 		else
 			this._useDefaultTemplate();
 
-		// attach all jquery functions to $wrapper
-		$Util.jQuerify(this);
 		this.$wrapper.removeClass('template');
+
+		// attach all jquery functions to Template
+		$Util.jQuerify(this);
+
 		return this;
 	}
 
