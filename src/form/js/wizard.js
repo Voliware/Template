@@ -141,6 +141,32 @@ class Wizard extends Form {
 		return this;
 	}
 
+	/**
+	 * Prepare the wizard
+	 * @returns {Wizard}
+	 * @private
+	 */
+	_prepare(){
+		this.toggleWizardComponents(false);
+		this.feedback.setFeedback('processing', 'Getting data...');
+		return this;
+	}
+
+	// ready
+
+	/**
+	 * Wizard is ready
+	 * @returns {Wizard}
+	 * @private
+	 */
+	_ready(){
+		var self = this;
+		this.feedback.slideUp(function(){
+			self.slideToggleWizardComponents(true);
+		});
+		return this;
+	}
+
 	// control
 
 	/**
@@ -389,8 +415,19 @@ class Wizard extends Form {
 	 * @param {boolean} state
 	 * @returns {Wizard}
 	 */
-	toggleWizardComponents(state){
-		this.$form.slideToggleState(state);
+	toggleForm(state){
+		super.toggleForm(state);
+		this.$navs.toggle(state);
+		return this;
+	}
+
+	/**
+	 * Toggle wizard components
+	 * @param {boolean} state
+	 * @returns {Wizard}
+	 */
+	slideToggleForm(state){
+		super.slideToggleForm(state);
 		this.$navs.slideToggleState(state);
 		return this;
 	}
@@ -410,43 +447,14 @@ class Wizard extends Form {
 	}
 
 	/**
-	 * Reset the wizard
+	 * Reset the form
 	 * @returns {Wizard}
 	 */
-	resetWizard(){
+	resetForm(){
 		var $nav = $(this.$navs[0]);
 		$nav.find('a').click();
 		this.resetNavValidation();
-		return this.resetForm();
-	}
-	// initializers
-
-	/**
-	 * Initialize as a clean form with
-	 * default values from the DOM
-	 * @returns {Form}
-	 */
-	initialize(){
-		super.initialize();
-		return this.resetWizard();
-	}
-
-	/**
-	 * Initialize as a form with
-	 * pre-populated values from the backend
-	 * @returns {jQuery}
-	 */
-	initializeUpdate(){
-		var self = this;
-		this.resetWizard();
-		this.toggleWizardComponents(false);
-		this.feedback.setFeedback('processing', 'Getting data...');
-		return this._getFormData()
-			.done(function(data){
-				self.populateForm(data);
-				self.feedback.slideUp(function(){
-					self.toggleWizardComponents(true);
-				});
-			});
+		super.resetForm();
+		return this;
 	}
 }

@@ -58,7 +58,7 @@ class Form extends Template {
 		// store serialized data
 		this._serializedData = {};
 		// cache populated data for reset button
-		this._populatedData = {};
+		this._cachedData = {};
 
 		// alias
 		// this exists solely for Wizard !!
@@ -154,6 +154,32 @@ class Form extends Template {
 		return this;
 	}
 
+	/**
+	 * Prepare the form
+	 * @returns {Form}
+	 * @private
+	 */
+	_prepare(){
+		this.toggleForm(false);
+		this.feedback.setFeedback('processing', 'Getting data...');
+		return this;
+	}
+
+	// ready
+
+	/**
+	 * Form is ready
+	 * @returns {Form}
+	 * @private
+	 */
+	_ready(){
+		var self = this;
+		this.feedback.slideUp(function(){
+			self.slideToggleForm(true);
+		});
+		return this;
+	}
+
 	// submit
 
 	/**
@@ -171,13 +197,13 @@ class Form extends Template {
 
 		return this._doSubmit()
 			.done(function(data){
-				self._onDone(data);
+				self._done(data);
 			})
 			.fail(function(err){
-				self._onFail(err);
+				self._fail(err);
 			})
 			.always(function(){
-				self._onAlways();
+				self._always();
 			});
 	}
 
@@ -203,7 +229,7 @@ class Form extends Template {
 	 * @returns {Form}
 	 * @private
 	 */
-	_onDone(data){
+	_done(data){
 		this.trigger('done', data);
 		if(this.feedback)
 			this.feedback.setFeedback('success', ' Operation was successful');
@@ -216,7 +242,7 @@ class Form extends Template {
 	 * @returns {Form}
 	 * @private
 	 */
-	_onFail(err){
+	_fail(err){
 		this.trigger('fail', err);
 		if(this.feedback)
 			this.feedback.setFeedback('danger', 'Operation has failed');
@@ -228,7 +254,7 @@ class Form extends Template {
 	 * @returns {Form}
 	 * @private
 	 */
-	_onAlways(){
+	_always(){
 		this.trigger('always');
 		this.toggleButtons(true);
 		return this;
@@ -252,7 +278,7 @@ class Form extends Template {
 	 * @private
 	 */
 	_cacheFormData(data){
-		this._populatedData = $.extend(true, {}, data);
+		this._cachedData = $.extend(true, {}, data);
 		return this;
 	}
 
@@ -277,6 +303,26 @@ class Form extends Template {
 		this.$cancel.prop('disabled', !state);
 		this.$reset.prop('disabled', !state);
 		this.$submit.prop('disabled', !state).toggleClass('disabled', !state);
+		return this;
+	}
+
+	/**
+	 * Toggle the form
+	 * @param {boolean} state
+	 * @returns {Form}
+	 */
+	toggleForm(state){
+		this.$form.toggle(state);
+		return this;
+	}
+
+	/**
+	 * Slide toggle the form
+	 * @param {boolean} state
+	 * @returns {Form}
+	 */
+	slideToggleForm(state){
+		this.$form.slideToggleState(state);
 		return this;
 	}
 
@@ -310,8 +356,8 @@ class Form extends Template {
 	 * @returns {Form}
 	 */
 	resetForm(){
-		if(!$.isEmptyObject(this._populatedData))
-			this.populateForm(this._populatedData);
+		if(!$.isEmptyObject(this._cachedData))
+			this.populateForm(this._cachedData);
 		else
 			this.$form[0].reset();
 
@@ -352,33 +398,23 @@ class Form extends Template {
 	// initializers
 
 	/**
-	 * Initialize as a clean form with
-	 * default values from the DOM
+	 * Remove all data from the form and reset it
 	 * @returns {Form}
 	 */
-	initialize(){
-		this._populatedData = {};
+	clean(){
+		this._cachedData = {};
 		this.resetForm();
 		return this;
 	}
 
 	/**
-	 * Initialize as a form with
-	 * pre-populated values from the backend
-	 * @returns {jQuery}
+	 * Initialize as a clean form with
+	 * default values from the DOM
+	 * @returns {Form}
 	 */
-	initializeUpdate(){
-		var self = this;
-		this.resetForm();
-		this.$form.hide();
-		this.feedback.setFeedback('processing', 'Getting data...');
-		return this._getFormData()
-			.done(function(data){
-				self.populateForm(data);
-				self.feedback.slideUp(function(){
-					self.$form.slideDown();
-				});
-			});
+	initialize(){
+		this.clean();
+		return this;
 	}
 }
 

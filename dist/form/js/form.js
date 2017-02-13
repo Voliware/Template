@@ -76,7 +76,7 @@ var Form = function (_Template) {
 		// store serialized data
 		_this._serializedData = {};
 		// cache populated data for reset button
-		_this._populatedData = {};
+		_this._cachedData = {};
 
 		// alias
 		// this exists solely for Wizard !!
@@ -168,6 +168,38 @@ var Form = function (_Template) {
 			return this;
 		}
 
+		/**
+   * Prepare the form
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: '_prepare',
+		value: function _prepare() {
+			this.toggleForm(false);
+			this.feedback.setFeedback('processing', 'Getting data...');
+			return this;
+		}
+
+		// ready
+
+		/**
+   * Form is ready
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: '_ready',
+		value: function _ready() {
+			var self = this;
+			this.feedback.slideUp(function () {
+				self.slideToggleForm(true);
+			});
+			return this;
+		}
+
 		// submit
 
 		/**
@@ -186,11 +218,11 @@ var Form = function (_Template) {
 			if (this.feedback) this.feedback.setFeedback('processing', 'Processing...');
 
 			return this._doSubmit().done(function (data) {
-				self._onDone(data);
+				self._done(data);
 			}).fail(function (err) {
-				self._onFail(err);
+				self._fail(err);
 			}).always(function () {
-				self._onAlways();
+				self._always();
 			});
 		}
 
@@ -218,8 +250,8 @@ var Form = function (_Template) {
    */
 
 	}, {
-		key: '_onDone',
-		value: function _onDone(data) {
+		key: '_done',
+		value: function _done(data) {
 			this.trigger('done', data);
 			if (this.feedback) this.feedback.setFeedback('success', ' Operation was successful');
 			return this;
@@ -233,8 +265,8 @@ var Form = function (_Template) {
    */
 
 	}, {
-		key: '_onFail',
-		value: function _onFail(err) {
+		key: '_fail',
+		value: function _fail(err) {
 			this.trigger('fail', err);
 			if (this.feedback) this.feedback.setFeedback('danger', 'Operation has failed');
 			return this;
@@ -247,8 +279,8 @@ var Form = function (_Template) {
    */
 
 	}, {
-		key: '_onAlways',
-		value: function _onAlways() {
+		key: '_always',
+		value: function _always() {
 			this.trigger('always');
 			this.toggleButtons(true);
 			return this;
@@ -278,7 +310,7 @@ var Form = function (_Template) {
 	}, {
 		key: '_cacheFormData',
 		value: function _cacheFormData(data) {
-			this._populatedData = $.extend(true, {}, data);
+			this._cachedData = $.extend(true, {}, data);
 			return this;
 		}
 
@@ -309,6 +341,32 @@ var Form = function (_Template) {
 			this.$cancel.prop('disabled', !state);
 			this.$reset.prop('disabled', !state);
 			this.$submit.prop('disabled', !state).toggleClass('disabled', !state);
+			return this;
+		}
+
+		/**
+   * Toggle the form
+   * @param {boolean} state
+   * @returns {Form}
+   */
+
+	}, {
+		key: 'toggleForm',
+		value: function toggleForm(state) {
+			this.$form.toggle(state);
+			return this;
+		}
+
+		/**
+   * Slide toggle the form
+   * @param {boolean} state
+   * @returns {Form}
+   */
+
+	}, {
+		key: 'slideToggleForm',
+		value: function slideToggleForm(state) {
+			this.$form.slideToggleState(state);
 			return this;
 		}
 
@@ -351,7 +409,7 @@ var Form = function (_Template) {
 	}, {
 		key: 'resetForm',
 		value: function resetForm() {
-			if (!$.isEmptyObject(this._populatedData)) this.populateForm(this._populatedData);else this.$form[0].reset();
+			if (!$.isEmptyObject(this._cachedData)) this.populateForm(this._cachedData);else this.$form[0].reset();
 
 			if (this.feedback) this.feedback.slideUp();
 
@@ -392,6 +450,19 @@ var Form = function (_Template) {
 		// initializers
 
 		/**
+   * Remove all data from the form and reset it
+   * @returns {Form}
+   */
+
+	}, {
+		key: 'clean',
+		value: function clean() {
+			this._cachedData = {};
+			this.resetForm();
+			return this;
+		}
+
+		/**
    * Initialize as a clean form with
    * default values from the DOM
    * @returns {Form}
@@ -400,30 +471,8 @@ var Form = function (_Template) {
 	}, {
 		key: 'initialize',
 		value: function initialize() {
-			this._populatedData = {};
-			this.resetForm();
+			this.clean();
 			return this;
-		}
-
-		/**
-   * Initialize as a form with
-   * pre-populated values from the backend
-   * @returns {jQuery}
-   */
-
-	}, {
-		key: 'initializeUpdate',
-		value: function initializeUpdate() {
-			var self = this;
-			this.resetForm();
-			this.$form.hide();
-			this.feedback.setFeedback('processing', 'Getting data...');
-			return this._getFormData().done(function (data) {
-				self.populateForm(data);
-				self.feedback.slideUp(function () {
-					self.$form.slideDown();
-				});
-			});
 		}
 	}]);
 
@@ -950,6 +999,38 @@ var Wizard = function (_Form) {
 			return this;
 		}
 
+		/**
+   * Prepare the wizard
+   * @returns {Wizard}
+   * @private
+   */
+
+	}, {
+		key: '_prepare',
+		value: function _prepare() {
+			this.toggleWizardComponents(false);
+			this.feedback.setFeedback('processing', 'Getting data...');
+			return this;
+		}
+
+		// ready
+
+		/**
+   * Wizard is ready
+   * @returns {Wizard}
+   * @private
+   */
+
+	}, {
+		key: '_ready',
+		value: function _ready() {
+			var self = this;
+			this.feedback.slideUp(function () {
+				self.slideToggleWizardComponents(true);
+			});
+			return this;
+		}
+
 		// control
 
 		/**
@@ -1257,9 +1338,23 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'toggleWizardComponents',
-		value: function toggleWizardComponents(state) {
-			this.$form.slideToggleState(state);
+		key: 'toggleForm',
+		value: function toggleForm(state) {
+			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'toggleForm', this).call(this, state);
+			this.$navs.toggle(state);
+			return this;
+		}
+
+		/**
+   * Toggle wizard components
+   * @param {boolean} state
+   * @returns {Wizard}
+   */
+
+	}, {
+		key: 'slideToggleForm',
+		value: function slideToggleForm(state) {
+			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'slideToggleForm', this).call(this, state);
 			this.$navs.slideToggleState(state);
 			return this;
 		}
@@ -1282,52 +1377,18 @@ var Wizard = function (_Form) {
 		}
 
 		/**
-   * Reset the wizard
+   * Reset the form
    * @returns {Wizard}
    */
 
 	}, {
-		key: 'resetWizard',
-		value: function resetWizard() {
+		key: 'resetForm',
+		value: function resetForm() {
 			var $nav = $(this.$navs[0]);
 			$nav.find('a').click();
 			this.resetNavValidation();
-			return this.resetForm();
-		}
-		// initializers
-
-		/**
-   * Initialize as a clean form with
-   * default values from the DOM
-   * @returns {Form}
-   */
-
-	}, {
-		key: 'initialize',
-		value: function initialize() {
-			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'initialize', this).call(this);
-			return this.resetWizard();
-		}
-
-		/**
-   * Initialize as a form with
-   * pre-populated values from the backend
-   * @returns {jQuery}
-   */
-
-	}, {
-		key: 'initializeUpdate',
-		value: function initializeUpdate() {
-			var self = this;
-			this.resetWizard();
-			this.toggleWizardComponents(false);
-			this.feedback.setFeedback('processing', 'Getting data...');
-			return this._getFormData().done(function (data) {
-				self.populateForm(data);
-				self.feedback.slideUp(function () {
-					self.toggleWizardComponents(true);
-				});
-			});
+			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'resetForm', this).call(this);
+			return this;
 		}
 	}]);
 
