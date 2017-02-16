@@ -28,7 +28,7 @@ class BootstrapForm extends Form {
 	 */
 	_setupFeedback(){
 		this.feedback = new BootstrapFeedback();
-		this.feedback.prependTo(this.$body);
+		this.feedback.prependTo(this.$form);
 		return this;
 	}
 }

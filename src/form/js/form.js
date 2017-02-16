@@ -150,12 +150,12 @@ class Form extends Template {
 	 */
 	_setupFeedback(){
 		this.feedback = new Feedback();
-		this.feedback.prependTo(this.$body);
+		this.feedback.prependTo(this.$form);
 		return this;
 	}
 
 	/**
-	 * Prepare the form
+	 * Prepare the form with a loading message
 	 * @returns {Form}
 	 * @private
 	 */
@@ -168,7 +168,8 @@ class Form extends Template {
 	// ready
 
 	/**
-	 * Form is ready
+	 * Set the form to ready by hiding
+	 * feedback and showing the form components
 	 * @returns {Form}
 	 * @private
 	 */
@@ -307,22 +308,24 @@ class Form extends Template {
 	}
 
 	/**
-	 * Toggle the form
+	 * Toggle the form body
 	 * @param {boolean} state
 	 * @returns {Form}
 	 */
 	toggleForm(state){
-		this.$form.toggle(state);
+		this.$body.toggle(state);
+		this.$footer.toggle(state);
 		return this;
 	}
 
 	/**
-	 * Slide toggle the form
+	 * Slide toggle the form body
 	 * @param {boolean} state
 	 * @returns {Form}
 	 */
 	slideToggleForm(state){
-		this.$form.slideToggleState(state);
+		this.$body.slideToggleState(state);
+		this.$footer.slideToggleState(state);
 		return this;
 	}
 
@@ -404,6 +407,7 @@ class Form extends Template {
 	clean(){
 		this._cachedData = {};
 		this.resetForm();
+		this.toggleForm(true);
 		return this;
 	}
 

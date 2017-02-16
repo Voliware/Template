@@ -329,7 +329,7 @@ var BootstrapForm = function (_Form) {
 		key: '_setupFeedback',
 		value: function _setupFeedback() {
 			this.feedback = new BootstrapFeedback();
-			this.feedback.prependTo(this.$body);
+			this.feedback.prependTo(this.$form);
 			return this;
 		}
 	}]);
@@ -1472,7 +1472,7 @@ var BootstrapWizard = function (_Wizard) {
 		key: '_setupFeedback',
 		value: function _setupFeedback() {
 			this.feedback = new BootstrapFeedback();
-			this.feedback.prependTo(this.$wrapper);
+			this.feedback.prependTo(this.$form);
 			return this;
 		}
 	}]);

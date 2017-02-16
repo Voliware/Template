@@ -147,7 +147,7 @@ class Wizard extends Form {
 	 * @private
 	 */
 	_prepare(){
-		this.toggleWizardComponents(false);
+		this.toggleForm(false);
 		this.feedback.setFeedback('processing', 'Getting data...');
 		return this;
 	}
@@ -162,7 +162,7 @@ class Wizard extends Form {
 	_ready(){
 		var self = this;
 		this.feedback.slideUp(function(){
-			self.slideToggleWizardComponents(true);
+			self.slideToggleForm(true);
 		});
 		return this;
 	}

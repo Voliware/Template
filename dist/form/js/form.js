@@ -164,12 +164,12 @@ var Form = function (_Template) {
 		key: '_setupFeedback',
 		value: function _setupFeedback() {
 			this.feedback = new Feedback();
-			this.feedback.prependTo(this.$body);
+			this.feedback.prependTo(this.$form);
 			return this;
 		}
 
 		/**
-   * Prepare the form
+   * Prepare the form with a loading message
    * @returns {Form}
    * @private
    */
@@ -185,7 +185,8 @@ var Form = function (_Template) {
 		// ready
 
 		/**
-   * Form is ready
+   * Set the form to ready by hiding
+   * feedback and showing the form components
    * @returns {Form}
    * @private
    */
@@ -345,7 +346,7 @@ var Form = function (_Template) {
 		}
 
 		/**
-   * Toggle the form
+   * Toggle the form body
    * @param {boolean} state
    * @returns {Form}
    */
@@ -353,12 +354,13 @@ var Form = function (_Template) {
 	}, {
 		key: 'toggleForm',
 		value: function toggleForm(state) {
-			this.$form.toggle(state);
+			this.$body.toggle(state);
+			this.$footer.toggle(state);
 			return this;
 		}
 
 		/**
-   * Slide toggle the form
+   * Slide toggle the form body
    * @param {boolean} state
    * @returns {Form}
    */
@@ -366,7 +368,8 @@ var Form = function (_Template) {
 	}, {
 		key: 'slideToggleForm',
 		value: function slideToggleForm(state) {
-			this.$form.slideToggleState(state);
+			this.$body.slideToggleState(state);
+			this.$footer.slideToggleState(state);
 			return this;
 		}
 
@@ -459,6 +462,7 @@ var Form = function (_Template) {
 		value: function clean() {
 			this._cachedData = {};
 			this.resetForm();
+			this.toggleForm(true);
 			return this;
 		}
 
@@ -1008,7 +1012,7 @@ var Wizard = function (_Form) {
 	}, {
 		key: '_prepare',
 		value: function _prepare() {
-			this.toggleWizardComponents(false);
+			this.toggleForm(false);
 			this.feedback.setFeedback('processing', 'Getting data...');
 			return this;
 		}
@@ -1026,7 +1030,7 @@ var Wizard = function (_Form) {
 		value: function _ready() {
 			var self = this;
 			this.feedback.slideUp(function () {
-				self.slideToggleWizardComponents(true);
+				self.slideToggleForm(true);
 			});
 			return this;
 		}
