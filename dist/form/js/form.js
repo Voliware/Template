@@ -178,6 +178,7 @@ var Form = function (_Template) {
 		key: '_prepare',
 		value: function _prepare() {
 			this.toggleForm(false);
+			this.feedback.show();
 			this.feedback.setFeedback('processing', 'Getting data...');
 			return this;
 		}
@@ -194,10 +195,8 @@ var Form = function (_Template) {
 	}, {
 		key: '_ready',
 		value: function _ready() {
-			var self = this;
-			this.feedback.slideUp(function () {
-				self.slideToggleForm(true);
-			});
+			this.feedback.slideUp();
+			this.slideToggleForm(true);
 			return this;
 		}
 
@@ -1004,34 +1003,16 @@ var Wizard = function (_Form) {
 		}
 
 		/**
-   * Prepare the wizard
-   * @returns {Wizard}
+   * Setup the feedback
+   * @returns {Form}
    * @private
    */
 
 	}, {
-		key: '_prepare',
-		value: function _prepare() {
-			this.toggleForm(false);
-			this.feedback.setFeedback('processing', 'Getting data...');
-			return this;
-		}
-
-		// ready
-
-		/**
-   * Wizard is ready
-   * @returns {Wizard}
-   * @private
-   */
-
-	}, {
-		key: '_ready',
-		value: function _ready() {
-			var self = this;
-			this.feedback.slideUp(function () {
-				self.slideToggleForm(true);
-			});
+		key: '_setupFeedback',
+		value: function _setupFeedback() {
+			this.feedback = new Feedback();
+			this.feedback.prependTo(this.$wrapper);
 			return this;
 		}
 

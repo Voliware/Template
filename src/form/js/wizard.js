@@ -142,28 +142,13 @@ class Wizard extends Form {
 	}
 
 	/**
-	 * Prepare the wizard
-	 * @returns {Wizard}
+	 * Setup the feedback
+	 * @returns {Form}
 	 * @private
 	 */
-	_prepare(){
-		this.toggleForm(false);
-		this.feedback.setFeedback('processing', 'Getting data...');
-		return this;
-	}
-
-	// ready
-
-	/**
-	 * Wizard is ready
-	 * @returns {Wizard}
-	 * @private
-	 */
-	_ready(){
-		var self = this;
-		this.feedback.slideUp(function(){
-			self.slideToggleForm(true);
-		});
+	_setupFeedback(){
+		this.feedback = new Feedback();
+		this.feedback.prependTo(this.$wrapper);
 		return this;
 	}
 

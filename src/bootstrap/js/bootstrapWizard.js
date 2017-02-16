@@ -28,7 +28,7 @@ class BootstrapWizard extends Wizard {
 	 */
 	_setupFeedback(){
 		this.feedback = new BootstrapFeedback();
-		this.feedback.prependTo(this.$form);
+		this.feedback.prependTo(this.$wrapper);
 		return this;
 	}
 

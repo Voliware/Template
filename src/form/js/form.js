@@ -161,6 +161,7 @@ class Form extends Template {
 	 */
 	_prepare(){
 		this.toggleForm(false);
+		this.feedback.show();
 		this.feedback.setFeedback('processing', 'Getting data...');
 		return this;
 	}
@@ -174,10 +175,8 @@ class Form extends Template {
 	 * @private
 	 */
 	_ready(){
-		var self = this;
-		this.feedback.slideUp(function(){
-			self.slideToggleForm(true);
-		});
+		this.feedback.slideUp();
+		this.slideToggleForm(true);
 		return this;
 	}
 
