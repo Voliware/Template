@@ -32,5 +32,5 @@ $(document).on('ready', function(){
 		vegetarian : 1,
 		height : 2,
 		gender : 0
-	})
+	});
 });

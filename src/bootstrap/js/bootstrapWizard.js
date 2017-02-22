@@ -17,20 +17,21 @@ class BootstrapWizard extends Wizard {
 	 */
 	constructor(options){
 		super(options);
-
 		return this;
 	}
 
 	/**
 	 * Setup the feedback
-	 * @returns {BootstrapWizard}
+	 * @returns {Form}
 	 * @private
 	 */
 	_setupFeedback(){
 		this.feedback = new BootstrapFeedback();
-		this.feedback.prependTo(this.$wrapper);
+		if(!this.$feedback.length){
+			this.$feedback = $('<div class="form-feedback"></div>');
+			this.$wrapper.prepend(this.$feedback);
+		}
+		this.$feedback.html(this.feedback.$wrapper);
 		return this;
 	}
-
-
 }

@@ -56,9 +56,10 @@ var Form = function (_Template) {
 			submitRequest: null,
 			serializeMode: FormSerializer.serializeMode.toString,
 			checkboxMode: FormSerializer.checkboxMode.number,
-			// jquery elements for each table components
+			// css classes for each form component
 			struct: {
 				$wrapper: 'form',
+				$feedback: '.form-feedback',
 				$header: '.form-header',
 				$body: '.form-body',
 				$footer: '.form-footer',
@@ -129,7 +130,7 @@ var Form = function (_Template) {
 	_createClass(Form, [{
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
-			var template = '<form class="form">' + '<div class="form-header"></div>' + '<div class="form-body"></div>' + '<div class="form-footer">' + '<button type="submit" class="form-submit">Submit</button>' + '<button type="button" class="form-reset">Reset</button>' + '<button type="button" class="form-cancel">Cancel</button>' + '</div>' + '</form>';
+			var template = '<form class="form">' + '<div class="form-feedback"></div>' + '<div class="form-header"></div>' + '<div class="form-body"></div>' + '<div class="form-footer">' + '<button type="submit" class="form-submit">Submit</button>' + '<button type="button" class="form-reset">Reset</button>' + '<button type="button" class="form-cancel">Cancel</button>' + '</div>' + '</form>';
 
 			this._useTemplate($(template));
 
@@ -164,7 +165,11 @@ var Form = function (_Template) {
 		key: '_setupFeedback',
 		value: function _setupFeedback() {
 			this.feedback = new Feedback();
-			this.feedback.prependTo(this.$form);
+			if (!this.$feedback.length) {
+				this.$feedback = $('<div class="form-feedback"></div>');
+				this.$form.prepend(this.$feedback);
+			}
+			this.$feedback.html(this.feedback.$wrapper);
 			return this;
 		}
 
@@ -507,6 +512,8 @@ Form.validators = {
    */
 		setup: function setup(form, $form, options) {
 			$form.off('submit');
+			// allows re-creation of the Form
+			if ($form.data('formValidation')) $form.data('formValidation').destroy();
 			$form.formValidation(options).on('success.form.fv', function (e) {
 				e.preventDefault();
 				form.toggleButtons(false);
@@ -1012,7 +1019,11 @@ var Wizard = function (_Form) {
 		key: '_setupFeedback',
 		value: function _setupFeedback() {
 			this.feedback = new Feedback();
-			this.feedback.prependTo(this.$wrapper);
+			if (!this.$feedback.length) {
+				this.$feedback = $('<div class="form-feedback"></div>');
+				this.$wrapper.prepend(this.$feedback);
+			}
+			this.$feedback.html(this.feedback.$wrapper);
 			return this;
 		}
 

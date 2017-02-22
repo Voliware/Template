@@ -320,7 +320,7 @@ var BootstrapForm = function (_Form) {
 
 	/**
   * Setup the feedback
-  * @returns {BootstrapForm}
+  * @returns {Form}
   * @private
   */
 
@@ -329,7 +329,11 @@ var BootstrapForm = function (_Form) {
 		key: '_setupFeedback',
 		value: function _setupFeedback() {
 			this.feedback = new BootstrapFeedback();
-			this.feedback.prependTo(this.$form);
+			if (!this.$feedback.length) {
+				this.$feedback = $('<div class="form-feedback"></div>');
+				this.$form.prepend(this.$feedback);
+			}
+			this.$feedback.html(this.feedback.$wrapper);
 			return this;
 		}
 	}]);
@@ -1463,7 +1467,7 @@ var BootstrapWizard = function (_Wizard) {
 
 	/**
   * Setup the feedback
-  * @returns {BootstrapWizard}
+  * @returns {Form}
   * @private
   */
 
@@ -1472,7 +1476,11 @@ var BootstrapWizard = function (_Wizard) {
 		key: '_setupFeedback',
 		value: function _setupFeedback() {
 			this.feedback = new BootstrapFeedback();
-			this.feedback.prependTo(this.$wrapper);
+			if (!this.$feedback.length) {
+				this.$feedback = $('<div class="form-feedback"></div>');
+				this.$wrapper.prepend(this.$feedback);
+			}
+			this.$feedback.html(this.feedback.$wrapper);
 			return this;
 		}
 	}]);

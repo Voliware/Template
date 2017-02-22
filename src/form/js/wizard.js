@@ -148,7 +148,11 @@ class Wizard extends Form {
 	 */
 	_setupFeedback(){
 		this.feedback = new Feedback();
-		this.feedback.prependTo(this.$wrapper);
+		if(!this.$feedback.length){
+			this.$feedback = $('<div class="form-feedback"></div>');
+			this.$wrapper.prepend(this.$feedback);
+		}
+		this.$feedback.html(this.feedback.$wrapper);
 		return this;
 	}
 

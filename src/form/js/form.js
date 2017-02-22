@@ -39,9 +39,10 @@ class Form extends Template {
 			submitRequest : null,
 			serializeMode : FormSerializer.serializeMode.toString,
 			checkboxMode : FormSerializer.checkboxMode.number,
-			// jquery elements for each table components
+			// css classes for each form component
 			struct: {
 				$wrapper: 'form',
+				$feedback: '.form-feedback',
 				$header: '.form-header',
 				$body: '.form-body',
 				$footer: '.form-footer',
@@ -114,6 +115,7 @@ class Form extends Template {
 	_useDefaultTemplate(){
 		var template =
 			'<form class="form">' +
+				'<div class="form-feedback"></div>' +
 				'<div class="form-header"></div>' +
 				'<div class="form-body"></div>' +
 				'<div class="form-footer">' +
@@ -150,7 +152,11 @@ class Form extends Template {
 	 */
 	_setupFeedback(){
 		this.feedback = new Feedback();
-		this.feedback.prependTo(this.$form);
+		if(!this.$feedback.length){
+			this.$feedback = $('<div class="form-feedback"></div>');
+			this.$form.prepend(this.$feedback);
+		}
+		this.$feedback.html(this.feedback.$wrapper);
 		return this;
 	}
 
@@ -446,6 +452,9 @@ Form.validators = {
 		 */
 		setup : function(form, $form, options){
 			$form.off('submit');
+			// allows re-creation of the Form
+			if($form.data('formValidation'))
+				$form.data('formValidation').destroy();
 			$form.formValidation(options)
 				.on('success.form.fv', function(e) {
 					e.preventDefault();

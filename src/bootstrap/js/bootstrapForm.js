@@ -17,18 +17,21 @@ class BootstrapForm extends Form {
 	 */
 	constructor(options){
 		super(options);
-
 		return this;
 	}
 
 	/**
 	 * Setup the feedback
-	 * @returns {BootstrapForm}
+	 * @returns {Form}
 	 * @private
 	 */
 	_setupFeedback(){
 		this.feedback = new BootstrapFeedback();
-		this.feedback.prependTo(this.$form);
+		if(!this.$feedback.length){
+			this.$feedback = $('<div class="form-feedback"></div>');
+			this.$form.prepend(this.$feedback);
+		}
+		this.$feedback.html(this.feedback.$wrapper);
 		return this;
 	}
 }
