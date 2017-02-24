@@ -24,8 +24,6 @@ class Template {
 	 * @param {object} [options.struct]
 	 * @param {object} [options.struct.$wrapper] - any css class that indicates
 	 * what the $wrapper element should be for the template
-	 * @param {object} [options.dom] - optional preset dom settings, such as
-	 * html, attributes, etc, that are then used with _setup() method
 	 * @returns {Template}
 	 */
 	constructor(options){
@@ -36,13 +34,11 @@ class Template {
 			// jquery elements for components
 			struct : {
 				$wrapper : ''
-			},
-			dom : {}
+			}
 		};
 		this.settings = $Util.opts(defaults, options);
 
-		this._template()
-			._setup();
+		this._template();
 
 		return this;
 	}
@@ -91,7 +87,7 @@ class Template {
 				$template.remove();
 		}
 		else if($template instanceof $ === false){
-			throw new ReferenceError("Template.useTemplate: first argument must be a string or jquery");
+			throw new ReferenceError("Template._useTemplate: first argument must be a string or jquery");
 		}
 
 		// search for the HTML components
@@ -115,18 +111,6 @@ class Template {
 	 */
 	_useDefaultTemplate() {
 		
-		return this;
-	}
-
-	/**
-	 * Setup the Template dom if there
-	 * are any settings for it
-	 */
-	_setup(){
-		//var d = this.settings.dom;
-		//if(d)
-		//   this.html(d.html);
-		// implement in child
 		return this;
 	}
 }

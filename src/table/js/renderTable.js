@@ -59,11 +59,10 @@ class RenderTable extends Table {
 	_render(data){
 		var dataIsArray = $.isArray(data);
 
-		if(dataIsArray && !isObject(data[0]))
-			throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
-
 		if($.isEmptyObject(data) || !data || (dataIsArray && !data.length))
 			this.toggleEmpty(true);
+		else if(dataIsArray && !isObject(data[0]))
+			throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
 
 		this.rowManager.build(data);
 		return this;

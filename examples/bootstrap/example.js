@@ -1,24 +1,9 @@
-var steps = [
-	{
-		text : 'Doing it',
-		err : 'Failed'
-	},
-	{
-		text : 'Did it',
-		err : 'Super failed'
-	},
-	{
-		text : 'Still doing it?',
-		err : 'Mega failed'
-	},
-	{
-		text : 'Ok last one',
-		err : 'Or is it?'
-	}
-];
-
 $(document).on('ready', function(){
-	var $body = $('body');
+	var $toggle = $('#toggle');
+	var $panel = $('#panel');
+	var $feedback = $('#feedback');
+	var $progress = $('#progress');
+	var $tabManager = $('#tabManager');
 
 	var tg = new BootstrapToggle({
 		name : 'test',
@@ -29,11 +14,11 @@ $(document).on('ready', function(){
 		.change(function(){
 			console.log("switch state is " + $(this).prop('checked'));
 		})
-		.appendTo('body').bootstrapToggle('on');
+		.appendTo($toggle).bootstrapToggle('on');
 
 	// panels
 	var pm = new BootstrapPanelManager();
-	pm.appendTo($body);
+	pm.appendTo($panel);
 
 	var pan1 = new BootstrapPanel({
 		html : {
@@ -57,32 +42,45 @@ $(document).on('ready', function(){
 	pm.add(pan1).add(pan2);
 
 	// feedback
-	var fbbs = new BootstrapFeedback().appendTo('body').setFeedback('info', 'This is some information. Or is it?');
+	var fbbs = new BootstrapFeedback()
+		.appendTo($feedback)
+		.setFeedback('info', 'This is some information. Or is it?');
 
 
 	// progress
 	var p1 =  new BootstrapProgress()
-		.appendTo($body)
+		.appendTo($progress)
 		.setProgress(48);
 
-	// loader
-	var l1 = new BootstrapLoader({
-		showPercent : false,
-		steps : steps
-	}).appendTo($body).setStep(0);
-	var l2 = new BootstrapLoader({
-		steps : steps
-	}).appendTo($body).goStart();
-	var l3 = new BootstrapLoader({
-		steps : steps
-	}).appendTo($body).goStart().goNext().goNext();
-	var l4 = new BootstrapLoader({
-		steps : steps
-	}).appendTo($body).goStart().goNext().goPrev();
-	var l5 = new BootstrapLoader({
-		steps : steps
-	}).appendTo($body).goEnd();
-	var l6 = new BootstrapLoader({
-		steps : steps
-	}).appendTo($body).setStep(0).setErr();
+	var navManager = new BootstrapNavManager({
+		useObjectNames : true
+	}).appendTo($tabManager);
+
+	var tabManager = new BootstrapTabManager({
+		useObjectNames : true
+	}).appendTo($tabManager);
+
+	var tabs = {
+		tab1 : {
+			id : 'tab1',
+			html : 'tab 1 html'
+		},
+		tab2 : {
+			id : 'tab2',
+			html : 'tab 2 html'
+		}
+	};
+	var navs = {
+		nav1 : {
+			href : 'tab1',
+			html : 'nav 1 html'
+		},
+		nav2 : {
+			href : 'tab2',
+			html : 'nav 2 html'
+		}
+	};
+	tabManager.build(tabs);
+	navManager.build(navs);
+
 });

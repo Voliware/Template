@@ -29,43 +29,26 @@ class BootstrapNavManager extends TemplateManager {
 	}
 
 	/**
+	 * Create and add a new Nav
+	 * @param {string} id - id of the object to create and then manage
+	 * @param {object} data
+	 * @param {object} data.href - href for the nav
+	 * @param {object} [data.html] - html for the nav
+	 * @returns {BootstrapNav}
+	 * @private
+	 */
+	_create(id, data){
+		if(!isDefined(data) || !isDefined(data.href))
+			throw new ReferenceError("BootstrapNavManager.create: an 'href' property is required to create a Nav");
+		else
+			return super._create(id, data);
+	}
+
+	/**
 	 * Get the first nav
 	 * @returns {jQuery}
 	 */
 	getFirst(){
 		return $(this.$wrapper.find('a').get(0));
-	}
-
-	// manager overrides
-
-	/**
-	 * Create and add a new Nav
-	 * @param {object} dom
-	 * @param {object} dom.href - href for the nav
-	 * @param {object} [dom.html] - html for the nav
-	 * @returns {BootstrapNav}
-	 * @private
-	 */
-	_create(dom) {
-		if(isUndefined(dom) || isUndefined(dom.href))
-			throw new ReferenceError("BootstrapNavManager.create: an 'href' property is required to create a Nav");
-		var nav =  new this.template({
-			dom : dom
-		});
-		return this._add(nav, dom.href);
-	}
-
-	/**
-	 * Update the nav
-	 * @param {BootstrapNav} nav
-	 * @param {object} dom
-	 * @param {object} dom.href - href for the nav
-	 * @param {object} [dom.html] - html for the nav
-	 * @returns {*}
-	 * @private
-	 */
-	_update(nav, dom) {
-		nav._setup(dom);
-		return super._update(nav, dom.href);
 	}
 }

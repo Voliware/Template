@@ -29,39 +29,26 @@ class BootstrapTabManager extends TemplateManager {
 	}
 
 	/**
+	 * Create and add a new Tab
+	 * @param {string} id - id of the object to create and then manage
+	 * @param {object} data
+	 * @param {number|string} data.id
+	 * @param {jQuery|string} [data.html]
+	 * @returns {BootstrapNav}
+	 * @private
+	 */
+	_create(id, data){
+		if(!isDefined(data) || !isDefined(data.id))
+			throw new ReferenceError("BootstrapTabManager.create: an 'id' property is required to create a Tab");
+		else
+			return super._create(id, data);
+	}
+
+	/**
 	 * Get the first tab in the wrapper
 	 * @returns {jQuery}
 	 */
 	getFirst(){
 		return $(this.$wrapper.find('.tab-pane').get(0));
-	}
-
-	// manager overrides
-
-	/**
-	 * Create and add a new tab
-	 * and give it an id attribute
-	 * @param {number|string} id
-	 * @returns {BootstrapTab}
-	 * @private
-	 */
-	_create(id) {
-		var tab = new this.template();
-		tab.attr('id', id);
-		return this._add(tab, id);
-	}
-
-	/**
-	 * Update a tab and its id attribute
-	 * @param {jQuery|BootstrapTab} tab
-	 * @param {number|string} [id]
-	 * @returns {*}
-	 * @private
-	 */
-	_update(tab, id) {
-		if(id)
-			tab.attr('id', id);
-		this.trigger('update', tab);
-		return this;
 	}
 }

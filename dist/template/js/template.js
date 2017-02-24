@@ -1046,8 +1046,6 @@ var Template = function () {
   * @param {object} [options.struct]
   * @param {object} [options.struct.$wrapper] - any css class that indicates
   * what the $wrapper element should be for the template
-  * @param {object} [options.dom] - optional preset dom settings, such as
-  * html, attributes, etc, that are then used with _setup() method
   * @returns {Template}
   */
 	function Template(options) {
@@ -1060,12 +1058,11 @@ var Template = function () {
 			// jquery elements for components
 			struct: {
 				$wrapper: ''
-			},
-			dom: {}
+			}
 		};
 		this.settings = $Util.opts(defaults, options);
 
-		this._template()._setup();
+		this._template();
 
 		return this;
 	}
@@ -1116,7 +1113,7 @@ var Template = function () {
 				// remove the template from the DOM
 				if (this.settings.consumeTemplate) $template.remove();
 			} else if ($template instanceof $ === false) {
-				throw new ReferenceError("Template.useTemplate: first argument must be a string or jquery");
+				throw new ReferenceError("Template._useTemplate: first argument must be a string or jquery");
 			}
 
 			// search for the HTML components
@@ -1143,21 +1140,6 @@ var Template = function () {
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
 
-			return this;
-		}
-
-		/**
-   * Setup the Template dom if there
-   * are any settings for it
-   */
-
-	}, {
-		key: '_setup',
-		value: function _setup() {
-			//var d = this.settings.dom;
-			//if(d)
-			//   this.html(d.html);
-			// implement in child
 			return this;
 		}
 	}]);
@@ -1228,6 +1210,7 @@ var TemplateManager = function (_Manager) {
 		value: function _add() {
 			var obj = _get2(TemplateManager.prototype.__proto__ || Object.getPrototypeOf(TemplateManager.prototype), '_add', this).apply(this, arguments);
 			// arguments[0].$wrapper for Template objects
+			// arguments[0] for native jQuery objects
 			this.$wrapper.append(arguments[0].$wrapper || arguments[0]);
 			return obj;
 		}
@@ -1283,7 +1266,7 @@ var TemplateManager = function (_Manager) {
 		value: function _create(id) {
 			var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-			if (!this.template) throw new ReferenceError("TemplateManager.create: no template option was passed to constructor");
+			if (!this.template) throw new ReferenceError("TemplateManager._create: no template option was passed to constructor");
 
 			// create a new template if it is a Template class
 			// or clone it if it is a jquery object
@@ -1308,6 +1291,18 @@ var TemplateManager = function (_Manager) {
 		value: function _populateTemplate(template, data) {
 			template.populateChildren(data);
 			return this;
+		}
+
+		/**
+   * Redirect manage to build
+   * @param {object|object[]} data
+   * @returns {TemplateManager}
+   */
+
+	}, {
+		key: 'manage',
+		value: function manage(data) {
+			return this.build(data);
 		}
 
 		/**

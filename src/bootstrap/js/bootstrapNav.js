@@ -16,9 +16,6 @@ class BootstrapNav extends Template {
 	 * @param {object} [options.struct]
 	 * @param {string} [options.struct.$wrapper=".tab-pane"]
 	 * @param {string} [options.struct.$link="a"]
-	 * @param {object} [options.dom]
-	 * @param {string} [options.dom.href]
-	 * @param {jQuery|string} [options.dom.html]
 	 * @returns {BootstrapNav}
 	 */
 	constructor(options) {
@@ -26,10 +23,6 @@ class BootstrapNav extends Template {
 			struct : {
 				$wrapper : 'li',
 				$link : 'a'
-			},
-			dom : {
-				href : "",
-				html : ""
 			}
 		};
 		super($Util.opts(defaults, options));
@@ -54,35 +47,16 @@ class BootstrapNav extends Template {
 	}
 
 	/**
-	 * Setup the BootstrapNav dom if there
-	 * are any settings for it
-	 */
-	_setup(){
-		var d = this.settings.dom;
-		if(d.href)
-			this.setHref(d.href);
-		if(d.html)
-			this.setHtml(d.html);
-		return this;
-	}
-
-	/**
-	 * Set the href of the nav $link
-	 * @param {number|string} href
+	 * Populate the href and html
+	 * @param {object} data
+	 * @param {number|string} data.href
+	 * @param {jQuery|string} [data.html]
 	 * @returns {BootstrapNav}
 	 */
-	setHref(href){
-		this.$link.attr('href', '#' + href);
-		return this;
-	}
-
-	/**
-	 * Set the html of the nav $link
-	 * @param html
-	 * @returns {BootstrapNav}
-	 */
-	setHtml(html){
-		this.$link.html(html);
+	populateChildren(data){
+		this.$link.attr('href', '#' + data.href);
+		if(data.html)
+			this.$link.html(data.html);
 		return this;
 	}
 

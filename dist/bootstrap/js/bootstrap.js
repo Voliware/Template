@@ -435,9 +435,6 @@ var BootstrapNav = function (_Template2) {
   * @param {object} [options.struct]
   * @param {string} [options.struct.$wrapper=".tab-pane"]
   * @param {string} [options.struct.$link="a"]
-  * @param {object} [options.dom]
-  * @param {string} [options.dom.href]
-  * @param {jQuery|string} [options.dom.html]
   * @returns {BootstrapNav}
   */
 	function BootstrapNav(options) {
@@ -449,10 +446,6 @@ var BootstrapNav = function (_Template2) {
 			struct: {
 				$wrapper: 'li',
 				$link: 'a'
-			},
-			dom: {
-				href: "",
-				html: ""
 			}
 		};
 
@@ -479,42 +472,18 @@ var BootstrapNav = function (_Template2) {
 		}
 
 		/**
-   * Setup the BootstrapNav dom if there
-   * are any settings for it
-   */
-
-	}, {
-		key: '_setup',
-		value: function _setup() {
-			var d = this.settings.dom;
-			if (d.href) this.setHref(d.href);
-			if (d.html) this.setHtml(d.html);
-			return this;
-		}
-
-		/**
-   * Set the href of the nav $link
-   * @param {number|string} href
+   * Populate the href and html
+   * @param {object} data
+   * @param {number|string} data.href
+   * @param {jQuery|string} [data.html]
    * @returns {BootstrapNav}
    */
 
 	}, {
-		key: 'setHref',
-		value: function setHref(href) {
-			this.$link.attr('href', '#' + href);
-			return this;
-		}
-
-		/**
-   * Set the html of the nav $link
-   * @param html
-   * @returns {BootstrapNav}
-   */
-
-	}, {
-		key: 'setHtml',
-		value: function setHtml(html) {
-			this.$link.html(html);
+		key: 'populateChildren',
+		value: function populateChildren(data) {
+			this.$link.attr('href', '#' + data.href);
+			if (data.html) this.$link.html(data.html);
 			return this;
 		}
 
@@ -574,53 +543,31 @@ var BootstrapNavManager = function (_TemplateManager) {
 	}
 
 	/**
-  * Get the first nav
-  * @returns {jQuery}
+  * Create and add a new Nav
+  * @param {string} id - id of the object to create and then manage
+  * @param {object} data
+  * @param {object} data.href - href for the nav
+  * @param {object} [data.html] - html for the nav
+  * @returns {BootstrapNav}
+  * @private
   */
 
 
 	_createClass(BootstrapNavManager, [{
+		key: '_create',
+		value: function _create(id, data) {
+			if (!isDefined(data) || !isDefined(data.href)) throw new ReferenceError("BootstrapNavManager.create: an 'href' property is required to create a Nav");else return _get(BootstrapNavManager.prototype.__proto__ || Object.getPrototypeOf(BootstrapNavManager.prototype), '_create', this).call(this, id, data);
+		}
+
+		/**
+   * Get the first nav
+   * @returns {jQuery}
+   */
+
+	}, {
 		key: 'getFirst',
 		value: function getFirst() {
 			return $(this.$wrapper.find('a').get(0));
-		}
-
-		// manager overrides
-
-		/**
-   * Create and add a new Nav
-   * @param {object} dom
-   * @param {object} dom.href - href for the nav
-   * @param {object} [dom.html] - html for the nav
-   * @returns {BootstrapNav}
-   * @private
-   */
-
-	}, {
-		key: '_create',
-		value: function _create(dom) {
-			if (isUndefined(dom) || isUndefined(dom.href)) throw new ReferenceError("BootstrapNavManager.create: an 'href' property is required to create a Nav");
-			var nav = new this.template({
-				dom: dom
-			});
-			return this._add(nav, dom.href);
-		}
-
-		/**
-   * Update the nav
-   * @param {BootstrapNav} nav
-   * @param {object} dom
-   * @param {object} dom.href - href for the nav
-   * @param {object} [dom.html] - html for the nav
-   * @returns {*}
-   * @private
-   */
-
-	}, {
-		key: '_update',
-		value: function _update(nav, dom) {
-			nav._setup(dom);
-			return _get(BootstrapNavManager.prototype.__proto__ || Object.getPrototypeOf(BootstrapNavManager.prototype), '_update', this).call(this, nav, dom.href);
 		}
 	}]);
 
@@ -1163,7 +1110,6 @@ var BootstrapTab = function (_Template5) {
   * @param {object} [options]
   * @param {object} [options.struct]
   * @param {string} [options.struct.$wrapper=".tab-pane"] - the tab class
-  * @param {object} [options.dom]
   * @returns {BootstrapTab}
   */
 	function BootstrapTab(options) {
@@ -1174,9 +1120,6 @@ var BootstrapTab = function (_Template5) {
 		var defaults = {
 			struct: {
 				$wrapper: '.tab-pane'
-			},
-			dom: {
-				id: ''
 			}
 		};
 
@@ -1200,17 +1143,18 @@ var BootstrapTab = function (_Template5) {
 		}
 
 		/**
-   * Add an id and html to the tab
+   * Populate the id and html
+   * @param {object} data
+   * @param {number|string} data.id
+   * @param {jQuery|string} [data.html]
    * @returns {BootstrapTab}
-   * @private
    */
 
 	}, {
-		key: '_setup',
-		value: function _setup() {
-			var d = this.settings.dom;
-			if (d.id) this.attr('id', d.id);
-			if (d.html) this.html(d.html);
+		key: 'populateChildren',
+		value: function populateChildren(data) {
+			this.attr('id', data.id);
+			if (data.html) this.html(data.html);
 			return this;
 		}
 	}]);
@@ -1257,49 +1201,31 @@ var BootstrapTabManager = function (_TemplateManager3) {
 	}
 
 	/**
-  * Get the first tab in the wrapper
-  * @returns {jQuery}
+  * Create and add a new Tab
+  * @param {string} id - id of the object to create and then manage
+  * @param {object} data
+  * @param {number|string} data.id
+  * @param {jQuery|string} [data.html]
+  * @returns {BootstrapNav}
+  * @private
   */
 
 
 	_createClass(BootstrapTabManager, [{
+		key: '_create',
+		value: function _create(id, data) {
+			if (!isDefined(data) || !isDefined(data.id)) throw new ReferenceError("BootstrapTabManager.create: an 'id' property is required to create a Tab");else return _get(BootstrapTabManager.prototype.__proto__ || Object.getPrototypeOf(BootstrapTabManager.prototype), '_create', this).call(this, id, data);
+		}
+
+		/**
+   * Get the first tab in the wrapper
+   * @returns {jQuery}
+   */
+
+	}, {
 		key: 'getFirst',
 		value: function getFirst() {
 			return $(this.$wrapper.find('.tab-pane').get(0));
-		}
-
-		// manager overrides
-
-		/**
-   * Create and add a new tab
-   * and give it an id attribute
-   * @param {number|string} id
-   * @returns {BootstrapTab}
-   * @private
-   */
-
-	}, {
-		key: '_create',
-		value: function _create(id) {
-			var tab = new this.template();
-			tab.attr('id', id);
-			return this._add(tab, id);
-		}
-
-		/**
-   * Update a tab and its id attribute
-   * @param {jQuery|BootstrapTab} tab
-   * @param {number|string} [id]
-   * @returns {*}
-   * @private
-   */
-
-	}, {
-		key: '_update',
-		value: function _update(tab, id) {
-			if (id) tab.attr('id', id);
-			this.trigger('update', tab);
-			return this;
 		}
 	}]);
 

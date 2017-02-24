@@ -51,6 +51,7 @@ class TemplateManager extends Manager {
 	_add() {
 		var obj = super._add(...arguments);
 		// arguments[0].$wrapper for Template objects
+		// arguments[0] for native jQuery objects
 		this.$wrapper.append(arguments[0].$wrapper || arguments[0]);
 		return obj;
 	}
@@ -97,7 +98,7 @@ class TemplateManager extends Manager {
 	 */
 	_create(id, data = {}){
 		if(!this.template)
-			throw new ReferenceError("TemplateManager.create: no template option was passed to constructor");
+			throw new ReferenceError("TemplateManager._create: no template option was passed to constructor");
 
 		// create a new template if it is a Template class
 		// or clone it if it is a jquery object
@@ -122,6 +123,15 @@ class TemplateManager extends Manager {
 	_populateTemplate(template, data){
 		template.populateChildren(data);
 		return this;
+	}
+
+	/**
+	 * Redirect manage to build
+	 * @param {object|object[]} data
+	 * @returns {TemplateManager}
+	 */
+	manage(data){
+		return this.build(data);
 	}
 
 	/**

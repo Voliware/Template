@@ -15,16 +15,12 @@ class BootstrapTab extends Template {
 	 * @param {object} [options]
 	 * @param {object} [options.struct]
 	 * @param {string} [options.struct.$wrapper=".tab-pane"] - the tab class
-	 * @param {object} [options.dom]
 	 * @returns {BootstrapTab}
 	 */
 	constructor(options) {
 		var defaults = {
 			struct : {
 				$wrapper : '.tab-pane'
-			},
-			dom : {
-				id : ''
 			}
 		};
 		super($Util.opts(defaults, options));
@@ -42,16 +38,16 @@ class BootstrapTab extends Template {
 	}
 
 	/**
-	 * Add an id and html to the tab
+	 * Populate the id and html
+	 * @param {object} data
+	 * @param {number|string} data.id
+	 * @param {jQuery|string} [data.html]
 	 * @returns {BootstrapTab}
-	 * @private
 	 */
-	_setup(){
-		var d = this.settings.dom;
-		if(d.id)
-			this.attr('id', d.id);
-		if(d.html)
-			this.html(d.html);
+	populateChildren(data){
+		this.attr('id', data.id);
+		if(data.html)
+			this.html(data.html);
 		return this;
 	}
 }
