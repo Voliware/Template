@@ -52,11 +52,12 @@ var Table = function (_Template) {
 			rowHeaders: []
 		};
 
-		// components
+		// properties
 		var _this = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
 
 		_this.$rows = [];
 		_this._cachedData = {};
+		_this._processedData = {};
 
 		// states
 		_this.isFirstBuild = true;
@@ -132,14 +133,14 @@ var Table = function (_Template) {
 	}, {
 		key: '_cacheData',
 		value: function _cacheData(data) {
-			this._cachedData = $.extend(true, {}, data);
+			if (isArray(data)) this._cachedData = data;else this._cachedData = $.extend(true, {}, data);
 			return this;
 		}
 
 		/**
    * Optionally process data
    * @param {number[]|object|object[]|string[]} data
-   * @returns {object}
+   * @returns {Table}
    * @private
    */
 
@@ -147,14 +148,16 @@ var Table = function (_Template) {
 		key: '_processData',
 		value: function _processData(data) {
 			var self = this;
+			if (isArray(data)) this._processedData = data;else this._processedData = $.extend(true, {}, data);
+
 			$.each(data, function (i, e) {
 				// add a private _id for objects
 				if (isObject(e)) {
-					data[i]._id = i;
+					self._processedData[i]._id = i;
 				}
-				data[i] = self._processRow(e);
+				self._processedData[i] = self._processRow(e);
 			});
-			return data;
+			return this;
 		}
 
 		/**
@@ -275,9 +278,9 @@ var Table = function (_Template) {
 		key: 'build',
 		value: function build(data) {
 			this._cacheData(data);
-			data = this._processData(data);
+			this._processData(data);
 			this.toggleEmpty(false);
-			this._render(data);
+			this._render(this._processedData);
 			this.isFirstBuild = false;
 			return this;
 		}
@@ -291,6 +294,7 @@ var Table = function (_Template) {
 		key: 'wipe',
 		value: function wipe() {
 			this.$tbody.empty();
+			this.toggleEmpty(true);
 			this.$rows = [];
 			this._cachedData = {};
 			return this;

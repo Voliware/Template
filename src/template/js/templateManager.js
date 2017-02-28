@@ -140,11 +140,14 @@ class TemplateManager extends Manager {
 	 * that have keys whos names are identical with [data-name]
 	 * or [name] attribute values within the template's elements,
 	 * so $.fn.populate may appropriately populate html or inputs
-	 * todo: this is literally a clone of manage with no process, and a _create call
+	 * todo: this is literally a clone of manage with a _create call
 	 * @returns {TemplateManager}
 	 */
 	build(data){
-		if(!isObject(data) && this.settings.useObjectNames)
+		this._cacheData(data);
+		this._processData(data);
+
+		if(!isObject(this._processedData) && this.settings.useObjectNames)
 			throw new Error("TemplateManager.build: to use option useObjectNames, object passed to build() must be an object.");
 
 		var self = this;
@@ -155,8 +158,8 @@ class TemplateManager extends Manager {
 		var dataIds = [];
 
 		// add or update objects
-		for(var i in data){
-			var e = data[i];
+		for(var i in this._processedData){
+			var e = this._processedData[i];
 
 			if(this.settings.useObjectNames)
 				e[id] = i;

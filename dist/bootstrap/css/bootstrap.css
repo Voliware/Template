@@ -95,6 +95,7 @@ div.input-help {
 
 .progress{
     text-align:center;
+    position:relative;
 }
 .progress-percent{
     color:black;

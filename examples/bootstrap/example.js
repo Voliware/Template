@@ -1,3 +1,5 @@
+var p1;
+
 $(document).on('ready', function(){
 	var $toggle = $('#toggle');
 	var $panel = $('#panel');
@@ -48,7 +50,7 @@ $(document).on('ready', function(){
 
 
 	// progress
-	var p1 =  new BootstrapProgress()
+	p1 =  new BootstrapProgress()
 		.appendTo($progress)
 		.setProgress(48);
 
