@@ -316,6 +316,42 @@ class Form extends Template {
 	}
 
 	/**
+	 * Lock the submit button for some amount of ms
+	 * @param {number} ms - time to lock in milliseconds
+	 */
+	lockSubmit(ms){
+		var self = this;
+
+		this.$submit.prop('disabled', true);
+		setTimeout(function() {
+			self.$submit.prop('disabled', false );
+			self.$submit.html(html);
+		}, ms);
+
+		var html = this.$submit.html();
+		var c = 0;
+		var timer = setInterval(setButtonHtml, 1000);
+		setButtonHtml();
+
+		/**
+		 * Set the button html to the time left on the lock
+		 */
+		function setButtonHtml(){
+			if(c >= ms){
+				clearInterval(timer);
+			}
+			else{
+				var time = Math.floor((ms - c) / 1000);
+				// don't show 0
+				time = time || 1;
+				var _html = html + " | " + time;
+				self.$submit.html(_html);
+				c += 1000;
+			}
+		}
+	}
+
+	/**
 	 * Toggle the form body
 	 * @param {boolean} state
 	 * @returns {Form}

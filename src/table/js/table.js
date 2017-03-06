@@ -167,8 +167,10 @@ class Table extends Template {
 		// empty the <tbody>
         this.wipe();
 
-		if($.isEmptyObject(data) || !data || (dataIsArray && !data.length))
-			return this.toggleEmpty(true);
+		if(!$.isEmptyObject(data) || data || (dataIsArray && data.length))
+			this.toggleEmpty(false);
+		else
+			return this;
 
 		// run through data and create rows
 		Util.each(data, function(i, e){

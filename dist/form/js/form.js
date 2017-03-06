@@ -353,6 +353,44 @@ var Form = function (_Template) {
 		}
 
 		/**
+   * Lock the submit button for some amount of ms
+   * @param {number} ms - time to lock in milliseconds
+   */
+
+	}, {
+		key: 'lockSubmit',
+		value: function lockSubmit(ms) {
+			var self = this;
+
+			this.$submit.prop('disabled', true);
+			setTimeout(function () {
+				self.$submit.prop('disabled', false);
+				self.$submit.html(html);
+			}, ms);
+
+			var html = this.$submit.html();
+			var c = 0;
+			var timer = setInterval(setButtonHtml, 1000);
+			setButtonHtml();
+
+			/**
+    * Set the button html to the time left on the lock
+    */
+			function setButtonHtml() {
+				if (c >= ms) {
+					clearInterval(timer);
+				} else {
+					var time = Math.floor((ms - c) / 1000);
+					// don't show 0
+					time = time || 1;
+					var _html = html + " | " + time;
+					self.$submit.html(_html);
+					c += 1000;
+				}
+			}
+		}
+
+		/**
    * Toggle the form body
    * @param {boolean} state
    * @returns {Form}
@@ -872,7 +910,8 @@ var Wizard = function (_Form) {
   * @param  {object} [options]
   * @param  {object} [options.struct]
   * @param  {string} [options.struct.$wrapper='.wizard'] - wizard wrapper
-  * @param  {string} [options.struct.$navs='ul.nav > li'] - navigation list
+  * @param  {string} [options.struct.$nav='ul.nav'] - navigation list
+  * @param  {string} [options.struct.$navs='ul.nav > li'] - navigation links
   * @param  {string} [options.struct.$tabs='.tab-pane'] - tab container
   * @param  {string} [options.struct.$next='li.next'] - next button
   * @param  {string} [options.struct.$pager='ul.pager'] - pager container
@@ -887,6 +926,7 @@ var Wizard = function (_Form) {
 		var defaults = {
 			struct: {
 				$wrapper: '.wizard',
+				$nav: 'ul.nav',
 				$navs: 'ul.nav > li',
 				$tabs: '.tab-pane',
 				$next: 'li.next',
@@ -911,33 +951,53 @@ var Wizard = function (_Form) {
 	}
 
 	/**
-  * Set pagination and form button handlers
-  * @returns {Wizard}
+  * Clear all handlers. Useful if
+  * the wizard DOM is being re-used.
   * @private
   */
 
 
 	_createClass(Wizard, [{
+		key: '_clearHandlers',
+		value: function _clearHandlers() {
+			this.$next.off('click.wizard');
+			this.$previous.off('click.wizard');
+			this.$submit.off('click.wizard');
+			this.$navs.each(function (i, e) {
+				$(e).off('click.wizard');
+			});
+		}
+
+		/**
+   * Set pagination and form button handlers
+   * @returns {Wizard}
+   * @private
+   */
+
+	}, {
 		key: '_setHandlers',
 		value: function _setHandlers() {
 			var self = this;
+
+			this._clearHandlers();
+
 			// next
-			this.$next.click(function () {
+			this.$next.on('click.wizard', function () {
 				self._getNextNav().find('a').click();
 				self.validatePreviousTab();
 			});
 			// prev
-			this.$previous.click(function () {
+			this.$previous.on('click.wizard', function () {
 				self._getPreviousNav().find('a').click();
 				self.validateNextTab();
 			});
 			// submit
-			this.$submit.click(function () {
+			this.$submit.on('click.wizard', function () {
 				self.validateAllTabs();
 			});
 			// navs
 			this.$navs.each(function (i, e) {
-				$(e).click(function () {
+				$(e).on('click.wizard', function () {
 					self._setPagination(i);
 					var x = i;
 					// nav clicked is ahead
@@ -975,7 +1035,7 @@ var Wizard = function (_Form) {
 
 			// components
 			this.$wrapper = $('<div class="wizard"></div>');
-			this.$navs = $('<ul class="nav"></ul>');
+			this.$nav = $('<ul class="nav"></ul>');
 			this.$tabs = $('<div class="tab-pane"></div>');
 			this.$pager = $('<ul class="pager"></ul>');
 			this.$next = $('<li class="next"><a href="#">Next</a></li>');
@@ -985,7 +1045,7 @@ var Wizard = function (_Form) {
 			this.$pager.append(this.$previous, this.$next, this.$submit);
 			this.$footer.append(this.$pager);
 			this.$form.append(this.$tabs, this.$footer);
-			this.$wrapper.append(this.$navs, this.$form);
+			this.$wrapper.append(this.$nav, this.$form);
 
 			return this;
 		}
@@ -1277,8 +1337,15 @@ var Wizard = function (_Form) {
 			$.each(this.$tabs, function (i, e) {
 				var $tab = $(e);
 				self.validator.validateContainer($tab);
-				valid = self.validator.isValidContainer($tab);
-				self._toggleNavInvalid(self._getNav(i), !valid);
+
+				var validTab = self.validator.isValidContainer($tab);
+				self._toggleNavInvalid(self._getNav(i), !validTab);
+
+				// set overal validity
+				// should be invalid if any tab is invalid
+				if (!validTab) {
+					valid = false;
+				}
 			});
 			return valid;
 		}
@@ -1340,7 +1407,7 @@ var Wizard = function (_Form) {
 		key: 'toggleForm',
 		value: function toggleForm(state) {
 			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'toggleForm', this).call(this, state);
-			this.$navs.toggle(state);
+			this.$nav.toggle(state);
 			return this;
 		}
 
@@ -1354,7 +1421,7 @@ var Wizard = function (_Form) {
 		key: 'slideToggleForm',
 		value: function slideToggleForm(state) {
 			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'slideToggleForm', this).call(this, state);
-			this.$navs.slideToggleState(state);
+			this.$nav.slideToggleState(state);
 			return this;
 		}
 

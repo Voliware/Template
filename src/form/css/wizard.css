@@ -4,9 +4,9 @@
  * Licensed under the MIT license.
  */
 
-.wizard-tab.invalid > a{
-    background: rgba(255, 3, 3, 0.71);
-    color: white;
+.wizard-tab.invalid > a {
+    background: rgba(255, 3, 3, 1)!important;
+    color: white!important;
 }
 .wizard button.form-submit{
     float:right;
