@@ -9,6 +9,7 @@ var populateForm;
 $(document).on('ready', function(){
 	feedbackForm = new Form({
 		validator : Form.validators.formValidation,
+		serializeMode : FormSerializer.serializeMode.toObject,
 		template : $('#feedbackForm'),
 		submitRequest : submitRequest
 	});

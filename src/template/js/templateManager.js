@@ -114,6 +114,19 @@ class TemplateManager extends Manager {
 	}
 
 	/**
+	 * Deletes all objects from the collection
+	 * @returns {Manager}
+	 * @private
+	 */
+	_empty(){
+		for(var i in this.objects){
+			this.objects[i].remove();
+			delete this.objects[i];
+		}
+		return this;
+	}
+
+	/**
 	 * Populate the template
 	 * @param {jQuery|Template} template
 	 * @param {*} data

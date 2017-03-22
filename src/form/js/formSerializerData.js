@@ -91,9 +91,9 @@ class FormSerializerData {
 		var data = {};
 		Util.each(this.data, function(i, e){
 			// convert string numbers to real numbers
-			data[i] = isNaN(e.val)
-				? e.val
-				: parseInt(e.val);
+			data[i] = (e.val !== "" && !isNaN(e.val))
+				? parseInt(e.val)
+				: data[i] = e.val;
 		});
 		return data;
 	}

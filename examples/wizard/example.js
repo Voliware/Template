@@ -6,8 +6,6 @@ $(document).on('ready', function(){
 		template : $testWizard,
 		useTemplate : true
 	});
-	$testWizard.find('[name="name"]').val('bob');
-	$testWizard.find('[name="age"]').val('55');
 	$testWizard.find('[name="gender"]').val('1');
 
 	$('.nav.nav-tabs').responsiveTabs();

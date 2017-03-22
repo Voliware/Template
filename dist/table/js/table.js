@@ -193,7 +193,7 @@ var Table = function (_Template) {
 			// empty the <tbody>
 			this.wipe();
 
-			if (!$.isEmptyObject(data) || data || dataIsArray && data.length) this.toggleEmpty(false);else return this;
+			if (!$.isEmptyObject(data) || dataIsArray && data.length) this.toggleEmpty(false);else return this;
 
 			// run through data and create rows
 			Util.each(data, function (i, e) {

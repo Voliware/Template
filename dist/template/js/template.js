@@ -1382,6 +1382,22 @@ var TemplateManager = function (_Manager) {
 		}
 
 		/**
+   * Deletes all objects from the collection
+   * @returns {Manager}
+   * @private
+   */
+
+	}, {
+		key: '_empty',
+		value: function _empty() {
+			for (var i in this.objects) {
+				this.objects[i].remove();
+				delete this.objects[i];
+			}
+			return this;
+		}
+
+		/**
    * Populate the template
    * @param {jQuery|Template} template
    * @param {*} data

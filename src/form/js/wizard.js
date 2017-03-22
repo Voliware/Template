@@ -78,12 +78,12 @@ class Wizard extends Form {
 		// next
 		this.$next.on('click.wizard', function(){
 			self._getNextNav().find('a').click();
-			self.validatePreviousTab();
+			//self.validatePreviousTab();
 		});
 		// prev
 		this.$previous.on('click.wizard', function(){
+			self.validateTab(self._getTab(self.step));
 			self._getPreviousNav().find('a').click();
-			self.validateNextTab();
 		});
 		// submit
 		this.$submit.on('click.wizard', function(){
@@ -96,7 +96,7 @@ class Wizard extends Form {
 				var x = i;
 				// nav clicked is ahead
 				if(i > self.step){
-					for(x; x > 0; x--){
+					for(x = x - 1; x >= 0; x--){
 						self.validateTab(self._getTab(x))
 					}
 				}
@@ -107,6 +107,9 @@ class Wizard extends Form {
 					}
 				}
 				self.step = i;
+
+				// reset nav status when going to a tab
+				self._toggleNavInvalid($(this), false);
 			});
 		});
 		return this;
@@ -280,7 +283,7 @@ class Wizard extends Form {
 
 	/**
 	 * Get a tab based on index
-	 * @param {jQuery} index
+	 * @param {number} index
 	 * @returns {jQuery}
 	 * @private
 	 */

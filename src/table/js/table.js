@@ -167,7 +167,7 @@ class Table extends Template {
 		// empty the <tbody>
         this.wipe();
 
-		if(!$.isEmptyObject(data) || data || (dataIsArray && data.length))
+		if(!$.isEmptyObject(data) || (dataIsArray && data.length))
 			this.toggleEmpty(false);
 		else
 			return this;

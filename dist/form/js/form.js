@@ -861,7 +861,7 @@ var FormSerializerData = function () {
 			var data = {};
 			Util.each(this.data, function (i, e) {
 				// convert string numbers to real numbers
-				data[i] = isNaN(e.val) ? e.val : parseInt(e.val);
+				data[i] = e.val !== "" && !isNaN(e.val) ? parseInt(e.val) : data[i] = e.val;
 			});
 			return data;
 		}
@@ -984,12 +984,12 @@ var Wizard = function (_Form) {
 			// next
 			this.$next.on('click.wizard', function () {
 				self._getNextNav().find('a').click();
-				self.validatePreviousTab();
+				//self.validatePreviousTab();
 			});
 			// prev
 			this.$previous.on('click.wizard', function () {
+				self.validateTab(self._getTab(self.step));
 				self._getPreviousNav().find('a').click();
-				self.validateNextTab();
 			});
 			// submit
 			this.$submit.on('click.wizard', function () {
@@ -1002,7 +1002,7 @@ var Wizard = function (_Form) {
 					var x = i;
 					// nav clicked is ahead
 					if (i > self.step) {
-						for (x; x > 0; x--) {
+						for (x = x - 1; x >= 0; x--) {
 							self.validateTab(self._getTab(x));
 						}
 					}
@@ -1013,6 +1013,9 @@ var Wizard = function (_Form) {
 							}
 						}
 					self.step = i;
+
+					// reset nav status when going to a tab
+					self._toggleNavInvalid($(this), false);
 				});
 			});
 			return this;
@@ -1214,7 +1217,7 @@ var Wizard = function (_Form) {
 
 		/**
    * Get a tab based on index
-   * @param {jQuery} index
+   * @param {number} index
    * @returns {jQuery}
    * @private
    */
