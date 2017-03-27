@@ -176,7 +176,7 @@ class Table extends Template {
     _render(data){
 		var self = this;
 		var useTemplate = !isNull(this.settings.template);
-		var dataIsArray = $.isArray(data);
+		var dataIsArray = Array.isArray(data);
 
 		// empty the &lt;tbody>
         this.wipe();

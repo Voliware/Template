@@ -162,7 +162,7 @@ class Table extends Template {
     _render(data){
 		var self = this;
 		var useTemplate = !isNull(this.settings.template);
-		var dataIsArray = $.isArray(data);
+		var dataIsArray = Array.isArray(data);
 
 		// empty the <tbody>
         this.wipe();
@@ -177,7 +177,7 @@ class Table extends Template {
 			var $row = createRow();
 
 			// if data is an object and a template is used
-			if(useTemplate && !dataIsArray)
+			if(useTemplate && !Array.isArray(e))
 				$row.populateChildren(e);
 			// if data is an array
 			else

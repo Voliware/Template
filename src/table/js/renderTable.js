@@ -57,7 +57,7 @@ class RenderTable extends Table {
 	 * @private
 	 */
 	_render(data){
-		var dataIsArray = $.isArray(data);
+		var dataIsArray = Array.isArray(data);
 
 		if($.isEmptyObject(data) || !data || (dataIsArray && !data.length))
 			this.toggleEmpty(true);

@@ -188,7 +188,7 @@ var Table = function (_Template) {
 		value: function _render(data) {
 			var self = this;
 			var useTemplate = !isNull(this.settings.template);
-			var dataIsArray = $.isArray(data);
+			var dataIsArray = Array.isArray(data);
 
 			// empty the <tbody>
 			this.wipe();
@@ -200,7 +200,7 @@ var Table = function (_Template) {
 				var $row = createRow();
 
 				// if data is an object and a template is used
-				if (useTemplate && !dataIsArray) $row.populateChildren(e);
+				if (useTemplate && !Array.isArray(e)) $row.populateChildren(e);
 				// if data is an array
 				else populateRow($row, e);
 
@@ -419,7 +419,7 @@ var RenderTable = function (_Table) {
 	_createClass(RenderTable, [{
 		key: '_render',
 		value: function _render(data) {
-			var dataIsArray = $.isArray(data);
+			var dataIsArray = Array.isArray(data);
 
 			if ($.isEmptyObject(data) || !data || dataIsArray && !data.length) this.toggleEmpty(true);else if (dataIsArray && !isObject(data[0])) throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
 

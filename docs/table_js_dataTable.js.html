@@ -79,7 +79,7 @@ class DataTable extends Table {
 	 * @private
 	 */
 	_render(data){
-		if($.isArray(data) &amp;&amp; !isObject(data[0]))
+		if(Array.isArray(data) &amp;&amp; !isObject(data[0]))
 			throw new ReferenceError("DataTable._render: data must be an object, or an array of objects");
 		this.rowManager.build(data);
 		return this;

@@ -81,7 +81,7 @@ class RenderTable extends Table {
 	 * @private
 	 */
 	_render(data){
-		var dataIsArray = $.isArray(data);
+		var dataIsArray = Array.isArray(data);
 
 		if(dataIsArray &amp;&amp; !isObject(data[0]))
 			throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
