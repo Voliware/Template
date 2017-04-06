@@ -355,9 +355,8 @@ if (typeof isJquery === 'undefined') {
 	/**
   * Populates the children of an object such as a form
   * by matching data keys with DOM elements that have the
-  * attribute [data-name="key"] or [name="key"].
-  * Uses $.populate(data) to appropriately fill in the
-  * found element.
+  * attribute [data-name="key"] or [name="key"]. Uses
+  * $.populate(data) to appropriately fill in the found element.
   * @param {object} data
   * @param {boolean} [trigger=true] - whether to call change and input events
   * @returns {jQuery}
@@ -367,8 +366,9 @@ if (typeof isJquery === 'undefined') {
 
 		var $this = $(this);
 		$.each(data, function (i, e) {
-			var $el = $this.find('[name="' + i + '"]');
-			if ($el.length === 0) $el = $this.find('[data-name="' + i + '"]');
+			var $elInput = $this.find('[name="' + i + '"]');
+			var $el = $this.find('[data-name="' + i + '"]');
+			if ($elInput.length > 0 && $elInput.data('populate') !== false) $elInput.populate(e, trigger);
 			if ($el.length > 0 && $el.data('populate') !== false) $el.populate(e, trigger);
 		});
 		return this;

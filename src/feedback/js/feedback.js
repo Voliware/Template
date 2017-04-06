@@ -22,6 +22,7 @@ class Feedback extends Template {
 	 */
 	constructor(options){
 		var defaults = {
+			closeButton : true,
 			struct : {
 				$wrapper : '.feedback',
 				$text : '.feedback-text',
@@ -32,10 +33,12 @@ class Feedback extends Template {
 		super($Util.opts(defaults, options));
 		var self = this;
 
-		// handlers
-		this.$close.click(function(){
-			self.slideUp();
-		});
+		if(this.settings.closeButton){
+			this.$close.click(function(){
+				self.slideUp();
+			});
+		}
+
 		return this;
 	}
 
@@ -48,9 +51,13 @@ class Feedback extends Template {
 		var template =
 			'<div class="feedback">' +
 				'<span class="feedback-icon"></span>' +
-				'<span class="feedback-text"></span>' +
-				'<button name="close" type="button">X</div>' +
-			'</div>';
+				'<span class="feedback-text"></span>';
+
+		if(this.settings.closeButton){
+			template += '<button name="close" type="button">X</button>';
+		}
+
+		template += '</div>';
 
 		this._useTemplate($(template));
 

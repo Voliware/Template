@@ -12,8 +12,12 @@
 }
 .feedback-icon,
 .feedback-text{
-    vertical-align: middle;
+    display: inline-block;
     padding:0 5px;
+    vertical-align: middle;
+}
+.feedback-text{
+    max-width:90%;
 }
 .feedback-icon{
     font-size: 16px;

@@ -167,9 +167,11 @@ var BootstrapFeedback = function (_Feedback) {
 
 		var self = _this2;
 
-		_this2.$close.click(function () {
-			self.slideUp();
-		});
+		if (_this2.settings.closeButton) {
+			_this2.$close.click(function () {
+				self.slideUp();
+			});
+		}
 
 		return _ret2 = _this2, _possibleConstructorReturn(_this2, _ret2);
 	}
@@ -185,15 +187,15 @@ var BootstrapFeedback = function (_Feedback) {
 	_createClass(BootstrapFeedback, [{
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
-			_get(BootstrapFeedback.prototype.__proto__ || Object.getPrototypeOf(BootstrapFeedback.prototype), '_useDefaultTemplate', this).call(this);
+			var template = '';
+			if (this.settings.closeButton) {
+				template = '<div class="feedback alert clearfix">' + '<div class="col-xs-10">' + '<div class="feedback-icon"></div>' + '<div class="feedback-text"></div>' + '</div>' + '<div class="col-xs-2">' + '<button type="button" name="close" class="close">&times;</button>' + '</div>' + '</div>';
+			} else {
+				template = '<div class="feedback alert clearfix">' + '<div class="col-xs-12">' + '<div class="feedback-icon"></div>' + '<div class="feedback-text"></div>' + '</div>' + '</div>';
+			}
 
-			// redo the close button
-			var $close = $('<button type="button" class="close">&times;</button>');
-			this.$close.replaceWith($close);
-			this.$close = $close;
-
-			this.$wrapper.addClass('alert');
-
+			this._useTemplate($(template));
+			this.$wrapper.hide();
 			return this;
 		}
 
@@ -228,6 +230,14 @@ var BootstrapFeedback = function (_Feedback) {
 			this.addClass(cls);
 			return this;
 		}
+
+		/**
+   * Set the feedback icon
+   * @param {*} $icon
+   * @returns {BootstrapFeedback}
+   * @private
+   */
+
 	}, {
 		key: '_setIcon',
 		value: function _setIcon($icon) {

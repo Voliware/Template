@@ -238,9 +238,9 @@ class Form extends Template {
 	 * @private
 	 */
 	_done(data){
-		this.trigger('done', data);
 		if(this.feedback)
 			this.feedback.setFeedback('success', ' Operation was successful');
+		this.trigger('done', data);
 		return this;
 	}
 
@@ -251,9 +251,9 @@ class Form extends Template {
 	 * @private
 	 */
 	_fail(err){
-		this.trigger('fail', err);
 		if(this.feedback)
 			this.feedback.setFeedback('danger', 'Operation has failed');
+		this.trigger('fail', err);
 		return this;
 	}
 
@@ -263,8 +263,8 @@ class Form extends Template {
 	 * @private
 	 */
 	_always(){
-		this.trigger('always');
 		this.toggleButtons(true);
+		this.trigger('always');
 		return this;
 	}
 
@@ -321,6 +321,7 @@ class Form extends Template {
 	 */
 	lockSubmit(ms){
 		var self = this;
+		var html = this.$submit.html();
 
 		this.$submit.prop('disabled', true);
 		setTimeout(function() {
@@ -328,7 +329,6 @@ class Form extends Template {
 			self.$submit.html(html);
 		}, ms);
 
-		var html = this.$submit.html();
 		var c = 0;
 		var timer = setInterval(setButtonHtml, 1000);
 		setButtonHtml();

@@ -37,6 +37,7 @@ var Feedback = function (_Template) {
 		_classCallCheck(this, Feedback);
 
 		var defaults = {
+			closeButton: true,
 			struct: {
 				$wrapper: '.feedback',
 				$text: '.feedback-text',
@@ -49,10 +50,12 @@ var Feedback = function (_Template) {
 
 		var self = _this;
 
-		// handlers
-		_this.$close.click(function () {
-			self.slideUp();
-		});
+		if (_this.settings.closeButton) {
+			_this.$close.click(function () {
+				self.slideUp();
+			});
+		}
+
 		return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	}
 
@@ -66,7 +69,13 @@ var Feedback = function (_Template) {
 	_createClass(Feedback, [{
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
-			var template = '<div class="feedback">' + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>' + '<button name="close" type="button">X</div>' + '</div>';
+			var template = '<div class="feedback">' + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>';
+
+			if (this.settings.closeButton) {
+				template += '<button name="close" type="button">X</button>';
+			}
+
+			template += '</div>';
 
 			this._useTemplate($(template));
 

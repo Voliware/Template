@@ -2,7 +2,6 @@ function submitRequest(data){
 	return $.post('backend.html', data)
 }
 
-var form;
 var feedbackForm;
 var singleValueForm;
 var populateForm;

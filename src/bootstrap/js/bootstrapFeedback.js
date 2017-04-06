@@ -19,9 +19,11 @@ class BootstrapFeedback extends Feedback {
 		super(options);
 		var self = this;
 
-		this.$close.click(function(){
-			self.slideUp();
-		});
+		if(this.settings.closeButton){
+			this.$close.click(function(){
+				self.slideUp();
+			});
+		}
 
 		return this;
 	}
@@ -33,15 +35,31 @@ class BootstrapFeedback extends Feedback {
 	 * @private
 	 */
 	_useDefaultTemplate(){
-		super._useDefaultTemplate();
+		var template = '';
+		if(this.settings.closeButton){
+			template =
+				'<div class="feedback alert clearfix">' +
+					'<div class="col-xs-10">' +
+						'<div class="feedback-icon"></div>' +
+						'<div class="feedback-text"></div>' +
+					'</div>' +
+					'<div class="col-xs-2">' +
+						'<button type="button" name="close" class="close">&times;</button>' +
+					'</div>' +
+				'</div>';
+		}
+		else {
+			template =
+				'<div class="feedback alert clearfix">' +
+					'<div class="col-xs-12">' +
+						'<div class="feedback-icon"></div>' +
+						'<div class="feedback-text"></div>' +
+					'</div>' +
+				'</div>';
+		}
 
-		// redo the close button
-		var $close = $('<button type="button" class="close">&times;</button>');
-		this.$close.replaceWith($close);
-		this.$close = $close;
-
-		this.$wrapper.addClass('alert');
-
+		this._useTemplate($(template));
+		this.$wrapper.hide();
 		return this;
 	}
 
@@ -72,6 +90,12 @@ class BootstrapFeedback extends Feedback {
 		return this;
 	}
 
+	/**
+	 * Set the feedback icon
+	 * @param {*} $icon
+	 * @returns {BootstrapFeedback}
+	 * @private
+	 */
 	_setIcon($icon){
 		this.$icon.html($icon);
 		return this;

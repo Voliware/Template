@@ -259,8 +259,8 @@ var Form = function (_Template) {
 	}, {
 		key: '_done',
 		value: function _done(data) {
-			this.trigger('done', data);
 			if (this.feedback) this.feedback.setFeedback('success', ' Operation was successful');
+			this.trigger('done', data);
 			return this;
 		}
 
@@ -274,8 +274,8 @@ var Form = function (_Template) {
 	}, {
 		key: '_fail',
 		value: function _fail(err) {
-			this.trigger('fail', err);
 			if (this.feedback) this.feedback.setFeedback('danger', 'Operation has failed');
+			this.trigger('fail', err);
 			return this;
 		}
 
@@ -288,8 +288,8 @@ var Form = function (_Template) {
 	}, {
 		key: '_always',
 		value: function _always() {
-			this.trigger('always');
 			this.toggleButtons(true);
+			this.trigger('always');
 			return this;
 		}
 
@@ -361,6 +361,7 @@ var Form = function (_Template) {
 		key: 'lockSubmit',
 		value: function lockSubmit(ms) {
 			var self = this;
+			var html = this.$submit.html();
 
 			this.$submit.prop('disabled', true);
 			setTimeout(function () {
@@ -368,7 +369,6 @@ var Form = function (_Template) {
 				self.$submit.html(html);
 			}, ms);
 
-			var html = this.$submit.html();
 			var c = 0;
 			var timer = setInterval(setButtonHtml, 1000);
 			setButtonHtml();

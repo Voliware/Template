@@ -5,7 +5,7 @@ class ComponentBox extends TemplateManager {
 		};
 		super($Util.opts(defaults, options));
 
-		this.lines = new LineManager();
+		this.lines = new TemplateManager();
 		this._add(new MouseCoords());
 
 		// listen to component creation
