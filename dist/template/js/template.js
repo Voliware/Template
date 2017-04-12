@@ -699,7 +699,9 @@ var Manager = function (_EventSystem) {
 			// use the name of the object.
 			// this only works when passing
 			// objects of objects to manage()
-			useObjectNames: false
+			useObjectNames: false,
+			// max number of objs to manage
+			max: 0
 		};
 		_this.settings = Object.assign(defaults, options);
 
@@ -846,7 +848,7 @@ var Manager = function (_EventSystem) {
     */
 			function postUpdate() {
 				self.requiresNewSerialize = true;
-				self.trigger('add', obj);
+				self.trigger('update', obj);
 				self.count++;
 				obj._count = self.count;
 			}

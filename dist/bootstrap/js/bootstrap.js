@@ -189,7 +189,7 @@ var BootstrapFeedback = function (_Feedback) {
 		value: function _useDefaultTemplate() {
 			var template = '';
 			if (this.settings.closeButton) {
-				template = '<div class="feedback alert clearfix">' + '<div class="col-xs-10">' + '<div class="feedback-icon"></div>' + '<div class="feedback-text"></div>' + '</div>' + '<div class="col-xs-2">' + '<button type="button" name="close" class="close">&times;</button>' + '</div>' + '</div>';
+				template = '<div class="feedback alert clearfix">' + '<div class="col-xs-offset-1 col-xs-10">' + '<div class="feedback-icon"></div>' + '<div class="feedback-text"></div>' + '</div>' + '<div class="col-xs-1">' + '<button type="button" name="close" class="close">&times;</button>' + '</div>' + '</div>';
 			} else {
 				template = '<div class="feedback alert clearfix">' + '<div class="col-xs-12">' + '<div class="feedback-icon"></div>' + '<div class="feedback-text"></div>' + '</div>' + '</div>';
 			}
