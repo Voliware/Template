@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: BootstrapForm</title>
+    <title>JSDoc: Class: BootstrapWizard</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: BootstrapForm</h1>
+    <h1 class="page-title">Class: BootstrapWizard</h1>
 
     
 
@@ -28,9 +28,9 @@
 
 <header>
     
-        <h2>BootstrapForm</h2>
+        <h2>BootstrapWizard</h2>
         
-            <div class="class-description">A form with bootstrap feedback</div>
+            <div class="class-description">A wizard with bootstrap feedback</div>
         
     
 </header>
@@ -44,7 +44,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="BootstrapForm"><span class="type-signature"></span>new BootstrapForm<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="BootstrapWizard"><span class="type-signature"></span>new BootstrapWizard<span class="signature">(options)</span><span class="type-signature"></span></h4>
 
     
 
@@ -144,7 +144,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="bootstrap_js_bootstrapForm.js.html">bootstrap/js/bootstrapForm.js</a>, <a href="bootstrap_js_bootstrapForm.js.html#line11">line 11</a>
+        <a href="bootstrap_js_bootstrapWizard.js.html">bootstrap/js/bootstrapWizard.js</a>, <a href="bootstrap_js_bootstrapWizard.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -180,7 +180,7 @@
 
 
     <ul>
-        <li><a href="Form.html">Form</a></li>
+        <li><a href="Wizard.html">Wizard</a></li>
     </ul>
 
 
@@ -204,14 +204,14 @@
 
     
 
-    <h4 class="name" id="clean"><span class="type-signature"></span>clean<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+    <h4 class="name" id="resetForm"><span class="type-signature"></span>resetForm<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Wizard.html">Wizard</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    Remove all data from the form and reset it
+    Reset the form
 </div>
 
 
@@ -235,7 +235,7 @@
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Form.html#clean">Form#clean</a>
+        <a href="Wizard.html#resetForm">Wizard#resetForm</a>
     </li></ul></dd>
     
 
@@ -260,7 +260,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line451">line 451</a>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line471">line 471</a>
     </li></ul></dd>
     
 
@@ -294,7 +294,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Form.html">Form</a></span>
+<span class="param-type"><a href="Wizard.html">Wizard</a></span>
 
 
     </dd>
@@ -309,14 +309,14 @@
 
     
 
-    <h4 class="name" id="initialize"><span class="type-signature"></span>initialize<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+    <h4 class="name" id="resetNavValidation"><span class="type-signature"></span>resetNavValidation<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Wizard.html">Wizard</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    Initialize as a clean form withdefault values from the DOM
+    Reset nav validation
 </div>
 
 
@@ -340,7 +340,7 @@
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Form.html#initialize">Form#initialize</a>
+        <a href="Wizard.html#resetNavValidation">Wizard#resetNavValidation</a>
     </li></ul></dd>
     
 
@@ -365,7 +365,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line463">line 463</a>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line459">line 459</a>
     </li></ul></dd>
     
 
@@ -399,7 +399,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Form.html">Form</a></span>
+<span class="param-type"><a href="Wizard.html">Wizard</a></span>
 
 
     </dd>
@@ -414,514 +414,14 @@
 
     
 
-    <h4 class="name" id="lockSubmit"><span class="type-signature"></span>lockSubmit<span class="signature">(ms)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="slideToggleForm"><span class="type-signature"></span>slideToggleForm<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Wizard.html">Wizard</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    Lock the submit button for some amount of ms
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>ms</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">time to lock in milliseconds</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Form.html#lockSubmit">Form#lockSubmit</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line322">line 322</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="populateForm"><span class="type-signature"></span>populateForm<span class="signature">(data)</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Populate form fields
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">collection of properties whoskey match an input or select name, andwhos value is appropriate for that field</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Form.html#populateForm">Form#populateForm</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line383">line 383</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="Form.html">Form</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="resetForm"><span class="type-signature"></span>resetForm<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Reset the form, using populated dataor setting to default values
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Form.html#resetForm">Form#resetForm</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line405">line 405</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="Form.html">Form</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="serializeForm"><span class="type-signature"></span>serializeForm<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Public function to serialize the form,as jQuery uses serialize already
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Form.html#serializeForm">Form#serializeForm</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line395">line 395</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="Form.html">Form</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="slideToggleForm"><span class="type-signature"></span>slideToggleForm<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Slide toggle the form body
+    Toggle wizard components
 </div>
 
 
@@ -994,7 +494,7 @@
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Form.html#slideToggleForm">Form#slideToggleForm</a>
+        <a href="Wizard.html#slideToggleForm">Wizard#slideToggleForm</a>
     </li></ul></dd>
     
 
@@ -1019,7 +519,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line370">line 370</a>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line447">line 447</a>
     </li></ul></dd>
     
 
@@ -1053,7 +553,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Form.html">Form</a></span>
+<span class="param-type"><a href="Wizard.html">Wizard</a></span>
 
 
     </dd>
@@ -1068,14 +568,14 @@
 
     
 
-    <h4 class="name" id="toggleButtons"><span class="type-signature"></span>toggleButtons<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+    <h4 class="name" id="toggleForm"><span class="type-signature"></span>toggleForm<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Wizard.html">Wizard</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    Toggle the button states
+    Toggle wizard components
 </div>
 
 
@@ -1148,7 +648,7 @@
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Form.html#toggleButtons">Form#toggleButtons</a>
+        <a href="Wizard.html#toggleForm">Wizard#toggleForm</a>
     </li></ul></dd>
     
 
@@ -1173,7 +673,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line311">line 311</a>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line436">line 436</a>
     </li></ul></dd>
     
 
@@ -1207,7 +707,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Form.html">Form</a></span>
+<span class="param-type"><a href="Wizard.html">Wizard</a></span>
 
 
     </dd>
@@ -1222,14 +722,14 @@
 
     
 
-    <h4 class="name" id="toggleForm"><span class="type-signature"></span>toggleForm<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+    <h4 class="name" id="toggleNextButton"><span class="type-signature"></span>toggleNextButton<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Wizard.html">Wizard</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    Toggle the form body
+    Toggle the next button
 </div>
 
 
@@ -1302,7 +802,7 @@
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Form.html#toggleForm">Form#toggleForm</a>
+        <a href="Wizard.html#toggleNextButton">Wizard#toggleNextButton</a>
     </li></ul></dd>
     
 
@@ -1327,7 +827,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line359">line 359</a>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line406">line 406</a>
     </li></ul></dd>
     
 
@@ -1361,7 +861,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Form.html">Form</a></span>
+<span class="param-type"><a href="Wizard.html">Wizard</a></span>
 
 
     </dd>
@@ -1376,14 +876,14 @@
 
     
 
-    <h4 class="name" id="validate"><span class="type-signature"></span>validate<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    <h4 class="name" id="togglePreviousButton"><span class="type-signature"></span>togglePreviousButton<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Wizard.html">Wizard</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    Validate the form
+    Toggle the previous button
 </div>
 
 
@@ -1392,6 +892,55 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -1407,7 +956,7 @@
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Form.html#validate">Form#validate</a>
+        <a href="Wizard.html#togglePreviousButton">Wizard#togglePreviousButton</a>
     </li></ul></dd>
     
 
@@ -1432,7 +981,735 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line430">line 430</a>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line416">line 416</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Wizard.html">Wizard</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toggleSubmitButton"><span class="type-signature"></span>toggleSubmitButton<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Wizard.html">Wizard</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Toggle the submit button
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Wizard.html#toggleSubmitButton">Wizard#toggleSubmitButton</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line426">line 426</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Wizard.html">Wizard</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="validateAllTabs"><span class="type-signature"></span>validateAllTabs<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Validate all tabs
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Wizard.html#validateAllTabs">Wizard#validateAllTabs</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line380">line 380</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="validateCurrentTab"><span class="type-signature"></span>validateCurrentTab<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Validate the current tab
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Wizard.html#validateCurrentTab">Wizard#validateCurrentTab</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line353">line 353</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="validateNextTab"><span class="type-signature"></span>validateNextTab<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Validate the next tab
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Wizard.html#validateNextTab">Wizard#validateNextTab</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line371">line 371</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="validatePreviousTab"><span class="type-signature"></span>validatePreviousTab<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Validate the previous tab
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Wizard.html#validatePreviousTab">Wizard#validatePreviousTab</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line362">line 362</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="validateTab"><span class="type-signature"></span>validateTab<span class="signature">($tab)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Validate a tab
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>$tab</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">jQuery</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Wizard.html#validateTab">Wizard#validateTab</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_wizard.js.html">form/js/wizard.js</a>, <a href="form_js_wizard.js.html#line332">line 332</a>
     </li></ul></dd>
     
 
@@ -1498,7 +1775,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Apr 11 2017 22:38:33 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Apr 11 2017 22:38:34 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

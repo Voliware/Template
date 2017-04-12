@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: bootstrap/js/bootstrapProgress.js</title>
+    <title>JSDoc: Source: bootstrap/js/bootstrapWizard.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: bootstrap/js/bootstrapProgress.js</h1>
+    <h1 class="page-title">Source: bootstrap/js/bootstrapWizard.js</h1>
 
     
 
@@ -27,104 +27,39 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/*!
- * bootstrapProgress
+ * bootstrapWizard
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  */
 
 /**
- * Template for bootstrap progress bar
- * @extends Template
+ * A wizard with bootstrap feedback
+ * @extends Wizard
  */
-class BootstrapProgress extends Template {
+class BootstrapWizard extends Wizard {
 
 	/**
 	 * Constructor
-	 * @param {object} [options]
-	 * @param {boolean} [options.showPercent=true] - whether to show percent value
-	 * @param {object} [options.struct]
-	 * @param {string} [options.struct.$wrapper='.progress'] - the wrapper element
-	 * @param {string} [options.struct.$progress='.progress'] - the bootstrap progress element
-	 * @param {string} [options.struct.$bar='.progress-bar'] - the bootstrap progress bar
-	 * @param {string} [options.struct.$percent='.progress-percent'] - the progress bar percent
-	 * @returns {BootstrapProgress}
+	 * @param {object} options
+	 * @returns {BootstrapWizard}
 	 */
 	constructor(options){
-		var defaults = {
-			struct : {
-				$wrapper : '.progress-wrapper',
-				$progress : '.progress',
-				$bar : '.progress-bar',
-				$percent : '.progress-percent'
-			},
-			showPercent : true
-		};
-		super($Util.opts(defaults, options));
-
-		this.percent = 0;
-
+		super(options);
 		return this;
 	}
 
 	/**
-	 * Create a default template
-	 * @returns {BootstrapProgress}
+	 * Setup the feedback
+	 * @returns {Form}
 	 * @private
 	 */
-	_useDefaultTemplate(){
-		var template = 
-			'&lt;div class="progress-wrapper">' +
-				'&lt;div class="progress">' +
-					'&lt;div class="progress-bar">&lt;/div>' +
-					'&lt;div class="progress-percent">&lt;/div>' +
-				'&lt;/div>' +
-			'&lt;/div>';
-		
-		this._useTemplate($(template));
-
-		if(!this.settings.showPercent)
-			this.$percent.remove();
-
-		return this;
-	}
-
-	/**
-	 * Set the percent text
-	 * @param {number} percent
-	 * @returns {BootstrapProgress}
-	 * @private
-	 */
-	_setPercent(percent){
-		this.percent = Math.floor(percent);
-		this.$percent.html(percent + "%");
-		this.$percent.toggleClass('progress-percent-white', percent > 50);
-		this._centerPercent();
-		return this;
-	}
-
-	/**
-	 * Center the percent text
-	 * @returns {BootstrapProgress}
-	 * @private
-	 */
-	_centerPercent(){
-		// 20 px is approx the text sie of "0%"
-		var w = this.$percent.width() || 20;
-		this.$percent.css('margin-left', w / 2 * -1 + "px");
-		return this;
-	}
-
-	/**
-	 * Set the progress of the bar
-	 * @param {number} percent
-	 * @returns {BootstrapProgress}
-	 */
-	setProgress(percent){
-		percent = Math.floor(percent);
-		this.$bar.css('width', percent + "%");
-		this.$bar.toggleClass('progress-bar-success', percent === 100);
-		if(this.settings.showPercent)
-			this._setPercent(percent);
+	_setupFeedback(){
+		this.feedback = new BootstrapFeedback();
+		if(!this.$feedback.length){
+			this.$feedback = $('&lt;div class="form-feedback">&lt;/div>');
+			this.$wrapper.prepend(this.$feedback);
+		}
+		this.$feedback.html(this.feedback.$wrapper);
 		return this;
 	}
 }</code></pre>

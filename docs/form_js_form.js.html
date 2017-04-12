@@ -55,6 +55,7 @@ class Form extends Template {
 	 * @param {string} [options.struct.$body='.form-body'] - the body selector
 	 * @param {string} [options.struct.$footer='.form-footer'] - the footer selector
 	 * @param {string} [options.struct.$cancel='.form-cancel'] - the cancel button selector
+	 * @param {string} [options.struct.$reset='.form-reset'] - the reset button selector
 	 * @param {string} [options.struct.$submit='button[type="submit"]'] - the submit button selector
 	 * @returns {Form}
 	 */
@@ -66,28 +67,36 @@ class Form extends Template {
 			submitRequest : null,
 			serializeMode : FormSerializer.serializeMode.toString,
 			checkboxMode : FormSerializer.checkboxMode.number,
-			// jquery elements for each table components
+			// css classes for each form component
 			struct: {
 				$wrapper: 'form',
+				$feedback: '.form-feedback',
 				$header: '.form-header',
 				$body: '.form-body',
 				$footer: '.form-footer',
 				$cancel: '.form-cancel',
+				$reset: '.form-reset',
 				$submit: 'button[type="submit"]'
 			},
 			validator: null
 		};
+
 		super($Util.opts(defaults, options));
 		var self = this;
 
 		// store serialized data
 		this._serializedData = {};
+		// cache raw incoming data
+		this._cachedData = {};
+		// processed form data
+		this._processedData = {};
 
 		// alias
-		// this alias just happens to be integral
-		// to Wizard, which inherits Form, but
-		// overrides $wrapper and thus loses a &lt;form> ref
-		this.$form = this.$wrapper;
+		// this exists solely for Wizard !!
+		var $form = this.$wrapper.find('form');
+		this.$form = $form.length > 0
+			? $form
+			: this.$wrapper;
 
 		// components
 		this.formSerializer = new FormSerializer({
@@ -97,11 +106,22 @@ class Form extends Template {
 		this.validator = null;
 		this.feedback = null;
 
+		// handlers
 		// default submit handler
-		this.$wrapper.on('submit', function(e){
+		this.$form.on('submit', function(e){
 			e.preventDefault();
-			self.serializer()
+			self.serializeForm()
 				._submit();
+		});
+
+		// cancel
+		this.$cancel.click(function(){
+			self.resetForm();
+		});
+
+		// reset
+		this.$reset.click(function(){
+			self.resetForm();
 		});
 
 		// set up validator
@@ -115,6 +135,8 @@ class Form extends Template {
 		return this;
 	}
 
+	// setup
+
 	/**
 	 * Default form template
 	 * @returns {Form}
@@ -123,10 +145,12 @@ class Form extends Template {
 	_useDefaultTemplate(){
 		var template =
 			'&lt;form class="form">' +
+				'&lt;div class="form-feedback">&lt;/div>' +
 				'&lt;div class="form-header">&lt;/div>' +
 				'&lt;div class="form-body">&lt;/div>' +
 				'&lt;div class="form-footer">' +
 					'&lt;button type="submit" class="form-submit">Submit&lt;/button>' +
+					'&lt;button type="button" class="form-reset">Reset&lt;/button>' +
 					'&lt;button type="button" class="form-cancel">Cancel&lt;/button>' +
 				'&lt;/div>' +
 			'&lt;/form>';
@@ -143,10 +167,9 @@ class Form extends Template {
 	 */
 	_setupValidator(){
 		var v = this.settings.validator;
-
 		switch(v.api){
 			case 'formValidation':
-				Form.validators.formValidation.setup(this, v.options);
+				Form.validators.formValidation.setup(this, this.$form, v.options);
 				break;
 		}
 		return this;
@@ -159,9 +182,41 @@ class Form extends Template {
 	 */
 	_setupFeedback(){
 		this.feedback = new Feedback();
-		this.feedback.$wrapper.prependTo(this.$body);
+		if(!this.$feedback.length){
+			this.$feedback = $('&lt;div class="form-feedback">&lt;/div>');
+			this.$form.prepend(this.$feedback);
+		}
+		this.$feedback.html(this.feedback.$wrapper);
 		return this;
 	}
+
+	/**
+	 * Prepare the form with a loading message
+	 * @returns {Form}
+	 * @private
+	 */
+	_prepare(){
+		this.toggleForm(false);
+		this.feedback.show();
+		this.feedback.setFeedback('processing', 'Getting data...');
+		return this;
+	}
+
+	// ready
+
+	/**
+	 * Set the form to ready by hiding
+	 * feedback and showing the form components
+	 * @returns {Form}
+	 * @private
+	 */
+	_ready(){
+		this.feedback.slideUp();
+		this.slideToggleForm(true);
+		return this;
+	}
+
+	// submit
 
 	/**
 	 * Submits the form
@@ -177,14 +232,14 @@ class Form extends Template {
 			this.feedback.setFeedback('processing', 'Processing...');
 
 		return this._doSubmit()
-			.done(function(){
-				self._onDone();
+			.done(function(data){
+				self._done(data);
 			})
-			.fail(function(){
-				self._onFail();
+			.fail(function(err){
+				self._fail(err);
 			})
 			.always(function(){
-				self._onAlways();
+				self._always();
 			});
 	}
 
@@ -202,27 +257,31 @@ class Form extends Template {
 			return $.post(s.submitUrl, this._serializedData);
 	}
 
+	// submit handlers
+
 	/**
 	 * Form submission success handler
+	 * @param {object} data
 	 * @returns {Form}
 	 * @private
 	 */
-	_onDone(){
-		this.trigger('done');
+	_done(data){
 		if(this.feedback)
 			this.feedback.setFeedback('success', ' Operation was successful');
+		this.trigger('done', data);
 		return this;
 	}
 
 	/**
 	 * Form submission fail handler
+	 * @param {object} err
 	 * @returns {Form}
 	 * @private
 	 */
-	_onFail(){
-		this.trigger('fail');
+	_fail(err){
 		if(this.feedback)
 			this.feedback.setFeedback('danger', 'Operation has failed');
+		this.trigger('fail', err);
 		return this;
 	}
 
@@ -231,8 +290,114 @@ class Form extends Template {
 	 * @returns {Form}
 	 * @private
 	 */
-	_onAlways(){
+	_always(){
+		this.toggleButtons(true);
 		this.trigger('always');
+		return this;
+	}
+
+	// data
+
+	/**
+	 * Get form data from the backend
+	 * @returns {jQuery}
+	 * @private
+	 */
+	_getFormData(){
+		return $.Deferred().resolve().promise();
+	}
+
+	/**
+	 * Cache incoming form data
+	 * @param {object} data
+	 * @returns {Form}
+	 * @private
+	 */
+	_cacheFormData(data){
+		this._cachedData = $.extend(true, {}, data);
+		return this;
+	}
+
+	/**
+	 * Process incoming form data
+	 * @param {object} data
+	 * @returns {Form}
+	 * @private
+	 */
+	_processData(data){
+		this._processedData = $.extend(true, {}, data);
+		return this;
+	}
+
+	// public
+
+	/**
+	 * Toggle the button states
+	 * @param {boolean} state
+	 * @returns {Form}
+	 */
+	toggleButtons(state){
+		this.$cancel.prop('disabled', !state);
+		this.$reset.prop('disabled', !state);
+		this.$submit.prop('disabled', !state).toggleClass('disabled', !state);
+		return this;
+	}
+
+	/**
+	 * Lock the submit button for some amount of ms
+	 * @param {number} ms - time to lock in milliseconds
+	 */
+	lockSubmit(ms){
+		var self = this;
+		var html = this.$submit.html();
+
+		this.$submit.prop('disabled', true);
+		setTimeout(function() {
+			self.$submit.prop('disabled', false );
+			self.$submit.html(html);
+		}, ms);
+
+		var c = 0;
+		var timer = setInterval(setButtonHtml, 1000);
+		setButtonHtml();
+
+		/**
+		 * Set the button html to the time left on the lock
+		 */
+		function setButtonHtml(){
+			if(c >= ms){
+				clearInterval(timer);
+			}
+			else{
+				var time = Math.floor((ms - c) / 1000);
+				// don't show 0
+				time = time || 1;
+				var _html = html + " | " + time;
+				self.$submit.html(_html);
+				c += 1000;
+			}
+		}
+	}
+
+	/**
+	 * Toggle the form body
+	 * @param {boolean} state
+	 * @returns {Form}
+	 */
+	toggleForm(state){
+		this.$body.toggle(state);
+		this.$footer.toggle(state);
+		return this;
+	}
+
+	/**
+	 * Slide toggle the form body
+	 * @param {boolean} state
+	 * @returns {Form}
+	 */
+	slideToggleForm(state){
+		this.$body.slideToggleState(state);
+		this.$footer.slideToggleState(state);
 		return this;
 	}
 
@@ -244,16 +409,87 @@ class Form extends Template {
 	 * @returns {Form}
 	 */
 	populateForm(data){
-		this.$wrapper.populateChildren(data);
+		this._cacheFormData(data);
+		this._processData(data);
+		this.$form.populateChildren(data);
 		return this;
 	}
 
 	/**
-	 * Serialize the form
+	 * Public function to serialize the form,
+	 * as jQuery uses serialize already
 	 * @returns {Form}
 	 */
-	serializer(){
-		this._serializedData = this.formSerializer.serialize(this.$wrapper);
+	serializeForm(){
+		this._serializedData = this.formSerializer.serialize(this.$form);
+		return this;
+	}
+
+	/**
+	 * Reset the form, using populated data
+	 * or setting to default values
+	 * @returns {Form}
+	 */
+	resetForm(){
+		if(!$.isEmptyObject(this._cachedData))
+			this.populateForm(this._cachedData);
+		else
+			this.$form[0].reset();
+
+		if(this.feedback)
+			this.feedback.slideUp();
+
+		// todo: implement for alternative validators
+		if(this.validator){
+			switch(this.settings.validator.api) {
+				case 'formValidation':
+					this.validator.resetForm();
+					break;
+			}
+		}
+
+		return this;
+	}
+
+	/**
+	 * Validate the form
+	 * @returns {boolean}
+	 */
+	validate(){
+		var isValid = false;
+		if(this.validator){
+			// todo: implement for alternative validators
+			switch(this.settings.validator.api){
+				case 'formValidation':
+					this.validator.resetForm();
+					this.validator.validateContainer(this.$form);
+					isValid = this.validator.isValidContainer(this.$form);
+					break;
+			}
+		}
+		return isValid;
+	}
+
+	// initializers
+
+	/**
+	 * Remove all data from the form and reset it
+	 * @returns {Form}
+	 */
+	clean(){
+		this._cachedData = {};
+		this.resetForm();
+		this.toggleForm(true);
+		return this;
+	}
+
+	/**
+	 * Initialize as a clean form with
+	 * default values from the DOM
+	 * @returns {Form}
+	 */
+	initialize(){
+		this.clean();
 		return this;
 	}
 }
@@ -278,17 +514,22 @@ Form.validators = {
 		/**
 		 * formValidation setup
 		 * @param {Form} form
+		 * @param {jQuery} $form
 		 * @param {object} options
 		 */
-		setup : function(form, options){
-			form.$wrapper.off('submit');
-			form.$wrapper.formValidation(options)
+		setup : function(form, $form, options){
+			$form.off('submit');
+			// allows re-creation of the Form
+			if($form.data('formValidation'))
+				$form.data('formValidation').destroy();
+			$form.formValidation(options)
 				.on('success.form.fv', function(e) {
 					e.preventDefault();
-					form.serializer()
+					form.toggleButtons(false);
+					form.serializeForm()
 						._submit();
 				});
-			form.validator = form.$wrapper.data('formValidation');
+			form.validator = $form.data('formValidation');
 		}
 	}
 };</code></pre>
@@ -301,13 +542,13 @@ Form.validators = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BootstrapControlTable.html">BootstrapControlTable</a></li><li><a href="BootstrapFeedback.html">BootstrapFeedback</a></li><li><a href="BootstrapForm.html">BootstrapForm</a></li><li><a href="BootstrapLoader.html">BootstrapLoader</a></li><li><a href="BootstrapModal.html">BootstrapModal</a></li><li><a href="BootstrapNav.html">BootstrapNav</a></li><li><a href="BootstrapNavManager.html">BootstrapNavManager</a></li><li><a href="BootstrapPanel.html">BootstrapPanel</a></li><li><a href="BootstrapPanelManager.html">BootstrapPanelManager</a></li><li><a href="BootstrapProgress.html">BootstrapProgress</a></li><li><a href="BootstrapTab.html">BootstrapTab</a></li><li><a href="BootstrapTabManager.html">BootstrapTabManager</a></li><li><a href="BootstrapToggle.html">BootstrapToggle</a></li><li><a href="ControlTable.html">ControlTable</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Form.html">Form</a></li><li><a href="FormSerializer.html">FormSerializer</a></li><li><a href="FormSerializerData.html">FormSerializerData</a></li><li><a href="RenderTable.html">RenderTable</a></li><li><a href="Table.html">Table</a></li><li><a href="Wizard.html">Wizard</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BootstrapControlTable.html">BootstrapControlTable</a></li><li><a href="BootstrapFeedback.html">BootstrapFeedback</a></li><li><a href="BootstrapForm.html">BootstrapForm</a></li><li><a href="BootstrapLoader.html">BootstrapLoader</a></li><li><a href="BootstrapModal.html">BootstrapModal</a></li><li><a href="BootstrapNav.html">BootstrapNav</a></li><li><a href="BootstrapNavManager.html">BootstrapNavManager</a></li><li><a href="BootstrapPanel.html">BootstrapPanel</a></li><li><a href="BootstrapPanelManager.html">BootstrapPanelManager</a></li><li><a href="BootstrapProgress.html">BootstrapProgress</a></li><li><a href="BootstrapTab.html">BootstrapTab</a></li><li><a href="BootstrapTabManager.html">BootstrapTabManager</a></li><li><a href="BootstrapToggle.html">BootstrapToggle</a></li><li><a href="BootstrapWizard.html">BootstrapWizard</a></li><li><a href="ControlTable.html">ControlTable</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Form.html">Form</a></li><li><a href="FormSerializer.html">FormSerializer</a></li><li><a href="FormSerializerData.html">FormSerializerData</a></li><li><a href="RenderTable.html">RenderTable</a></li><li><a href="Table.html">Table</a></li><li><a href="Wizard.html">Wizard</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Dec 11 2016 13:22:12 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Apr 11 2017 22:38:33 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

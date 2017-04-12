@@ -64,8 +64,13 @@ class Table extends Template {
 		};
 		super($Util.opts(defaults, options));
 
+		// properties
 		this.$rows = [];
 		this._cachedData = {};
+		this._processedData = {};
+
+		// states
+		this.isFirstBuild = true;
 
 		// provide a default empty msg
 		this.$empty = $('&lt;tr class="table-empty">&lt;td>There is no data to display.&lt;/td>&lt;/tr>');
@@ -133,30 +138,39 @@ class Table extends Template {
 	 * @private
 	 */
 	_cacheData(data){
-		this._cachedData = $.extend(true, {}, data);
+		if(isArray(data))
+			this._cachedData = data;
+		else
+			this._cachedData = $.extend(true, {}, data);
 		return this;
 	}
 
 	/**
 	 * Optionally process data
-	 * @param {object} data
-	 * @returns {object}
+	 * @param {number[]|object|object[]|string[]} data
+	 * @returns {Table}
 	 * @private
 	 */
 	_processData(data){
 		var self = this;
-		var tData = $.extend(true, {}, data);
+		if(isArray(data))
+			this._processedData = data;
+		else
+			this._processedData = $.extend(true, {}, data);
+
 		$.each(data, function(i, e){
-			// add a private _id
-			tData[i]._id = i;
-			tData[i] = self._processRow(e);
+			// add a private _id for objects
+			if(isObject(e)){
+				self._processedData[i]._id = i;
+			}
+			self._processedData[i] = self._processRow(e);
 		});
-		return tData;
+		return this;
 	}
 
 	/**
 	 * Optionally process row
-	 * @param {object} data
+	 * @param {*} data
 	 * @returns {*}
 	 * @private
 	 */
@@ -181,15 +195,17 @@ class Table extends Template {
 		// empty the &lt;tbody>
         this.wipe();
 
-		if($.isEmptyObject(data) || !data || (dataIsArray &amp;&amp; !data.length))
-			return this.toggleEmpty(true);
+		if(!$.isEmptyObject(data) || (dataIsArray &amp;&amp; data.length))
+			this.toggleEmpty(false);
+		else
+			return this;
 
 		// run through data and create rows
 		Util.each(data, function(i, e){
 			var $row = createRow();
 
 			// if data is an object and a template is used
-			if(useTemplate &amp;&amp; !dataIsArray)
+			if(useTemplate &amp;&amp; !Array.isArray(e))
 				$row.populateChildren(e);
 			// if data is an array
 			else
@@ -263,8 +279,10 @@ class Table extends Template {
 	 */
 	build(data){
 		this._cacheData(data);
-		data = this._processData(data);
-		this._render(data);
+		this._processData(data);
+		this.toggleEmpty(false);
+		this._render(this._processedData);
+		this.isFirstBuild = false;
 		return this;
 	}
 
@@ -274,6 +292,7 @@ class Table extends Template {
 	 */
 	wipe(){
 		this.$tbody.empty();
+		this.toggleEmpty(true);
 		this.$rows = [];
 		this._cachedData = {};
 		return this;
@@ -289,6 +308,10 @@ class Table extends Template {
 		if(this.$rows[index]){
 			this.$rows[index].remove();
 			this.$rows.splice(index, 1);
+		}
+		// check if all rows were deleted
+		if(this._isEmptyTable()){
+			this.toggleEmpty();
 		}
 		return this;
 	}
@@ -322,13 +345,13 @@ class Table extends Template {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BootstrapControlTable.html">BootstrapControlTable</a></li><li><a href="BootstrapFeedback.html">BootstrapFeedback</a></li><li><a href="BootstrapForm.html">BootstrapForm</a></li><li><a href="BootstrapLoader.html">BootstrapLoader</a></li><li><a href="BootstrapModal.html">BootstrapModal</a></li><li><a href="BootstrapNav.html">BootstrapNav</a></li><li><a href="BootstrapNavManager.html">BootstrapNavManager</a></li><li><a href="BootstrapPanel.html">BootstrapPanel</a></li><li><a href="BootstrapPanelManager.html">BootstrapPanelManager</a></li><li><a href="BootstrapProgress.html">BootstrapProgress</a></li><li><a href="BootstrapTab.html">BootstrapTab</a></li><li><a href="BootstrapTabManager.html">BootstrapTabManager</a></li><li><a href="BootstrapToggle.html">BootstrapToggle</a></li><li><a href="ControlTable.html">ControlTable</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Form.html">Form</a></li><li><a href="FormSerializer.html">FormSerializer</a></li><li><a href="FormSerializerData.html">FormSerializerData</a></li><li><a href="RenderTable.html">RenderTable</a></li><li><a href="Table.html">Table</a></li><li><a href="Wizard.html">Wizard</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BootstrapControlTable.html">BootstrapControlTable</a></li><li><a href="BootstrapFeedback.html">BootstrapFeedback</a></li><li><a href="BootstrapForm.html">BootstrapForm</a></li><li><a href="BootstrapLoader.html">BootstrapLoader</a></li><li><a href="BootstrapModal.html">BootstrapModal</a></li><li><a href="BootstrapNav.html">BootstrapNav</a></li><li><a href="BootstrapNavManager.html">BootstrapNavManager</a></li><li><a href="BootstrapPanel.html">BootstrapPanel</a></li><li><a href="BootstrapPanelManager.html">BootstrapPanelManager</a></li><li><a href="BootstrapProgress.html">BootstrapProgress</a></li><li><a href="BootstrapTab.html">BootstrapTab</a></li><li><a href="BootstrapTabManager.html">BootstrapTabManager</a></li><li><a href="BootstrapToggle.html">BootstrapToggle</a></li><li><a href="BootstrapWizard.html">BootstrapWizard</a></li><li><a href="ControlTable.html">ControlTable</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Form.html">Form</a></li><li><a href="FormSerializer.html">FormSerializer</a></li><li><a href="FormSerializerData.html">FormSerializerData</a></li><li><a href="RenderTable.html">RenderTable</a></li><li><a href="Table.html">Table</a></li><li><a href="Wizard.html">Wizard</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Dec 11 2016 13:22:12 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Apr 11 2017 22:38:33 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
