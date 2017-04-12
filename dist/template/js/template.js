@@ -60,6 +60,11 @@ if (typeof isNull === 'undefined') {
 		return x === null;
 	};
 }
+if (typeof isNullOrUndefined() === 'undefined') {
+	window.isNullOrUndefined = function (x) {
+		return x === null || x === 'undefined';
+	};
+}
 if (typeof isFunction === 'undefined') {
 	window.isFunction = function (x) {
 		return typeof x === 'function';
@@ -699,7 +704,9 @@ var Manager = function (_EventSystem) {
 			// use the name of the object.
 			// this only works when passing
 			// objects of objects to manage()
-			useObjectNames: false
+			useObjectNames: false,
+			// max number of objs to manage
+			max: 0
 		};
 		_this.settings = Object.assign(defaults, options);
 
@@ -792,7 +799,7 @@ var Manager = function (_EventSystem) {
 			}
 			// if no id is passed, check that it has
 			// an identifier property already
-			else if (obj[identifier]) {
+			else if (!isNullOrUndefined(obj[identifier])) {
 					this.objects[obj[identifier]] = obj;
 					postAdd();
 				}
@@ -833,10 +840,12 @@ var Manager = function (_EventSystem) {
 				String(id);
 				this.objects[id] = obj;
 				postUpdate();
-			} else if (obj[identifier]) {
+			} else if (!isNullOrUndefined(obj[identifier])) {
 				this.objects[obj[identifier]] = obj;
 				postUpdate();
-			} else console.warn('Manager._update: cannot update an object with no identifier');
+			} else {
+				console.warn('Manager._update: cannot update an object with no identifier');
+			}
 
 			return obj;
 
@@ -846,7 +855,7 @@ var Manager = function (_EventSystem) {
     */
 			function postUpdate() {
 				self.requiresNewSerialize = true;
-				self.trigger('add', obj);
+				self.trigger('update', obj);
 				self.count++;
 				obj._count = self.count;
 			}
@@ -874,7 +883,9 @@ var Manager = function (_EventSystem) {
 				delete this.objects[id];
 				this.requiresNewSerialize = true;
 				if (this.count > 0) this.count--;
-			} else console.error('Manager._delete: cannot delete an object with no identifier');
+			} else {
+				console.error('Manager._delete: cannot delete an object with no identifier');
+			}
 
 			return this;
 		}

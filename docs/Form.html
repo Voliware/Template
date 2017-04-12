@@ -724,6 +724,45 @@
 
         <tr>
             
+                <td class="name"><code>$reset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    '.form-reset'
+                
+                </td>
+            
+
+            <td class="description last">the reset button selector</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>$submit</code></td>
             
 
@@ -871,6 +910,337 @@
 
     
 
+    <h4 class="name" id="clean"><span class="type-signature"></span>clean<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Remove all data from the form and reset it
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line451">line 451</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Form.html">Form</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="initialize"><span class="type-signature"></span>initialize<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Initialize as a clean form withdefault values from the DOM
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line463">line 463</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Form.html">Form</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="lockSubmit"><span class="type-signature"></span>lockSubmit<span class="signature">(ms)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Lock the submit button for some amount of ms
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ms</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">time to lock in milliseconds</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line322">line 322</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="populateForm"><span class="type-signature"></span>populateForm<span class="signature">(data)</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
 
     
@@ -971,7 +1341,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line218">line 218</a>
+        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line383">line 383</a>
     </li></ul></dd>
     
 
@@ -1020,14 +1390,14 @@
 
     
 
-    <h4 class="name" id="serializer"><span class="type-signature"></span>serializer<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+    <h4 class="name" id="resetForm"><span class="type-signature"></span>resetForm<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    Serialize the form
+    Reset the form, using populated dataor setting to default values
 </div>
 
 
@@ -1071,7 +1441,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line227">line 227</a>
+        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line405">line 405</a>
     </li></ul></dd>
     
 
@@ -1116,6 +1486,653 @@
 
 
         
+            
+
+    
+
+    <h4 class="name" id="serializeForm"><span class="type-signature"></span>serializeForm<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Public function to serialize the form,as jQuery uses serialize already
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line395">line 395</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Form.html">Form</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="slideToggleForm"><span class="type-signature"></span>slideToggleForm<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Slide toggle the form body
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line370">line 370</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Form.html">Form</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toggleButtons"><span class="type-signature"></span>toggleButtons<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Toggle the button states
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line311">line 311</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Form.html">Form</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toggleForm"><span class="type-signature"></span>toggleForm<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Form.html">Form</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Toggle the form body
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line359">line 359</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Form.html">Form</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="validate"><span class="type-signature"></span>validate<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Validate the form
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="form_js_form.js.html">form/js/form.js</a>, <a href="form_js_form.js.html#line430">line 430</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
     
 
     
@@ -1131,13 +2148,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BootstrapControlTable.html">BootstrapControlTable</a></li><li><a href="BootstrapFeedback.html">BootstrapFeedback</a></li><li><a href="BootstrapForm.html">BootstrapForm</a></li><li><a href="BootstrapLoader.html">BootstrapLoader</a></li><li><a href="BootstrapModal.html">BootstrapModal</a></li><li><a href="BootstrapNav.html">BootstrapNav</a></li><li><a href="BootstrapNavManager.html">BootstrapNavManager</a></li><li><a href="BootstrapPanel.html">BootstrapPanel</a></li><li><a href="BootstrapPanelManager.html">BootstrapPanelManager</a></li><li><a href="BootstrapProgress.html">BootstrapProgress</a></li><li><a href="BootstrapTab.html">BootstrapTab</a></li><li><a href="BootstrapTabManager.html">BootstrapTabManager</a></li><li><a href="BootstrapToggle.html">BootstrapToggle</a></li><li><a href="ControlTable.html">ControlTable</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Form.html">Form</a></li><li><a href="FormSerializer.html">FormSerializer</a></li><li><a href="FormSerializerData.html">FormSerializerData</a></li><li><a href="RenderTable.html">RenderTable</a></li><li><a href="Table.html">Table</a></li><li><a href="Wizard.html">Wizard</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BootstrapControlTable.html">BootstrapControlTable</a></li><li><a href="BootstrapFeedback.html">BootstrapFeedback</a></li><li><a href="BootstrapForm.html">BootstrapForm</a></li><li><a href="BootstrapLoader.html">BootstrapLoader</a></li><li><a href="BootstrapModal.html">BootstrapModal</a></li><li><a href="BootstrapNav.html">BootstrapNav</a></li><li><a href="BootstrapNavManager.html">BootstrapNavManager</a></li><li><a href="BootstrapPanel.html">BootstrapPanel</a></li><li><a href="BootstrapPanelManager.html">BootstrapPanelManager</a></li><li><a href="BootstrapProgress.html">BootstrapProgress</a></li><li><a href="BootstrapTab.html">BootstrapTab</a></li><li><a href="BootstrapTabManager.html">BootstrapTabManager</a></li><li><a href="BootstrapToggle.html">BootstrapToggle</a></li><li><a href="BootstrapWizard.html">BootstrapWizard</a></li><li><a href="ControlTable.html">ControlTable</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Form.html">Form</a></li><li><a href="FormSerializer.html">FormSerializer</a></li><li><a href="FormSerializerData.html">FormSerializerData</a></li><li><a href="RenderTable.html">RenderTable</a></li><li><a href="Table.html">Table</a></li><li><a href="Wizard.html">Wizard</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Dec 11 2016 13:22:13 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Tue Apr 11 2017 22:38:34 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
