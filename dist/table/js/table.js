@@ -1,8 +1,8 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -10,6 +10,195 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/*!
+ * crudRow
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * CRUD row with read/update/delete buttons.
+ * A virtual class to extend from.
+ * @extends Template
+ */
+var CrudRow = function (_Template) {
+	_inherits(CrudRow, _Template);
+
+	/**
+  * Constructor
+  * @returns {CrudRow}
+  */
+	function CrudRow(options) {
+		var _ret;
+
+		_classCallCheck(this, CrudRow);
+
+		var defaults = {
+			struct: {
+				$deleteButton: '[name="deleteButton"]',
+				$updateButton: '[name="updateButton"]',
+				$viewButton: '[name="viewButton"]'
+			}
+		};
+
+		// properties
+		var _this = _possibleConstructorReturn(this, (CrudRow.__proto__ || Object.getPrototypeOf(CrudRow)).call(this, $Util.opts(defaults, options)));
+
+		_this._cachedData = {};
+		_this._processedData = {};
+
+		return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	}
+
+	// data
+
+	/**
+  * Cache data
+  * @param {object} data
+  * @returns {CrudRow}
+  * @private
+  */
+
+
+	_createClass(CrudRow, [{
+		key: '_cacheData',
+		value: function _cacheData(data) {
+			this._cachedData = $.extend(true, {}, data);
+			return this;
+		}
+
+		/**
+   * Process data
+   * @param {object} data
+   * @returns {CrudRow}
+   * @private
+   */
+
+	}, {
+		key: '_processData',
+		value: function _processData(data) {
+			this._processedData = $.extend(true, {}, data);
+			return this;
+		}
+
+		/**
+   * Populate children override.
+   * Cache and process data first.
+   * @param {object} data
+   * @returns {CrudRow}
+   */
+
+	}, {
+		key: 'populateChildren',
+		value: function populateChildren(data) {
+			this._cacheData(data);
+			this._processData(data);
+			this.$wrapper.populateChildren(this._processedData);
+			return this;
+		}
+
+		// delete
+
+		/**
+   * Attach delete button handlers
+   * @returns {CrudRow}
+   * @private
+   */
+
+	}, {
+		key: '_attachDeleteButtonHandlers',
+		value: function _attachDeleteButtonHandlers() {
+			var self = this;
+			this.$deleteButton.click(function () {
+				self._deleteButtonAction();
+			});
+			return this;
+		}
+
+		/**
+   * Action that occurs when delete button is clicked
+   * @private
+   */
+
+	}, {
+		key: '_deleteButtonAction',
+		value: function _deleteButtonAction() {
+			throw new Error("CrudRow._deleteButtonAction: must be implemented in child class");
+		}
+
+		// update
+
+		/**
+   * Attach update button handlers
+   * @virtual
+   * @private
+   */
+
+	}, {
+		key: '_attachUpdateButtonHandlers',
+		value: function _attachUpdateButtonHandlers() {
+			var self = this;
+			this.$updateButton.click(function () {
+				self._updateButtonAction();
+			});
+			return this;
+		}
+
+		/**
+   * Action that occurs when update button is clicked
+   * @private
+   */
+
+	}, {
+		key: '_updateButtonAction',
+		value: function _updateButtonAction() {
+			throw new Error("CrudRow._updateButtonAction: must be implemented in child class");
+		}
+
+		// view
+
+		/**
+   * Attach view button handlers
+   * @virtual
+   * @private
+   */
+
+	}, {
+		key: '_attachViewButtonHandlers',
+		value: function _attachViewButtonHandlers() {
+			var self = this;
+			this.$viewButton.click(function () {
+				self._viewButtonAction();
+			});
+			return this;
+		}
+
+		/**
+   * Action that occurs when view button is clicked
+   * @private
+   */
+
+	}, {
+		key: '_viewButtonAction',
+		value: function _viewButtonAction() {
+			throw new Error("CrudRow._viewButtonAction: must be implemented in child class");
+		}
+
+		/**
+   * Initialize the row
+   * @returns {CrudRow}
+   */
+
+	}, {
+		key: 'initialize',
+		value: function initialize() {
+			this._attachDeleteButtonHandlers()._attachUpdateButtonHandlers()._attachViewButtonHandlers();
+			return this;
+		}
+	}]);
+
+	return CrudRow;
+}(Template);
 /*!
  * table
  * https://github.com/Voliware/Template
@@ -20,8 +209,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Templates and creates tables
  * @extends Template
  */
-var Table = function (_Template) {
-	_inherits(Table, _Template);
+
+
+var Table = function (_Template2) {
+	_inherits(Table, _Template2);
 
 	/**
   * Constructor
@@ -37,7 +228,7 @@ var Table = function (_Template) {
   * @returns {Table}
   */
 	function Table(options) {
-		var _ret;
+		var _ret2;
 
 		_classCallCheck(this, Table);
 
@@ -53,19 +244,19 @@ var Table = function (_Template) {
 		};
 
 		// properties
-		var _this = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
+		var _this2 = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
 
-		_this.$rows = [];
-		_this._cachedData = {};
-		_this._processedData = {};
+		_this2.$rows = [];
+		_this2._cachedData = {};
+		_this2._processedData = {};
 
 		// states
-		_this.isFirstBuild = true;
+		_this2.isFirstBuild = true;
 
 		// provide a default empty msg
-		_this.$empty = $('<tr class="table-empty"><td>There is no data to display.</td></tr>');
+		_this2.$empty = $('<tr class="table-empty"><td>There is no data to display.</td></tr>');
 
-		return _ret = _this, _possibleConstructorReturn(_this, _ret);
+		return _ret2 = _this2, _possibleConstructorReturn(_this2, _ret2);
 	}
 
 	/**
@@ -371,7 +562,7 @@ var RenderTable = function (_Table) {
   * @returns {RenderTable}
   */
 	function RenderTable(options) {
-		var _ret2;
+		var _ret3;
 
 		_classCallCheck(this, RenderTable);
 
@@ -393,18 +584,18 @@ var RenderTable = function (_Table) {
 		// components
 		// row manager to re-build rows instead
 		// of wiping the <tbody> each time
-		var _this2 = _possibleConstructorReturn(this, (RenderTable.__proto__ || Object.getPrototypeOf(RenderTable)).call(this, $Util.opts(defaults, options)));
+		var _this3 = _possibleConstructorReturn(this, (RenderTable.__proto__ || Object.getPrototypeOf(RenderTable)).call(this, $Util.opts(defaults, options)));
 
-		_this2.rowManager = new TemplateManager({
-			identifier: _this2.settings.identifier,
-			useObjectNames: _this2.settings.useObjectNames,
-			template: _this2.settings.rowTemplate || _this2.$tr,
-			$wrapper: _this2.$tbody
+		_this3.rowManager = new TemplateManager({
+			identifier: _this3.settings.identifier,
+			useObjectNames: _this3.settings.useObjectNames,
+			template: _this3.settings.rowTemplate || _this3.$tr,
+			$wrapper: _this3.$tbody
 		});
 
-		_this2.$wrapper.addClass('renderTable');
+		_this3.$wrapper.addClass('renderTable');
 
-		return _ret2 = _this2, _possibleConstructorReturn(_this2, _ret2);
+		return _ret3 = _this3, _possibleConstructorReturn(_this3, _ret3);
 	}
 
 	/**
@@ -474,6 +665,7 @@ var RenderTable = function (_Table) {
  * Buttons are added to the incoming data objects
  * as if they were part of the data.
  * @extends RenderTable
+ * @deprecated Use RenderTable
  */
 
 
@@ -490,7 +682,7 @@ var ControlTable = function (_RenderTable) {
   * @returns {ControlTable}
   */
 	function ControlTable(options) {
-		var _ret3;
+		var _ret4;
 
 		_classCallCheck(this, ControlTable);
 
@@ -502,12 +694,12 @@ var ControlTable = function (_RenderTable) {
 			}
 		};
 
-		var _this3 = _possibleConstructorReturn(this, (ControlTable.__proto__ || Object.getPrototypeOf(ControlTable)).call(this, $Util.opts(defaults, options)));
+		var _this4 = _possibleConstructorReturn(this, (ControlTable.__proto__ || Object.getPrototypeOf(ControlTable)).call(this, $Util.opts(defaults, options)));
 
-		_this3._setupButtons();
-		_this3.$wrapper.addClass('controlTable');
+		_this4._setupButtons();
+		_this4.$wrapper.addClass('controlTable');
 
-		return _ret3 = _this3, _possibleConstructorReturn(_this3, _ret3);
+		return _ret4 = _this4, _possibleConstructorReturn(_this4, _ret4);
 	}
 
 	// buttons

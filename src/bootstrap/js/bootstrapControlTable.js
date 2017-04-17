@@ -7,6 +7,7 @@
 /**
  * Control table with bootstrap buttons
  * @extends ControlTable
+ * @deprecated Use RenderTable
  */
 class BootstrapControlTable extends ControlTable {
 
