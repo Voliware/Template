@@ -1228,7 +1228,7 @@ if(!validTab){valid=false;}});return valid;}// buttons
 	 * add an alert class to the feedback
 	 * @returns {BootstrapFeedback}
 	 * @private
-	 */_createClass(BootstrapFeedback,[{key:'_useDefaultTemplate',value:function _useDefaultTemplate(){var template='';if(this.settings.closeButton){template='<div class="feedback alert clearfix">'+'<div class="col-xs-10">'+'<div class="feedback-icon"></div>'+'<div class="feedback-text"></div>'+'</div>'+'<div class="col-xs-2">'+'<button type="button" name="close" class="close">&times;</button>'+'</div>'+'</div>';}else{template='<div class="feedback alert clearfix">'+'<div class="col-xs-12">'+'<div class="feedback-icon"></div>'+'<div class="feedback-text"></div>'+'</div>'+'</div>';}this._useTemplate($(template));this.$wrapper.hide();return this;}/**
+	 */_createClass(BootstrapFeedback,[{key:'_useDefaultTemplate',value:function _useDefaultTemplate(){var template='';if(this.settings.closeButton){template='<div class="feedback alert clearfix">'+'<div class="col-sm-10">'+'<div class="feedback-icon"></div>'+'<div class="feedback-text"></div>'+'</div>'+'<div class="col-sm-2">'+'<button type="button" name="close" class="close">&times;</button>'+'</div>'+'</div>';}else{template='<div class="feedback alert clearfix">'+'<div class="col-sm-12">'+'<div class="feedback-icon"></div>'+'<div class="feedback-text"></div>'+'</div>'+'</div>';}this._useTemplate($(template));this.$wrapper.hide();return this;}/**
 	 * Create a default icon based on feedback class
 	 * @param {string} cls - the alert- bootstrap class to set
 	 * @returns {string}
