@@ -33,7 +33,7 @@ class RenderTable extends Table {
 			rowTemplate : null
 		};
 		super($Util.opts(defaults, options));
-
+		
 		// components
 		// row manager to re-build rows instead
 		// of wiping the <tbody> each time

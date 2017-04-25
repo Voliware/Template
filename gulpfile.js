@@ -29,6 +29,8 @@ buildFileSys(dist, 'feedback');
 buildFileSys(dist, 'form');
 buildFileSys(dist, 'table');
 buildFileSys(dist, 'template');
+buildFileSys(dist, 'template-package');
+buildFileSys(dist, 'template-package-bootstrap');
 
 // WebUtil
 var webUtilJs = 'C:/Voliware/Web/WebUtil/src/js/';
@@ -45,10 +47,13 @@ function buildBootstrap(){
 		src.bootstrap.js + 'bootstrapFeedback.js',
 		src.bootstrap.js + 'bootstrapForm.js',
 		src.bootstrap.js + 'bootstrapModal.js',
+		src.bootstrap.js + 'bootstrapModalForm.js',
 		src.bootstrap.js + 'bootstrapNav.js',
 		src.bootstrap.js + 'bootstrapNavManager.js',
 		src.bootstrap.js + 'bootstrapPanel.js',
 		src.bootstrap.js + 'bootstrapPanelManager.js',
+		src.bootstrap.js + 'bootstrapCard.js',
+		src.bootstrap.js + 'bootstrapCardManager.js',
 		src.bootstrap.js + 'bootstrapProgress.js',
 		src.bootstrap.js + 'bootstrapLoader.js',
 		src.bootstrap.js + 'bootstrapTab.js',
@@ -111,6 +116,7 @@ function buildFeedback(){
  */
 function buildTable(){
 	var js = [
+		src.table.js + 'crudRow.js',
 		src.table.js + 'table.js',
 		src.table.js + 'renderTable.js',
 		src.table.js + 'controlTable.js'
@@ -127,7 +133,7 @@ function buildTable(){
  * Built the template library
  * @returns {*}
  */
-function builtTemplate(){
+function buildTemplate(){
 	var js = [
 		webUtilJs + 'util.js',
 		webUtilJs + 'util-jquery.js',
@@ -143,6 +149,99 @@ function builtTemplate(){
 		src.template.css + 'template.css'
 	];
 	return buildCss(css, dist.template.css, 'template');
+}
+
+/**
+ * Build as a packaged library
+ * @returns {*}
+ */
+function buildPackage(){
+	var js = [
+		webUtilJs + 'util.js',
+		webUtilJs + 'util-jquery.js',
+		webUtilJs + 'eventSystem.js',
+		webUtilJs + 'manager.js',
+		src.template.js + 'template.js',
+		src.template.js + 'templateManager.js',
+		src.feedback.js + 'feedback.js',
+		src.table.js + 'crudRow.js',
+		src.table.js + 'table.js',
+		src.table.js + 'renderTable.js',
+		src.table.js + 'controlTable.js',
+		src.form.js + 'form.js',
+		src.form.js + 'formSerializer.js',
+		src.form.js + 'formSerializerData.js',
+		src.form.js + 'wizard.js'
+	];
+	buildJs(js, dist['template-package'].js, 'template-package');
+
+	var css = [
+		webUtilCss + 'util.css',
+		src.template.css + 'template.css',
+		src.feedback.css + 'feedback.css',
+		src.table.css + 'table.css',
+		src.form.css + 'wizard.css'
+	];
+	return buildCss(css, dist['template-package'].css, 'template-package');
+}
+
+/**
+ * Build as a packaged library with bootstrap
+ * @returns {*}
+ */
+function buildPackageBootstrap(){
+	var js = [
+		webUtilJs + 'util.js',
+		webUtilJs + 'util-jquery.js',
+		webUtilJs + 'eventSystem.js',
+		webUtilJs + 'manager.js',
+		src.template.js + 'template.js',
+		src.template.js + 'templateManager.js',
+		src.feedback.js + 'feedback.js',
+		src.table.js + 'crudRow.js',
+		src.table.js + 'table.js',
+		src.table.js + 'renderTable.js',
+		src.table.js + 'controlTable.js',
+		src.form.js + 'form.js',
+		src.form.js + 'formSerializer.js',
+		src.form.js + 'formSerializerData.js',
+		src.form.js + 'wizard.js',
+		src.bootstrap.js + 'bootstrap.js',
+		src.bootstrap.js + 'bootstrapControlTable.js',
+		src.bootstrap.js + 'bootstrapFeedback.js',
+		src.bootstrap.js + 'bootstrapForm.js',
+		src.bootstrap.js + 'bootstrapModal.js',
+		src.bootstrap.js + 'bootstrapModalForm.js',
+		src.bootstrap.js + 'bootstrapNav.js',
+		src.bootstrap.js + 'bootstrapNavManager.js',
+		src.bootstrap.js + 'bootstrapPanel.js',
+		src.bootstrap.js + 'bootstrapPanelManager.js',
+		src.bootstrap.js + 'bootstrapCard.js',
+		src.bootstrap.js + 'bootstrapCardManager.js',
+		src.bootstrap.js + 'bootstrapProgress.js',
+		src.bootstrap.js + 'bootstrapLoader.js',
+		src.bootstrap.js + 'bootstrapTab.js',
+		src.bootstrap.js + 'bootstrapTabManager.js',
+		src.bootstrap.js + 'bootstrapToggle.js',
+		src.bootstrap.js + 'bootstrapWizard.js'
+	];
+	buildJs(js, dist['template-package-bootstrap'].js, 'template-package-bootstrap');
+
+	var css = [
+		webUtilCss + 'util.css',
+		src.template.css + 'template.css',
+		src.feedback.css + 'feedback.css',
+		src.table.css + 'table.css',
+		src.form.css + 'wizard.css',
+		src.bootstrap.css + 'bootstrap.css',
+		src.bootstrap.css + 'bootstrapFeedback.css',
+		src.bootstrap.css + 'bootstrapLoader.css',
+		src.bootstrap.css + 'bootstrapPanel.css',
+		src.bootstrap.css + 'bootstrapProgress.css',
+		src.bootstrap.css + 'bootstrapTab.css',
+		src.bootstrap.css + 'bootstrapTable.css'
+	];
+	return buildCss(css, dist['template-package-bootstrap'].css, 'template-package-bootstrap');
 }
 
 /**
@@ -162,7 +261,9 @@ gulp.task('all', function(){
 	buildFeedback();
 	buildForm();
 	buildTable();
-	return builtTemplate();
+	buildTemplate();
+	buildPackage();
+	return buildPackageBootstrap();
 });
 
 // individual tasks
@@ -183,10 +284,18 @@ gulp.task('table', function(){
 	return buildTable()();
 });
 
-gulp.task('util-jquery', function(){
-	return builtTemplate();
+gulp.task('template', function(){
+	return buildTemplate();
+});
+
+gulp.task('package', function(){
+	return buildPackage();
+});
+
+gulp.task('packageBootstrap', function(){
+	return buildPackageBootstrap();
 });
 
 gulp.task('jsdoc', function(){
-	buildJsDoc();
+	return buildJsDoc();
 });

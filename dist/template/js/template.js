@@ -60,7 +60,7 @@ if (typeof isNull === 'undefined') {
 		return x === null;
 	};
 }
-if (typeof isNullOrUndefined() === 'undefined') {
+if (typeof isNullOrUndefined === 'undefined') {
 	window.isNullOrUndefined = function (x) {
 		return x === null || x === 'undefined';
 	};
@@ -375,6 +375,20 @@ if (typeof isJquery === 'undefined') {
 			var $el = $this.find('[data-name="' + i + '"]');
 			if ($elInput.length > 0 && $elInput.data('populate') !== false) $elInput.populate(e, trigger);
 			if ($el.length > 0 && $el.data('populate') !== false) $el.populate(e, trigger);
+		});
+		return this;
+	};
+
+	/**
+  * Populate an elements attributes by matching
+  * data keys with attributes of the same name.
+  * @param {object} data
+  * @returns {jQuery}
+  */
+	$.fn.populateAttr = function (data) {
+		var $this = $(this);
+		$.each(data, function (i, e) {
+			$this.attr('i', e);
 		});
 		return this;
 	};

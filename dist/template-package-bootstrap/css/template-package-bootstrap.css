@@ -1,0 +1,290 @@
+/*!
+ * util
+ * https://github.com/Voliware/Util
+ * Licensed under the MIT license.
+ */
+
+.spin {
+    animation-name: spin;
+    animation-duration: 500ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+/*!
+ * template
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.template {
+    display:none;
+}
+/*!
+ * feedback
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.feedback{
+    padding:20px;
+    position: relative;
+    text-align: center;
+    transition:background-color 600ms;
+}
+.feedback-icon,
+.feedback-text{
+    display: inline-block;
+    padding:0 5px;
+    vertical-align: middle;
+}
+.feedback-text{
+    max-width:90%;
+}
+.feedback-icon{
+    font-size: 16px;
+    line-height: 16px;
+}
+.feedback-close{
+    float:right;
+    padding:5px;
+}
+/*!
+ * table
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.table-empty{
+    display:none;
+}
+/*!
+ * wizard
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.wizard-tab.invalid > a {
+    background: rgba(255, 3, 3, 1)!important;
+    color: white!important;
+}
+.wizard button.form-submit{
+    float:right;
+}
+/*!
+ * bootstrap
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/* input help */
+div.input-help {
+    display: none;
+}
+.input-group-addon-help{
+    cursor: pointer;
+}
+.input-group-addon.glyphicon {
+    top: -0.1em;
+}
+/* animation */
+.glyphicon-refresh-spin{
+    transform-origin:50% 44%;
+    animation: spin .5s infinite linear;
+}
+/* collapse button */
+.btn-collapse {
+    float : right
+}
+.btn-collapse:after {
+    font-family: "Glyphicons Halflings", serif;
+    content: '\e113';
+}
+.btn-collapse.collapsed:after{
+    content: '\e114';
+}
+/*!
+ * bootstrapFeedback
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.feedback.alert{
+    padding:15px;
+}
+/* clone alert-info */
+.alert-processing{
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+/*!
+ * bootstrapLoader
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+.loader{
+    height:100%;
+    position:fixed;
+    text-align:center;
+    width:100%;
+    z-index:1000;
+}
+.loader-container{
+    position: absolute;
+    top: 50%;
+    width: 100%;
+}
+.loader-text.err{
+    color: #ff414b;
+    font-weight:bold;
+}
+.loader-text.success{
+    color: #00c110;
+    font-weight:bold;
+}
+/*!
+ * bootstrapPanel
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.panel-close {
+    color:black;
+    float: right;
+    opacity: .2;
+}
+.panel-close{
+    margin-left: 10px;
+}
+.panel-heading[data-toggle="collapse"]{
+    cursor:pointer;
+}
+/*!
+ * boostrapProgress
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.progress{
+    text-align:center;
+    position:relative;
+}
+.progress-percent{
+    color:black;
+    position: absolute;
+    left:50%;
+    width:100%;
+}
+.progress-percent-white{
+    color:white;
+}
+/*!
+ * bootstrapTab
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+.tab-pane {
+    padding: 15px 5px;
+}
+.responsive-tabs.nav-tabs {
+    position: relative;
+    z-index: 10;
+    height: 42px;
+    overflow: visible;
+    border-bottom: none;
+}
+@media (min-width: 768px) {
+    .responsive-tabs.nav-tabs {
+        border-bottom: 1px solid #ddd;
+    }
+}
+.responsive-tabs.nav-tabs span.glyphicon {
+    position: absolute;
+    top: 14px;
+    right: 22px;
+}
+.responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-top {
+    display: none;
+}
+@media (min-width: 768px) {
+    .responsive-tabs.nav-tabs span.glyphicon {
+        display: none;
+    }
+}
+.responsive-tabs.nav-tabs > li {
+    display: none;
+    float: none;
+    text-align: center;
+}
+.responsive-tabs.nav-tabs > li:last-of-type > a {
+    margin-right: 0;
+}
+.responsive-tabs.nav-tabs > li > a {
+    margin-right: 0;
+    background: #fff;
+    border: 1px solid #DDDDDD;
+}
+@media (min-width: 768px) {
+    .responsive-tabs.nav-tabs > li > a {
+        margin-right: 4px;
+    }
+}
+.responsive-tabs.nav-tabs > li.active {
+    display: block;
+}
+.responsive-tabs.nav-tabs > li.active a {
+    border: 1px solid #DDDDDD;
+    border-radius: 2px;
+}
+@media (min-width: 768px) {
+    .responsive-tabs.nav-tabs > li.active a {
+        border-bottom-color: transparent;
+    }
+}
+@media (min-width: 768px) {
+    .responsive-tabs.nav-tabs > li {
+        display: block;
+        float: left;
+    }
+}
+.responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-top {
+    display: block;
+}
+@media (min-width: 768px) {
+    .responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-top {
+        display: none;
+    }
+}
+.responsive-tabs.nav-tabs.open span.glyphicon.glyphicon-triangle-bottom {
+    display: none;
+}
+.responsive-tabs.nav-tabs.open > li {
+    display: block;
+}
+.responsive-tabs.nav-tabs.open > li a {
+    border-radius: 0;
+}
+.responsive-tabs.nav-tabs.open > li:first-of-type a {
+    border-radius: 2px 2px 0 0;
+}
+.responsive-tabs.nav-tabs.open > li:last-of-type a {
+    border-radius: 0 0 2px 2px;
+}
+/*!
+ * bootstrapTable
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+table>tbody>tr.table-empty>td {
+    border-top:none;
+}

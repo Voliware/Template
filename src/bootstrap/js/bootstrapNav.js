@@ -37,8 +37,8 @@ class BootstrapNav extends Template {
 	 */
 	_useDefaultTemplate(){
 		var template =
-			'<li>' +
-				'<a data-toggle="tab" href="#"></a>' +
+			'<li class="nav-item">' +
+				'<a class="nav-link" data-toggle="tab" href="#"></a>' +
 			'</li>';
 
 		this._useTemplate($(template));

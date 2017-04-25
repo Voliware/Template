@@ -9,6 +9,7 @@
  * Buttons are added to the incoming data objects
  * as if they were part of the data.
  * @extends RenderTable
+ * @deprecated Use RenderTable
  */
 class ControlTable extends RenderTable {
 

@@ -48,20 +48,7 @@ class BootstrapPanel extends Template {
 		this.isCollapsed = false;
 		this.isClosed = false;
 
-		// handlers
-		if(this.settings.closeable) {
-			this.$close.click(function (e) {
-				e.stopPropagation();
-				self._onClose();
-				self.trigger('close');
-			});
-		}
-		if(this.settings.collapsible) {
-			this.$header.click(function () {
-				self._collapse();
-				self.trigger('collapse');
-			});
-		}
+		this._attachHandlers();
 
 		return this;
 	}
@@ -91,6 +78,29 @@ class BootstrapPanel extends Template {
 			this.$close.remove();
 		if(!this.settings.collapsible)
 			this.$collapse.remove();
+
+		return this;
+	}
+
+	/**
+	 * Attach close and collapse handlers
+	 * @returns {BootstrapPanel}
+	 * @private
+	 */
+	_attachHandlers(){
+		if(this.settings.closeable) {
+			this.$close.click(function (e) {
+				e.stopPropagation();
+				self._onClose();
+				self.trigger('close');
+			});
+		}
+		if(this.settings.collapsible) {
+			this.$header.click(function () {
+				self._collapse();
+				self.trigger('collapse');
+			});
+		}
 
 		return this;
 	}
