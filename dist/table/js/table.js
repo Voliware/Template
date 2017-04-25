@@ -35,7 +35,7 @@ var CrudRow = function (_Template) {
 
 		var defaults = {
 			struct: {
-				$wrapper: '.tr',
+				$wrapper: 'tr',
 				$deleteButton: '[name="deleteButton"]',
 				$updateButton: '[name="updateButton"]',
 				$viewButton: '[name="viewButton"]'
