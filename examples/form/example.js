@@ -2,10 +2,21 @@ function submitRequest(data){
 	return $.post('backend.html', data)
 }
 
+var basicForm;
 var feedbackForm;
 var singleValueForm;
 var populateForm;
 $(document).on('ready', function(){
+	basicForm = new Form({
+		validator : Form.validators.formValidation,
+		serializeMode : FormSerializer.serializeMode.toObject,
+		template : $('#basicForm'),
+		excluded : [':hidden'],
+		submitRequest : submitRequest
+	})
+		.on('beforeSubmit', function(e, form){
+			console.log(form._serializedData);
+		});
 	feedbackForm = new Form({
 		validator : Form.validators.formValidation,
 		serializeMode : FormSerializer.serializeMode.toObject,

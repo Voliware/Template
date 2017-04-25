@@ -18,6 +18,7 @@ class Form extends Template {
 	 * @param {function} [options.submitRequest=null] - if set, ignores submitUrl and uses this function to submit data
 	 * @param {number} [options.serializeMode=0] - the mode in which to serialize data
 	 * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
+	 * @param {string[]} [options.excluded=[':disabled']] - exluded fields via css pseudo selectors
 	 * @param {object} [options.validator] - validator setttings
 	 * @param {string} [options.validator.api] - the validator api to use
 	 * @param {object} [options.validator.options] - the validator options
@@ -39,6 +40,7 @@ class Form extends Template {
 			submitRequest : null,
 			serializeMode : FormSerializer.serializeMode.toString,
 			checkboxMode : FormSerializer.checkboxMode.number,
+			excluded : [':disabled'],
 			// css classes for each form component
 			struct: {
 				$wrapper: 'form',
@@ -53,7 +55,7 @@ class Form extends Template {
 			validator: null
 		};
 
-		super($Util.opts(defaults, options));
+		super($Util.opts(defaults, options, 'replace'));
 		var self = this;
 
 		// store serialized data
@@ -73,7 +75,8 @@ class Form extends Template {
 		// components
 		this.formSerializer = new FormSerializer({
 			serializeMode : this.settings.serializeMode,
-			checkboxMode : this.settings.checkboxMode
+			checkboxMode : this.settings.checkboxMode,
+			excluded : this.settings.excluded
 		});
 		this.validator = null;
 		this.feedback = null;
@@ -198,7 +201,7 @@ class Form extends Template {
 	_submit(){
 		var self = this;
 
-		this.trigger('beforeSubmit');
+		this.trigger('beforeSubmit', this);
 		
 		if(this.feedback)
 			this.feedback.setFeedback('processing', 'Processing...');

@@ -31,6 +31,7 @@ var Form = function (_Template) {
   * @param {function} [options.submitRequest=null] - if set, ignores submitUrl and uses this function to submit data
   * @param {number} [options.serializeMode=0] - the mode in which to serialize data
   * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
+  * @param {string[]} [options.excluded=[':disabled']] - exluded fields via css pseudo selectors
   * @param {object} [options.validator] - validator setttings
   * @param {string} [options.validator.api] - the validator api to use
   * @param {object} [options.validator.options] - the validator options
@@ -56,6 +57,7 @@ var Form = function (_Template) {
 			submitRequest: null,
 			serializeMode: FormSerializer.serializeMode.toString,
 			checkboxMode: FormSerializer.checkboxMode.number,
+			excluded: [':disabled'],
 			// css classes for each form component
 			struct: {
 				$wrapper: 'form',
@@ -70,7 +72,7 @@ var Form = function (_Template) {
 			validator: null
 		};
 
-		var _this = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, $Util.opts(defaults, options)));
+		var _this = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, $Util.opts(defaults, options, 'replace')));
 
 		var self = _this;
 
@@ -89,7 +91,8 @@ var Form = function (_Template) {
 		// components
 		_this.formSerializer = new FormSerializer({
 			serializeMode: _this.settings.serializeMode,
-			checkboxMode: _this.settings.checkboxMode
+			checkboxMode: _this.settings.checkboxMode,
+			excluded: _this.settings.excluded
 		});
 		_this.validator = null;
 		_this.feedback = null;
@@ -220,7 +223,7 @@ var Form = function (_Template) {
 		value: function _submit() {
 			var self = this;
 
-			this.trigger('beforeSubmit');
+			this.trigger('beforeSubmit', this);
 
 			if (this.feedback) this.feedback.setFeedback('processing', 'Processing...');
 
@@ -589,9 +592,11 @@ var FormSerializer = function () {
 
 		var defaults = {
 			checkboxMode: FormSerializer.checkboxMode.number,
-			serializeMode: FormSerializer.serializeMode.toString
+			serializeMode: FormSerializer.serializeMode.toString,
+			excluded: [':disabled']
 		};
-		this.settings = $Util.opts(defaults, options);
+		// use extendext to replace entirely the excluded settings
+		this.settings = $Util.opts(defaults, options, 'replace');
 
 		return this;
 	}
@@ -663,6 +668,11 @@ var FormSerializer = function () {
 				var type = "";
 				var tag = "";
 				var val = "";
+
+				var excluded = self.settings.excluded;
+				for (var x = 0; x < excluded.length; x++) {
+					if ($el.is(excluded[x])) return true;
+				}
 
 				if ($el.data('serialize') === false) return true;
 

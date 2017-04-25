@@ -135,6 +135,7 @@ function buildTable(){
  */
 function buildTemplate(){
 	var js = [
+		webUtilJs + 'extendext.js',
 		webUtilJs + 'util.js',
 		webUtilJs + 'util-jquery.js',
 		webUtilJs + 'eventSystem.js',

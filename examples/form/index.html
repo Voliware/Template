@@ -28,7 +28,7 @@
                 <div class="well">
                     <span>Basic form</span>
                 </div>
-                <form id="testForm">
+                <form id="basicForm">
                     <div class="form-group">
                         <label>Name</label>
                         <input type="text" class="form-control" name="name" placeholder="Name"/>
@@ -36,6 +36,14 @@
                     <div class="form-group">
                         <label>Age</label>
                         <input type="text" class="form-control" name="age" placeholder="Age" min="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Disabled Field</label>
+                        <input type="text" class="form-control" name="none" placeholder="Disabled" disabled>
+                    </div>
+                    <div class="form-group" style="display:none;">
+                        <label>Disabled Field</label>
+                        <input type="text" class="form-control" name="hidden" placeholder="Hidden">
                     </div>
                     <div class="form-footer">
                         <div class="form-group">
@@ -48,7 +56,6 @@
                 <div class="well">
 					<span>Form with feedback and validation.</span>
                 </div>
-                <button id = "fooButton" type="button">FOOOOO</button>
                 <form id="feedbackForm">
                     <div class="form-body">
                         <div class="form-group">

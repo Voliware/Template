@@ -20,9 +20,11 @@ class FormSerializer {
 	constructor(options){
 		var defaults = {
 			checkboxMode : FormSerializer.checkboxMode.number,
-			serializeMode : FormSerializer.serializeMode.toString
+			serializeMode : FormSerializer.serializeMode.toString,
+			excluded : [':disabled']
 		};
-		this.settings = $Util.opts(defaults, options);
+		// use extendext to replace entirely the excluded settings
+		this.settings = $Util.opts(defaults, options, 'replace');
 
 		return this;
 	}
@@ -86,6 +88,12 @@ class FormSerializer {
 			var type = "";
 			var tag = "";
 			var val = "";
+
+			var excluded = self.settings.excluded;
+			for(var x = 0; x < excluded.length; x++){
+				if($el.is(excluded[x]))
+					return true;
+			}
 
 			if($el.data('serialize') === false)
 				return true;
