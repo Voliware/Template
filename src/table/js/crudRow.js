@@ -18,6 +18,7 @@ class CrudRow extends Template {
 	constructor(options){
 		var defaults = {
 			struct : {
+				$wrapper : '.tr',
 				$deleteButton : '[name="deleteButton"]',
 				$updateButton : '[name="updateButton"]',
 				$viewButton : '[name="viewButton"]'
