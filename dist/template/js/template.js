@@ -247,6 +247,15 @@ if (typeof Array.max === 'undefined') {
 		return Math.max.apply(Math, array);
 	};
 }
+if (typeof Object.set === 'undefined') {
+	Object.set = function (obj, data) {
+		for (var key in data) {
+			if (obj.hasOwnProperty(key)) {
+				obj[key] = data[key];
+			}
+		}
+	};
+}
 
 //https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 if (typeof Object.assign != 'function') {
