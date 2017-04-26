@@ -60,10 +60,6 @@ class Form extends Template {
 
 		// store serialized data
 		this._serializedData = {};
-		// cache raw incoming data
-		this._cachedData = {};
-		// processed form data
-		this._processedData = {};
 
 		// alias
 		// this exists solely for Wizard !!
@@ -282,28 +278,6 @@ class Form extends Template {
 		return $.Deferred().resolve().promise();
 	}
 
-	/**
-	 * Cache incoming form data
-	 * @param {object} data
-	 * @returns {Form}
-	 * @private
-	 */
-	_cacheFormData(data){
-		this._cachedData = $.extend(true, {}, data);
-		return this;
-	}
-
-	/**
-	 * Process incoming form data
-	 * @param {object} data
-	 * @returns {Form}
-	 * @private
-	 */
-	_processData(data){
-		this._processedData = $.extend(true, {}, data);
-		return this;
-	}
-
 	// public
 
 	/**
@@ -384,7 +358,7 @@ class Form extends Template {
 	 * @returns {Form}
 	 */
 	populateForm(data){
-		this._cacheFormData(data);
+		this._cacheData(data);
 		this._processData(data);
 		this.$form.populateChildren(data);
 		return this;

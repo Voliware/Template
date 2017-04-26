@@ -78,10 +78,6 @@ var Form = function (_Template) {
 
 		// store serialized data
 		_this._serializedData = {};
-		// cache raw incoming data
-		_this._cachedData = {};
-		// processed form data
-		_this._processedData = {};
 
 		// alias
 		// this exists solely for Wizard !!
@@ -310,34 +306,6 @@ var Form = function (_Template) {
 			return $.Deferred().resolve().promise();
 		}
 
-		/**
-   * Cache incoming form data
-   * @param {object} data
-   * @returns {Form}
-   * @private
-   */
-
-	}, {
-		key: '_cacheFormData',
-		value: function _cacheFormData(data) {
-			this._cachedData = $.extend(true, {}, data);
-			return this;
-		}
-
-		/**
-   * Process incoming form data
-   * @param {object} data
-   * @returns {Form}
-   * @private
-   */
-
-	}, {
-		key: '_processData',
-		value: function _processData(data) {
-			this._processedData = $.extend(true, {}, data);
-			return this;
-		}
-
 		// public
 
 		/**
@@ -432,7 +400,7 @@ var Form = function (_Template) {
 	}, {
 		key: 'populateForm',
 		value: function populateForm(data) {
-			this._cacheFormData(data);
+			this._cacheData(data);
 			this._processData(data);
 			this.$form.populateChildren(data);
 			return this;

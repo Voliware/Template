@@ -515,10 +515,10 @@ var $Util = function () {
 	}, {
 		key: 'opts',
 		value: function opts(defaults, options, arrayMode) {
-			if (arrayMode) {
-				return $.extend(true, defaults, options);
-			} else {
+			if (isDefined(arrayMode)) {
 				return $.extendext(true, arrayMode, defaults, options);
+			} else {
+				return $.extend(true, defaults, options);
 			}
 		}
 	}]);
@@ -1197,6 +1197,10 @@ var Template = function () {
 
 		this._template();
 
+		// properties related to template population
+		this._cachedData = {};
+		this._processedData = {};
+
 		return this;
 	}
 
@@ -1272,7 +1276,52 @@ var Template = function () {
 	}, {
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
+			return this;
+		}
 
+		// data
+
+		/**
+   * Cache data into a new object.
+   * @param {object} data
+   * @returns {Template}
+   * @private
+   */
+
+	}, {
+		key: '_cacheData',
+		value: function _cacheData(data) {
+			this._cachedData = $.extend(true, {}, data);
+			return this;
+		}
+
+		/**
+   * Process data into a new object.
+   * @param {object} data
+   * @returns {Template}
+   * @private
+   */
+
+	}, {
+		key: '_processData',
+		value: function _processData(data) {
+			this._processedData = $.extend(true, {}, data);
+			return this;
+		}
+
+		/**
+   * Override popualteChildren to first cache and process data.
+   * Use the processed data to populate the Template.
+   * @param {object} data
+   * @returns {Template}
+   */
+
+	}, {
+		key: 'populateChildren',
+		value: function populateChildren(data) {
+			this._cacheData(data);
+			this._processData(data);
+			this.$wrapper.populateChildren(this._processedData);
 			return this;
 		}
 	}]);
@@ -1810,71 +1859,21 @@ var CrudRow = function (_Template2) {
 			}
 		};
 
-		// properties
 		var _this4 = _possibleConstructorReturn(this, (CrudRow.__proto__ || Object.getPrototypeOf(CrudRow)).call(this, $Util.opts(defaults, options)));
-
-		_this4._cachedData = {};
-		_this4._processedData = {};
 
 		return _ret4 = _this4, _possibleConstructorReturn(_this4, _ret4);
 	}
 
-	// data
+	// delete
 
 	/**
-  * Cache data
-  * @param {object} data
+  * Attach delete button handlers
   * @returns {CrudRow}
   * @private
   */
 
 
 	_createClass(CrudRow, [{
-		key: '_cacheData',
-		value: function _cacheData(data) {
-			this._cachedData = $.extend(true, {}, data);
-			return this;
-		}
-
-		/**
-   * Process data
-   * @param {object} data
-   * @returns {CrudRow}
-   * @private
-   */
-
-	}, {
-		key: '_processData',
-		value: function _processData(data) {
-			this._processedData = $.extend(true, {}, data);
-			return this;
-		}
-
-		/**
-   * Populate children override.
-   * Cache and process data first.
-   * @param {object} data
-   * @returns {CrudRow}
-   */
-
-	}, {
-		key: 'populateChildren',
-		value: function populateChildren(data) {
-			this._cacheData(data);
-			this._processData(data);
-			this.$wrapper.populateChildren(this._processedData);
-			return this;
-		}
-
-		// delete
-
-		/**
-   * Attach delete button handlers
-   * @returns {CrudRow}
-   * @private
-   */
-
-	}, {
 		key: '_attachDeleteButtonHandlers',
 		value: function _attachDeleteButtonHandlers() {
 			var self = this;
@@ -2016,8 +2015,6 @@ var Table = function (_Template3) {
 		var _this5 = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
 
 		_this5.$rows = [];
-		_this5._cachedData = {};
-		_this5._processedData = {};
 
 		// states
 		_this5.isFirstBuild = true;
@@ -2700,10 +2697,6 @@ var Form = function (_Template4) {
 
 		// store serialized data
 		_this8._serializedData = {};
-		// cache raw incoming data
-		_this8._cachedData = {};
-		// processed form data
-		_this8._processedData = {};
 
 		// alias
 		// this exists solely for Wizard !!
@@ -2932,34 +2925,6 @@ var Form = function (_Template4) {
 			return $.Deferred().resolve().promise();
 		}
 
-		/**
-   * Cache incoming form data
-   * @param {object} data
-   * @returns {Form}
-   * @private
-   */
-
-	}, {
-		key: '_cacheFormData',
-		value: function _cacheFormData(data) {
-			this._cachedData = $.extend(true, {}, data);
-			return this;
-		}
-
-		/**
-   * Process incoming form data
-   * @param {object} data
-   * @returns {Form}
-   * @private
-   */
-
-	}, {
-		key: '_processData',
-		value: function _processData(data) {
-			this._processedData = $.extend(true, {}, data);
-			return this;
-		}
-
 		// public
 
 		/**
@@ -3054,7 +3019,7 @@ var Form = function (_Template4) {
 	}, {
 		key: 'populateForm',
 		value: function populateForm(data) {
-			this._cacheFormData(data);
+			this._cacheData(data);
 			this._processData(data);
 			this.$form.populateChildren(data);
 			return this;

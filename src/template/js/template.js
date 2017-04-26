@@ -40,6 +40,10 @@ class Template {
 
 		this._template();
 
+		// properties related to template population
+		this._cachedData = {};
+		this._processedData = {};
+
 		return this;
 	}
 
@@ -110,7 +114,43 @@ class Template {
 	 * @private
 	 */
 	_useDefaultTemplate() {
-		
+		return this;
+	}
+
+	// data
+
+	/**
+	 * Cache data into a new object.
+	 * @param {object} data
+	 * @returns {Template}
+	 * @private
+	 */
+	_cacheData(data){
+		this._cachedData = $.extend(true, {}, data);
+		return this;
+	}
+
+	/**
+	 * Process data into a new object.
+	 * @param {object} data
+	 * @returns {Template}
+	 * @private
+	 */
+	_processData(data){
+		this._processedData = $.extend(true, {}, data);
+		return this;
+	}
+
+	/**
+	 * Override popualteChildren to first cache and process data.
+	 * Use the processed data to populate the Template.
+	 * @param {object} data
+	 * @returns {Template}
+	 */
+	populateChildren(data){
+		this._cacheData(data);
+		this._processData(data);
+		this.$wrapper.populateChildren(this._processedData);
 		return this;
 	}
 }

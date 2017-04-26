@@ -38,8 +38,6 @@ class Table extends Template {
 
 		// properties
 		this.$rows = [];
-		this._cachedData = {};
-		this._processedData = {};
 
 		// states
 		this.isFirstBuild = true;

@@ -638,10 +638,10 @@ var $Util = function () {
 	}, {
 		key: "opts",
 		value: function opts(defaults, options, arrayMode) {
-			if (arrayMode) {
-				return $.extend(true, defaults, options);
-			} else {
+			if (isDefined(arrayMode)) {
 				return $.extendext(true, arrayMode, defaults, options);
+			} else {
+				return $.extend(true, defaults, options);
 			}
 		}
 	}]);
@@ -1320,6 +1320,10 @@ var Template = function () {
 
 		this._template();
 
+		// properties related to template population
+		this._cachedData = {};
+		this._processedData = {};
+
 		return this;
 	}
 
@@ -1395,7 +1399,52 @@ var Template = function () {
 	}, {
 		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
+			return this;
+		}
 
+		// data
+
+		/**
+   * Cache data into a new object.
+   * @param {object} data
+   * @returns {Template}
+   * @private
+   */
+
+	}, {
+		key: "_cacheData",
+		value: function _cacheData(data) {
+			this._cachedData = $.extend(true, {}, data);
+			return this;
+		}
+
+		/**
+   * Process data into a new object.
+   * @param {object} data
+   * @returns {Template}
+   * @private
+   */
+
+	}, {
+		key: "_processData",
+		value: function _processData(data) {
+			this._processedData = $.extend(true, {}, data);
+			return this;
+		}
+
+		/**
+   * Override popualteChildren to first cache and process data.
+   * Use the processed data to populate the Template.
+   * @param {object} data
+   * @returns {Template}
+   */
+
+	}, {
+		key: "populateChildren",
+		value: function populateChildren(data) {
+			this._cacheData(data);
+			this._processData(data);
+			this.$wrapper.populateChildren(this._processedData);
 			return this;
 		}
 	}]);

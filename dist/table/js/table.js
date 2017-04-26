@@ -42,71 +42,21 @@ var CrudRow = function (_Template) {
 			}
 		};
 
-		// properties
 		var _this = _possibleConstructorReturn(this, (CrudRow.__proto__ || Object.getPrototypeOf(CrudRow)).call(this, $Util.opts(defaults, options)));
-
-		_this._cachedData = {};
-		_this._processedData = {};
 
 		return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	}
 
-	// data
+	// delete
 
 	/**
-  * Cache data
-  * @param {object} data
+  * Attach delete button handlers
   * @returns {CrudRow}
   * @private
   */
 
 
 	_createClass(CrudRow, [{
-		key: '_cacheData',
-		value: function _cacheData(data) {
-			this._cachedData = $.extend(true, {}, data);
-			return this;
-		}
-
-		/**
-   * Process data
-   * @param {object} data
-   * @returns {CrudRow}
-   * @private
-   */
-
-	}, {
-		key: '_processData',
-		value: function _processData(data) {
-			this._processedData = $.extend(true, {}, data);
-			return this;
-		}
-
-		/**
-   * Populate children override.
-   * Cache and process data first.
-   * @param {object} data
-   * @returns {CrudRow}
-   */
-
-	}, {
-		key: 'populateChildren',
-		value: function populateChildren(data) {
-			this._cacheData(data);
-			this._processData(data);
-			this.$wrapper.populateChildren(this._processedData);
-			return this;
-		}
-
-		// delete
-
-		/**
-   * Attach delete button handlers
-   * @returns {CrudRow}
-   * @private
-   */
-
-	}, {
 		key: '_attachDeleteButtonHandlers',
 		value: function _attachDeleteButtonHandlers() {
 			var self = this;
@@ -248,8 +198,6 @@ var Table = function (_Template2) {
 		var _this2 = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
 
 		_this2.$rows = [];
-		_this2._cachedData = {};
-		_this2._processedData = {};
 
 		// states
 		_this2.isFirstBuild = true;

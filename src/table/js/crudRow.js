@@ -26,47 +26,6 @@ class CrudRow extends Template {
 		};
 		super($Util.opts(defaults, options));
 
-		// properties
-		this._cachedData = {};
-		this._processedData = {};
-
-		return this;
-	}
-
-	// data
-
-	/**
-	 * Cache data
-	 * @param {object} data
-	 * @returns {CrudRow}
-	 * @private
-	 */
-	_cacheData(data){
-		this._cachedData = $.extend(true, {}, data);
-		return this;
-	}
-
-	/**
-	 * Process data
-	 * @param {object} data
-	 * @returns {CrudRow}
-	 * @private
-	 */
-	_processData(data){
-		this._processedData = $.extend(true, {}, data);
-		return this;
-	}
-
-	/**
-	 * Populate children override.
-	 * Cache and process data first.
-	 * @param {object} data
-	 * @returns {CrudRow}
-	 */
-	populateChildren(data){
-		this._cacheData(data);
-		this._processData(data);
-		this.$wrapper.populateChildren(this._processedData);
 		return this;
 	}
 
