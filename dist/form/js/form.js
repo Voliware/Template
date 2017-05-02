@@ -402,7 +402,7 @@ var Form = function (_Template) {
 		value: function populateForm(data) {
 			this._cacheData(data);
 			this._processData(data);
-			this.$form.populateChildren(data);
+			this.$form.populateChildren(this._processedData);
 			return this;
 		}
 
@@ -431,6 +431,8 @@ var Form = function (_Template) {
 			if (!$.isEmptyObject(this._cachedData)) this.populateForm(this._cachedData);else this.$form[0].reset();
 
 			if (this.feedback) this.feedback.slideUp();
+
+			this.toggleButtons(true);
 
 			// todo: implement for alternative validators
 			if (this.validator) {

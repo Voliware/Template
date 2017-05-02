@@ -158,6 +158,7 @@ function buildTemplate(){
  */
 function buildPackage(){
 	var js = [
+		webUtilJs + 'extendext.js',
 		webUtilJs + 'util.js',
 		webUtilJs + 'util-jquery.js',
 		webUtilJs + 'eventSystem.js',
@@ -192,6 +193,7 @@ function buildPackage(){
  */
 function buildPackageBootstrap(){
 	var js = [
+		webUtilJs + 'extendext.js',
 		webUtilJs + 'util.js',
 		webUtilJs + 'util-jquery.js',
 		webUtilJs + 'eventSystem.js',

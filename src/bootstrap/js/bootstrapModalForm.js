@@ -49,10 +49,8 @@ class BootstrapModalForm extends BootstrapModal {
 				}, 1500)
 			})
 			.on('fail', function(){
-				if(self.form.feedback){
-					self.form.feedback.setFeedback('danger', 'Failed to submit data');
-				}
 				self.form.slideToggleForm(true);
+				self.form.toggleButtons(true);
 			});
 		return this;
 	}

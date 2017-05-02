@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
 var _get2 = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
@@ -12,6 +12,128 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/*!
+ * jQuery.extendext 0.1.2
+ *
+ * Copyright 2014-2016 Damien "Mistic" Sorel (http://www.strangeplanet.fr)
+ * Licensed under MIT (http://opensource.org/licenses/MIT)
+ *
+ * Based on jQuery.extend by jQuery Foundation, Inc. and other contributors
+ */
+
+/*jshint -W083 */
+(function ($) {
+	"use strict";
+
+	$.extendext = function () {
+		var options,
+		    name,
+		    src,
+		    copy,
+		    copyIsArray,
+		    clone,
+		    target = arguments[0] || {},
+		    i = 1,
+		    length = arguments.length,
+		    deep = false,
+		    arrayMode = 'default';
+
+		// Handle a deep copy situation
+		if (typeof target === "boolean") {
+			deep = target;
+
+			// Skip the boolean and the target
+			target = arguments[i++] || {};
+		}
+
+		// Handle array mode parameter
+		if (typeof target === "string") {
+			arrayMode = target.toLowerCase();
+			if (arrayMode !== 'concat' && arrayMode !== 'replace' && arrayMode !== 'extend') {
+				arrayMode = 'default';
+			}
+
+			// Skip the string param
+			target = arguments[i++] || {};
+		}
+
+		// Handle case when target is a string or something (possible in deep copy)
+		if ((typeof target === "undefined" ? "undefined" : _typeof(target)) !== "object" && !$.isFunction(target)) {
+			target = {};
+		}
+
+		// Extend jQuery itself if only one argument is passed
+		if (i === length) {
+			target = this;
+			i--;
+		}
+
+		for (; i < length; i++) {
+			// Only deal with non-null/undefined values
+			if ((options = arguments[i]) !== null) {
+				// Special operations for arrays
+				if ($.isArray(options) && arrayMode !== 'default') {
+					clone = target && $.isArray(target) ? target : [];
+
+					switch (arrayMode) {
+						case 'concat':
+							target = clone.concat($.extend(deep, [], options));
+							break;
+
+						case 'replace':
+							target = $.extend(deep, [], options);
+							break;
+
+						case 'extend':
+							options.forEach(function (e, i) {
+								if ((typeof e === "undefined" ? "undefined" : _typeof(e)) === 'object') {
+									var type = $.isArray(e) ? [] : {};
+									clone[i] = $.extendext(deep, arrayMode, clone[i] || type, e);
+								} else if (clone.indexOf(e) === -1) {
+									clone.push(e);
+								}
+							});
+
+							target = clone;
+							break;
+					}
+				} else {
+					// Extend the base object
+					for (name in options) {
+						src = target[name];
+						copy = options[name];
+
+						// Prevent never-ending loop
+						if (target === copy) {
+							continue;
+						}
+
+						// Recurse if we're merging plain objects or arrays
+						if (deep && copy && ($.isPlainObject(copy) || (copyIsArray = $.isArray(copy)))) {
+
+							if (copyIsArray) {
+								copyIsArray = false;
+								clone = src && $.isArray(src) ? src : [];
+							} else {
+								clone = src && $.isPlainObject(src) ? src : {};
+							}
+
+							// Never move original objects, clone them
+							target[name] = $.extendext(deep, arrayMode, clone, copy);
+
+							// Don't bring in undefined values
+						} else if (copy !== undefined) {
+							target[name] = copy;
+						}
+					}
+				}
+			}
+		}
+
+		// Return the modified object
+		return target;
+	};
+})(jQuery);
 /*!
  * util
  * https://github.com/Voliware/Util
@@ -21,13 +143,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * General utility functions
  */
+
 var Util = function () {
 	function Util() {
 		_classCallCheck(this, Util);
 	}
 
 	_createClass(Util, null, [{
-		key: 'each',
+		key: "each",
 
 		/**
    * Wraps a for in loop.
@@ -82,7 +205,7 @@ if (typeof isNumber === 'undefined') {
 }
 if (typeof isObject === 'undefined') {
 	window.isObject = function (x) {
-		return x !== null && (typeof x === 'undefined' ? 'undefined' : _typeof(x)) === 'object';
+		return x !== null && (typeof x === "undefined" ? "undefined" : _typeof(x)) === 'object';
 	};
 }
 if (typeof isArray === 'undefined') {
@@ -165,7 +288,7 @@ if (typeof Object.assign != 'function') {
  * It also borrows some code from http://stackoverflow.com/a/11621004/560114
  */
 function deepCopy(src, /* INTERNAL */_visited, _copiesVisited) {
-	if (src === null || (typeof src === 'undefined' ? 'undefined' : _typeof(src)) !== 'object') {
+	if (src === null || (typeof src === "undefined" ? "undefined" : _typeof(src)) !== 'object') {
 		return src;
 	}
 
@@ -484,7 +607,7 @@ var $Util = function () {
 	}
 
 	_createClass($Util, null, [{
-		key: 'jQuerify',
+		key: "jQuerify",
 
 
 		/**
@@ -522,7 +645,7 @@ var $Util = function () {
       */
 
 	}, {
-		key: 'opts',
+		key: "opts",
 		value: function opts(defaults, options, arrayMode) {
 			if (isDefined(arrayMode)) {
 				return $.extendext(true, arrayMode, defaults, options);
@@ -576,7 +699,7 @@ var EventSystem = function () {
 
 
 	_createClass(EventSystem, [{
-		key: '_createEvent',
+		key: "_createEvent",
 		value: function _createEvent(name) {
 			return this.events[name] = { callbacks: [] };
 		}
@@ -589,7 +712,7 @@ var EventSystem = function () {
    */
 
 	}, {
-		key: '_destroy',
+		key: "_destroy",
 		value: function _destroy(name) {
 			if (isDefined(this.event[name])) delete this.event[name];
 			return this;
@@ -603,7 +726,7 @@ var EventSystem = function () {
    */
 
 	}, {
-		key: 'on',
+		key: "on",
 		value: function on(name, callback) {
 			var event = this.events[name];
 
@@ -622,7 +745,7 @@ var EventSystem = function () {
    */
 
 	}, {
-		key: 'off',
+		key: "off",
 		value: function off(name, callback) {
 			var event = this.events[name];
 
@@ -640,7 +763,7 @@ var EventSystem = function () {
    */
 
 	}, {
-		key: 'offAll',
+		key: "offAll",
 		value: function offAll(name) {
 			var event = this.events[name];
 
@@ -655,7 +778,7 @@ var EventSystem = function () {
    */
 
 	}, {
-		key: 'trigger',
+		key: "trigger",
 		value: function trigger() {
 			// grab the name of the event and remove it from arguments
 			var shift = [].shift;
@@ -679,7 +802,7 @@ var EventSystem = function () {
    */
 
 	}, {
-		key: 'emit',
+		key: "emit",
 		value: function emit() {
 			return this.trigger();
 		}
@@ -767,7 +890,7 @@ var Manager = function (_EventSystem) {
 
 
 	_createClass(Manager, [{
-		key: '_exists',
+		key: "_exists",
 		value: function _exists() {
 			var arg = arguments[0];
 			if (isString(arg) || isNumber(arg)) return isDefined(this.objects[arg]);else return isDefined(this.objects[arg[this.settings.identifier]]);
@@ -783,7 +906,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: '_get',
+		key: "_get",
 		value: function _get() {
 			var arg = arguments[0];
 			var obj = null;
@@ -812,7 +935,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: '_add',
+		key: "_add",
 		value: function _add(obj, id) {
 			var self = this;
 			var identifier = this.settings.identifier;
@@ -859,7 +982,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: '_update',
+		key: "_update",
 		value: function _update(obj, id) {
 			var self = this;
 			var identifier = this.settings.identifier;
@@ -897,7 +1020,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: '_delete',
+		key: "_delete",
 		value: function _delete() {
 			var arg = arguments[0];
 			var obj = null;
@@ -925,7 +1048,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: '_empty',
+		key: "_empty",
 		value: function _empty() {
 			// ..in likely case there are references
 			for (var i in this.objects) {
@@ -942,7 +1065,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: '_cacheData',
+		key: "_cacheData",
 		value: function _cacheData(data) {
 			this._cachedData = deepCopy(data);
 			return this;
@@ -956,7 +1079,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: '_processData',
+		key: "_processData",
 		value: function _processData(data) {
 			this._processedData = deepCopy(data);
 			return this;
@@ -968,7 +1091,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'getIds',
+		key: "getIds",
 		value: function getIds() {
 			var ids = [];
 			for (var i in this.objects) {
@@ -985,7 +1108,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'getId',
+		key: "getId",
 		value: function getId(obj) {
 			return obj[this.settings.identifier].toString();
 		}
@@ -1001,7 +1124,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'manage',
+		key: "manage",
 		value: function manage(data) {
 			this._cacheData(data);
 			this._processData(data);
@@ -1053,7 +1176,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'exists',
+		key: "exists",
 		value: function exists() {
 			return this._exists.apply(this, arguments);
 		}
@@ -1065,7 +1188,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'addObjects',
+		key: "addObjects",
 		value: function addObjects() {
 			var data = arguments.length > 1 ? [].slice.call(arguments).sort() : arguments[0];
 			for (var i in data) {
@@ -1081,7 +1204,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'addObject',
+		key: "addObject",
 		value: function addObject() {
 			return this._add.apply(this, arguments);
 		}
@@ -1092,7 +1215,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'getObject',
+		key: "getObject",
 		value: function getObject() {
 			return this._get.apply(this, arguments);
 		}
@@ -1103,7 +1226,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'updateObject',
+		key: "updateObject",
 		value: function updateObject() {
 			return this._update.apply(this, arguments);
 		}
@@ -1114,7 +1237,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'deleteObject',
+		key: "deleteObject",
 		value: function deleteObject() {
 			return this._delete.apply(this, arguments);
 		}
@@ -1125,7 +1248,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'deleteObjects',
+		key: "deleteObjects",
 		value: function deleteObjects() {
 			return this._empty();
 		}
@@ -1138,7 +1261,7 @@ var Manager = function (_EventSystem) {
    */
 
 	}, {
-		key: 'serializer',
+		key: "serializer",
 		value: function serializer() {
 			var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 			var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -1223,7 +1346,7 @@ var Template = function () {
 
 
 	_createClass(Template, [{
-		key: '_template',
+		key: "_template",
 		value: function _template() {
 			if (this.settings.template) this._useTemplate();else this._useDefaultTemplate();
 
@@ -1245,7 +1368,7 @@ var Template = function () {
    */
 
 	}, {
-		key: '_useTemplate',
+		key: "_useTemplate",
 		value: function _useTemplate() {
 			var $template = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -1283,7 +1406,7 @@ var Template = function () {
    */
 
 	}, {
-		key: '_useDefaultTemplate',
+		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
 			return this;
 		}
@@ -1298,7 +1421,7 @@ var Template = function () {
    */
 
 	}, {
-		key: '_cacheData',
+		key: "_cacheData",
 		value: function _cacheData(data) {
 			this._cachedData = $.extend(true, {}, data);
 			return this;
@@ -1312,7 +1435,7 @@ var Template = function () {
    */
 
 	}, {
-		key: '_processData',
+		key: "_processData",
 		value: function _processData(data) {
 			this._processedData = $.extend(true, {}, data);
 			return this;
@@ -1326,7 +1449,7 @@ var Template = function () {
    */
 
 	}, {
-		key: 'populateChildren',
+		key: "populateChildren",
 		value: function populateChildren(data) {
 			this._cacheData(data);
 			this._processData(data);
@@ -1397,9 +1520,9 @@ var TemplateManager = function (_Manager) {
 
 
 	_createClass(TemplateManager, [{
-		key: '_add',
+		key: "_add",
 		value: function _add() {
-			var obj = _get2(TemplateManager.prototype.__proto__ || Object.getPrototypeOf(TemplateManager.prototype), '_add', this).apply(this, arguments);
+			var obj = _get2(TemplateManager.prototype.__proto__ || Object.getPrototypeOf(TemplateManager.prototype), "_add", this).apply(this, arguments);
 			// arguments[0].$wrapper for Template objects
 			// arguments[0] for native jQuery objects
 			this.$wrapper.append(arguments[0].$wrapper || arguments[0]);
@@ -1414,7 +1537,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: '_update',
+		key: "_update",
 		value: function _update(data) {
 			var id = this.getId(data);
 			var $template = this.templates[id];
@@ -1432,12 +1555,12 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: '_delete',
+		key: "_delete",
 		value: function _delete() {
 			var template = this._get.apply(this, arguments);
 			if (template) {
 				template.remove();
-				_get2(TemplateManager.prototype.__proto__ || Object.getPrototypeOf(TemplateManager.prototype), '_delete', this).call(this, template);
+				_get2(TemplateManager.prototype.__proto__ || Object.getPrototypeOf(TemplateManager.prototype), "_delete", this).call(this, template);
 			} else {
 				console.error("TemplateManager._delete: could not find template object");
 			}
@@ -1453,7 +1576,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: '_create',
+		key: "_create",
 		value: function _create(id) {
 			var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -1476,7 +1599,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: '_empty',
+		key: "_empty",
 		value: function _empty() {
 			for (var i in this.objects) {
 				this.objects[i].remove();
@@ -1494,7 +1617,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: '_populateTemplate',
+		key: "_populateTemplate",
 		value: function _populateTemplate(template, data) {
 			template.populateChildren(data);
 			return this;
@@ -1507,7 +1630,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: 'manage',
+		key: "manage",
 		value: function manage(data) {
 			return this.build(data);
 		}
@@ -1523,7 +1646,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: 'build',
+		key: "build",
 		value: function build(data) {
 			this._cacheData(data);
 			this._processData(data);
@@ -1579,7 +1702,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: 'setCurrent',
+		key: "setCurrent",
 		value: function setCurrent(name) {
 			var self = this;
 			var t = this.templates[name];
@@ -1611,7 +1734,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: 'createTemplate',
+		key: "createTemplate",
 		value: function createTemplate() {
 			return this._create.apply(this, arguments);
 		}
@@ -1623,9 +1746,9 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: 'addTemplates',
+		key: "addTemplates",
 		value: function addTemplates() {
-			return _get2(TemplateManager.prototype.__proto__ || Object.getPrototypeOf(TemplateManager.prototype), 'addObjects', this).apply(this, arguments);
+			return _get2(TemplateManager.prototype.__proto__ || Object.getPrototypeOf(TemplateManager.prototype), "addObjects", this).apply(this, arguments);
 		}
 
 		/**
@@ -1634,7 +1757,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: 'addTemplate',
+		key: "addTemplate",
 		value: function addTemplate() {
 			return this._add.apply(this, arguments);
 		}
@@ -1645,7 +1768,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: 'getTemplate',
+		key: "getTemplate",
 		value: function getTemplate() {
 			return this._get.apply(this, arguments);
 		}
@@ -1656,7 +1779,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: 'updateTemplate',
+		key: "updateTemplate",
 		value: function updateTemplate() {
 			return this._update.apply(this, arguments);
 		}
@@ -1667,7 +1790,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: 'deleteTemplate',
+		key: "deleteTemplate",
 		value: function deleteTemplate() {
 			return this._delete.apply(this, arguments);
 		}
@@ -1678,7 +1801,7 @@ var TemplateManager = function (_Manager) {
    */
 
 	}, {
-		key: 'deleteTemplates',
+		key: "deleteTemplates",
 		value: function deleteTemplates() {
 			return this._empty();
 		}
@@ -1747,7 +1870,7 @@ var Feedback = function (_Template) {
 
 
 	_createClass(Feedback, [{
-		key: '_useDefaultTemplate',
+		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
 			var template = '<div class="feedback">' + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>';
 
@@ -1772,7 +1895,7 @@ var Feedback = function (_Template) {
    */
 
 	}, {
-		key: '_setClass',
+		key: "_setClass",
 		value: function _setClass(cls) {
 			this.removeClass(function (index, css) {
 				return (css.match(/(^|\s)feedback-\S+/g) || []).join(' ');
@@ -1791,7 +1914,7 @@ var Feedback = function (_Template) {
    */
 
 	}, {
-		key: '_animateFeedback',
+		key: "_animateFeedback",
 		value: function _animateFeedback(cls, text, icon) {
 			this._setClass(cls);
 			this.$text.fadeOut(function () {
@@ -1815,7 +1938,7 @@ var Feedback = function (_Template) {
    */
 
 	}, {
-		key: 'setFeedback',
+		key: "setFeedback",
 		value: function setFeedback(cls, text, icon) {
 			if (this.is(':hidden')) {
 				this._setClass(cls);
@@ -1883,7 +2006,7 @@ var CrudRow = function (_Template2) {
 
 
 	_createClass(CrudRow, [{
-		key: '_attachDeleteButtonHandlers',
+		key: "_attachDeleteButtonHandlers",
 		value: function _attachDeleteButtonHandlers() {
 			var self = this;
 			this.$deleteButton.click(function () {
@@ -1898,7 +2021,7 @@ var CrudRow = function (_Template2) {
    */
 
 	}, {
-		key: '_deleteButtonAction',
+		key: "_deleteButtonAction",
 		value: function _deleteButtonAction() {
 			throw new Error("CrudRow._deleteButtonAction: must be implemented in child class");
 		}
@@ -1912,7 +2035,7 @@ var CrudRow = function (_Template2) {
    */
 
 	}, {
-		key: '_attachUpdateButtonHandlers',
+		key: "_attachUpdateButtonHandlers",
 		value: function _attachUpdateButtonHandlers() {
 			var self = this;
 			this.$updateButton.click(function () {
@@ -1927,7 +2050,7 @@ var CrudRow = function (_Template2) {
    */
 
 	}, {
-		key: '_updateButtonAction',
+		key: "_updateButtonAction",
 		value: function _updateButtonAction() {
 			throw new Error("CrudRow._updateButtonAction: must be implemented in child class");
 		}
@@ -1941,7 +2064,7 @@ var CrudRow = function (_Template2) {
    */
 
 	}, {
-		key: '_attachViewButtonHandlers',
+		key: "_attachViewButtonHandlers",
 		value: function _attachViewButtonHandlers() {
 			var self = this;
 			this.$viewButton.click(function () {
@@ -1956,7 +2079,7 @@ var CrudRow = function (_Template2) {
    */
 
 	}, {
-		key: '_viewButtonAction',
+		key: "_viewButtonAction",
 		value: function _viewButtonAction() {
 			throw new Error("CrudRow._viewButtonAction: must be implemented in child class");
 		}
@@ -1967,7 +2090,7 @@ var CrudRow = function (_Template2) {
    */
 
 	}, {
-		key: 'initialize',
+		key: "initialize",
 		value: function initialize() {
 			this._attachDeleteButtonHandlers()._attachUpdateButtonHandlers()._attachViewButtonHandlers();
 			return this;
@@ -2045,11 +2168,11 @@ var Table = function (_Template3) {
 
 
 	_createClass(Table, [{
-		key: '_useTemplate',
+		key: "_useTemplate",
 		value: function _useTemplate() {
 			var $template = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-			_get2(Table.prototype.__proto__ || Object.getPrototypeOf(Table.prototype), '_useTemplate', this).call(this, $template);
+			_get2(Table.prototype.__proto__ || Object.getPrototypeOf(Table.prototype), "_useTemplate", this).call(this, $template);
 			// remove template row from the DOM
 			this.$tr.remove();
 			return this;
@@ -2062,7 +2185,7 @@ var Table = function (_Template3) {
    */
 
 	}, {
-		key: '_useDefaultTemplate',
+		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
 			var template = '<table class="table">' + '<thead></thead>' + '<tbody>' + '<tr></tr>' + '</tbody>' + '<tfoot></tfoot>' + '</table>';
 
@@ -2097,7 +2220,7 @@ var Table = function (_Template3) {
    */
 
 	}, {
-		key: '_cacheData',
+		key: "_cacheData",
 		value: function _cacheData(data) {
 			if (isArray(data)) this._cachedData = data;else this._cachedData = $.extend(true, {}, data);
 			return this;
@@ -2111,7 +2234,7 @@ var Table = function (_Template3) {
    */
 
 	}, {
-		key: '_processData',
+		key: "_processData",
 		value: function _processData(data) {
 			var self = this;
 			if (isArray(data)) this._processedData = data;else this._processedData = $.extend(true, {}, data);
@@ -2134,7 +2257,7 @@ var Table = function (_Template3) {
    */
 
 	}, {
-		key: '_processRow',
+		key: "_processRow",
 		value: function _processRow(data) {
 			return data;
 		}
@@ -2150,7 +2273,7 @@ var Table = function (_Template3) {
    */
 
 	}, {
-		key: '_render',
+		key: "_render",
 		value: function _render(data) {
 			var self = this;
 			var useTemplate = !isNull(this.settings.template);
@@ -2222,7 +2345,7 @@ var Table = function (_Template3) {
    */
 
 	}, {
-		key: '_isEmptyTable',
+		key: "_isEmptyTable",
 		value: function _isEmptyTable() {
 			return this.$tbody.find('tr').length === 0;
 		}
@@ -2241,7 +2364,7 @@ var Table = function (_Template3) {
    */
 
 	}, {
-		key: 'build',
+		key: "build",
 		value: function build(data) {
 			this._cacheData(data);
 			this._processData(data);
@@ -2257,7 +2380,7 @@ var Table = function (_Template3) {
    */
 
 	}, {
-		key: 'wipe',
+		key: "wipe",
 		value: function wipe() {
 			this.$tbody.empty();
 			this.toggleEmpty(true);
@@ -2274,7 +2397,7 @@ var Table = function (_Template3) {
    */
 
 	}, {
-		key: 'deleteRow',
+		key: "deleteRow",
 		value: function deleteRow(index) {
 			if (this.$rows[index]) {
 				this.$rows[index].remove();
@@ -2295,7 +2418,7 @@ var Table = function (_Template3) {
    */
 
 	}, {
-		key: 'toggleEmpty',
+		key: "toggleEmpty",
 		value: function toggleEmpty() {
 			var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -2383,7 +2506,7 @@ var RenderTable = function (_Table) {
 
 
 	_createClass(RenderTable, [{
-		key: '_render',
+		key: "_render",
 		value: function _render(data) {
 			var dataIsArray = Array.isArray(data);
 
@@ -2399,9 +2522,9 @@ var RenderTable = function (_Table) {
    */
 
 	}, {
-		key: 'wipe',
+		key: "wipe",
 		value: function wipe() {
-			_get2(RenderTable.prototype.__proto__ || Object.getPrototypeOf(RenderTable.prototype), 'wipe', this).call(this);
+			_get2(RenderTable.prototype.__proto__ || Object.getPrototypeOf(RenderTable.prototype), "wipe", this).call(this);
 			this.rowManager.deleteObjects();
 			return this;
 		}
@@ -2414,7 +2537,7 @@ var RenderTable = function (_Table) {
    */
 
 	}, {
-		key: 'deleteRow',
+		key: "deleteRow",
 		value: function deleteRow() {
 			var _rowManager;
 
@@ -2487,7 +2610,7 @@ var ControlTable = function (_RenderTable) {
 
 
 	_createClass(ControlTable, [{
-		key: '_setupButtons',
+		key: "_setupButtons",
 		value: function _setupButtons() {
 			var self = this;
 
@@ -2533,7 +2656,7 @@ var ControlTable = function (_RenderTable) {
    */
 
 	}, {
-		key: '_processRow',
+		key: "_processRow",
 		value: function _processRow(data) {
 			if (this.settings.buttons.deleteButton) this._addDeleteButton(data);
 			if (this.settings.buttons.updateButton) this._addUpdateButton(data);
@@ -2551,7 +2674,7 @@ var ControlTable = function (_RenderTable) {
    */
 
 	}, {
-		key: '_addDeleteButton',
+		key: "_addDeleteButton",
 		value: function _addDeleteButton(data) {
 			data.deleteButton = this._createDeleteButton(data);
 			return this;
@@ -2565,7 +2688,7 @@ var ControlTable = function (_RenderTable) {
    */
 
 	}, {
-		key: '_createDeleteButton',
+		key: "_createDeleteButton",
 		value: function _createDeleteButton(data) {
 			var self = this;
 			var $btn = $('<button type="button" title="Delete">Delete</button>');
@@ -2585,7 +2708,7 @@ var ControlTable = function (_RenderTable) {
    */
 
 	}, {
-		key: '_addUpdateButton',
+		key: "_addUpdateButton",
 		value: function _addUpdateButton(data) {
 			data.updateButton = this._createUpdateButton(data);
 			return this;
@@ -2599,7 +2722,7 @@ var ControlTable = function (_RenderTable) {
    */
 
 	}, {
-		key: '_createUpdateButton',
+		key: "_createUpdateButton",
 		value: function _createUpdateButton(data) {
 			return $('<button type="button" title="Update">Update</button>');
 		}
@@ -2614,7 +2737,7 @@ var ControlTable = function (_RenderTable) {
    */
 
 	}, {
-		key: '_addViewButton',
+		key: "_addViewButton",
 		value: function _addViewButton(data) {
 			data.viewButton = this._createViewButton(data);
 			return this;
@@ -2628,7 +2751,7 @@ var ControlTable = function (_RenderTable) {
    */
 
 	}, {
-		key: '_createViewButton',
+		key: "_createViewButton",
 		value: function _createViewButton(data) {
 			return $('<button type="button" title="View">View</button>');
 		}
@@ -2757,7 +2880,7 @@ var Form = function (_Template4) {
 
 
 	_createClass(Form, [{
-		key: '_useDefaultTemplate',
+		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
 			var template = '<form class="form">' + '<div class="form-feedback"></div>' + '<div class="form-header"></div>' + '<div class="form-body"></div>' + '<div class="form-footer">' + '<button type="submit" class="form-submit">Submit</button>' + '<button type="button" class="form-reset">Reset</button>' + '<button type="button" class="form-cancel">Cancel</button>' + '</div>' + '</form>';
 
@@ -2773,7 +2896,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: '_setupValidator',
+		key: "_setupValidator",
 		value: function _setupValidator() {
 			var v = this.settings.validator;
 			switch (v.api) {
@@ -2791,7 +2914,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: '_setupFeedback',
+		key: "_setupFeedback",
 		value: function _setupFeedback() {
 			this.feedback = new Feedback();
 			if (!this.$feedback.length) {
@@ -2809,7 +2932,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: '_prepare',
+		key: "_prepare",
 		value: function _prepare() {
 			this.toggleForm(false);
 			this.feedback.show();
@@ -2827,7 +2950,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: '_ready',
+		key: "_ready",
 		value: function _ready() {
 			this.feedback.slideUp();
 			this.slideToggleForm(true);
@@ -2843,7 +2966,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: '_submit',
+		key: "_submit",
 		value: function _submit() {
 			var self = this;
 
@@ -2867,7 +2990,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: '_doSubmit',
+		key: "_doSubmit",
 		value: function _doSubmit() {
 			var s = this.settings;
 
@@ -2884,7 +3007,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: '_done',
+		key: "_done",
 		value: function _done(data) {
 			if (this.feedback) this.feedback.setFeedback('success', ' Operation was successful');
 			this.trigger('done', data);
@@ -2899,7 +3022,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: '_fail',
+		key: "_fail",
 		value: function _fail(err) {
 			if (this.feedback) this.feedback.setFeedback('danger', 'Operation has failed');
 			this.trigger('fail', err);
@@ -2913,7 +3036,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: '_always',
+		key: "_always",
 		value: function _always() {
 			this.toggleButtons(true);
 			this.trigger('always');
@@ -2929,7 +3052,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: '_getFormData',
+		key: "_getFormData",
 		value: function _getFormData() {
 			return $.Deferred().resolve().promise();
 		}
@@ -2943,7 +3066,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: 'toggleButtons',
+		key: "toggleButtons",
 		value: function toggleButtons(state) {
 			this.$cancel.prop('disabled', !state);
 			this.$reset.prop('disabled', !state);
@@ -2957,7 +3080,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: 'lockSubmit',
+		key: "lockSubmit",
 		value: function lockSubmit(ms) {
 			var self = this;
 			var html = this.$submit.html();
@@ -2996,7 +3119,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: 'toggleForm',
+		key: "toggleForm",
 		value: function toggleForm(state) {
 			this.$body.toggle(state);
 			this.$footer.toggle(state);
@@ -3010,7 +3133,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: 'slideToggleForm',
+		key: "slideToggleForm",
 		value: function slideToggleForm(state) {
 			this.$body.slideToggleState(state);
 			this.$footer.slideToggleState(state);
@@ -3026,11 +3149,11 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: 'populateForm',
+		key: "populateForm",
 		value: function populateForm(data) {
 			this._cacheData(data);
 			this._processData(data);
-			this.$form.populateChildren(data);
+			this.$form.populateChildren(this._processedData);
 			return this;
 		}
 
@@ -3041,7 +3164,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: 'serializeForm',
+		key: "serializeForm",
 		value: function serializeForm() {
 			this._serializedData = this.formSerializer.serialize(this.$form);
 			return this;
@@ -3054,11 +3177,13 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: 'resetForm',
+		key: "resetForm",
 		value: function resetForm() {
 			if (!$.isEmptyObject(this._cachedData)) this.populateForm(this._cachedData);else this.$form[0].reset();
 
 			if (this.feedback) this.feedback.slideUp();
+
+			this.toggleButtons(true);
 
 			// todo: implement for alternative validators
 			if (this.validator) {
@@ -3078,7 +3203,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: 'validate',
+		key: "validate",
 		value: function validate() {
 			var isValid = false;
 			if (this.validator) {
@@ -3102,7 +3227,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: 'clean',
+		key: "clean",
 		value: function clean() {
 			this._cachedData = {};
 			this.resetForm();
@@ -3117,7 +3242,7 @@ var Form = function (_Template4) {
    */
 
 	}, {
-		key: 'initialize',
+		key: "initialize",
 		value: function initialize() {
 			this.clean();
 			return this;
@@ -3207,7 +3332,7 @@ var FormSerializer = function () {
 
 
 	_createClass(FormSerializer, [{
-		key: '_getElName',
+		key: "_getElName",
 		value: function _getElName($el) {
 			if (typeof $el.attr('name') !== "undefined") return $el.attr('name');
 			if (typeof $el.data('name') !== "undefined") return $el.data('name');
@@ -3225,7 +3350,7 @@ var FormSerializer = function () {
    */
 
 	}, {
-		key: '_convertCheckbox',
+		key: "_convertCheckbox",
 		value: function _convertCheckbox($checkbox, mode) {
 			var checked = $checkbox.is(':checked');
 			switch (mode) {
@@ -3251,7 +3376,7 @@ var FormSerializer = function () {
    */
 
 	}, {
-		key: 'serialize',
+		key: "serialize",
 		value: function serialize($form) {
 			var self = this;
 			var formData = new FormSerializerData();
@@ -3397,7 +3522,7 @@ var FormSerializerData = function () {
 
 
 	_createClass(FormSerializerData, [{
-		key: 'set',
+		key: "set",
 		value: function set(data) {
 			this.data = data;
 			return this;
@@ -3409,7 +3534,7 @@ var FormSerializerData = function () {
    */
 
 	}, {
-		key: 'toString',
+		key: "toString",
 		value: function toString() {
 			var data = "";
 			var c = 0;
@@ -3428,7 +3553,7 @@ var FormSerializerData = function () {
    */
 
 	}, {
-		key: 'toOrderedString',
+		key: "toOrderedString",
 		value: function toOrderedString() {
 			var data = "";
 			var ordered = [];
@@ -3462,7 +3587,7 @@ var FormSerializerData = function () {
    */
 
 	}, {
-		key: 'toObject',
+		key: "toObject",
 		value: function toObject() {
 			var data = {};
 			Util.each(this.data, function (i, e) {
@@ -3479,7 +3604,7 @@ var FormSerializerData = function () {
    */
 
 	}, {
-		key: 'toValue',
+		key: "toValue",
 		value: function toValue() {
 			var data = null;
 			// data will be the last iterated object value
@@ -3564,7 +3689,7 @@ var Wizard = function (_Form) {
 
 
 	_createClass(Wizard, [{
-		key: '_clearHandlers',
+		key: "_clearHandlers",
 		value: function _clearHandlers() {
 			this.$next.off('click.wizard');
 			this.$previous.off('click.wizard');
@@ -3581,7 +3706,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_setHandlers',
+		key: "_setHandlers",
 		value: function _setHandlers() {
 			var self = this;
 
@@ -3634,9 +3759,9 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_useDefaultTemplate',
+		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
-			_get2(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), '_useDefaultTemplate', this).call(this);
+			_get2(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), "_useDefaultTemplate", this).call(this);
 
 			// to avoid duplicate $wrapper's (Wizard inherits Form)
 			// set this.$form to Form's $wrapper
@@ -3666,7 +3791,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_setupValidator',
+		key: "_setupValidator",
 		value: function _setupValidator() {
 			var v = this.settings.validator;
 			switch (v.api) {
@@ -3688,7 +3813,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_setupFeedback',
+		key: "_setupFeedback",
 		value: function _setupFeedback() {
 			this.feedback = new Feedback();
 			if (!this.$feedback.length) {
@@ -3709,7 +3834,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_setPagination',
+		key: "_setPagination",
 		value: function _setPagination(step) {
 			// simply hide everything first
 			this.togglePreviousButton(false);
@@ -3747,7 +3872,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getNav',
+		key: "_getNav",
 		value: function _getNav(index) {
 			return $(this.$navs.get(index));
 		}
@@ -3760,7 +3885,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getNavFromTab',
+		key: "_getNavFromTab",
 		value: function _getNavFromTab($tab) {
 			var index = this.$tabs.index($tab);
 			return this._getNav(index);
@@ -3773,7 +3898,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getPreviousNav',
+		key: "_getPreviousNav",
 		value: function _getPreviousNav() {
 			return $(this.$navs.get(this.step - 1));
 		}
@@ -3785,7 +3910,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getCurrentNav',
+		key: "_getCurrentNav",
 		value: function _getCurrentNav() {
 			return $(this.$navs.get(this.step));
 		}
@@ -3797,7 +3922,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getNextNav',
+		key: "_getNextNav",
 		value: function _getNextNav() {
 			return $(this.$navs.get(this.step + 1));
 		}
@@ -3811,7 +3936,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_toggleNavInvalid',
+		key: "_toggleNavInvalid",
 		value: function _toggleNavInvalid($nav) {
 			var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
@@ -3829,7 +3954,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getTab',
+		key: "_getTab",
 		value: function _getTab(index) {
 			return $(this.$tabs.get(index));
 		}
@@ -3841,7 +3966,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getCurrentTab',
+		key: "_getCurrentTab",
 		value: function _getCurrentTab() {
 			return $(this.$tabs.get(this.step));
 		}
@@ -3853,7 +3978,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getNextTab',
+		key: "_getNextTab",
 		value: function _getNextTab() {
 			return this.step !== this.stepCount ? $(this.$tabs.get(this.step + 1)) : null;
 		}
@@ -3865,7 +3990,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getPreviousTab',
+		key: "_getPreviousTab",
 		value: function _getPreviousTab() {
 			return this.step > 0 ? $(this.$tabs.get(this.step - 1)) : null;
 		}
@@ -3879,7 +4004,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'validateTab',
+		key: "validateTab",
 		value: function validateTab($tab) {
 			var api = this.settings.validator.api;
 			var valid = true;
@@ -3903,7 +4028,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'validateCurrentTab',
+		key: "validateCurrentTab",
 		value: function validateCurrentTab() {
 			var $tab = this._getCurrentTab();
 			return this.validateTab($tab);
@@ -3915,7 +4040,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'validatePreviousTab',
+		key: "validatePreviousTab",
 		value: function validatePreviousTab() {
 			var $tab = this._getPreviousTab();
 			return this.validateTab($tab);
@@ -3927,7 +4052,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'validateNextTab',
+		key: "validateNextTab",
 		value: function validateNextTab() {
 			var $tab = this._getNextTab();
 			return this.validateTab($tab);
@@ -3939,7 +4064,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'validateAllTabs',
+		key: "validateAllTabs",
 		value: function validateAllTabs() {
 			var self = this;
 			var valid = true;
@@ -3968,7 +4093,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'toggleNextButton',
+		key: "toggleNextButton",
 		value: function toggleNextButton() {
 			var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -3983,7 +4108,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'togglePreviousButton',
+		key: "togglePreviousButton",
 		value: function togglePreviousButton() {
 			var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -3998,7 +4123,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'toggleSubmitButton',
+		key: "toggleSubmitButton",
 		value: function toggleSubmitButton() {
 			var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -4013,9 +4138,9 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'toggleForm',
+		key: "toggleForm",
 		value: function toggleForm(state) {
-			_get2(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'toggleForm', this).call(this, state);
+			_get2(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), "toggleForm", this).call(this, state);
 			this.$nav.toggle(state);
 			return this;
 		}
@@ -4027,9 +4152,9 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'slideToggleForm',
+		key: "slideToggleForm",
 		value: function slideToggleForm(state) {
-			_get2(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'slideToggleForm', this).call(this, state);
+			_get2(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), "slideToggleForm", this).call(this, state);
 			this.$nav.slideToggleState(state);
 			return this;
 		}
@@ -4042,7 +4167,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'resetNavValidation',
+		key: "resetNavValidation",
 		value: function resetNavValidation() {
 			for (var i = 0; i < this.$navs.length; i++) {
 				var $nav = $(this.$navs[i]);
@@ -4057,12 +4182,12 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'resetForm',
+		key: "resetForm",
 		value: function resetForm() {
 			var $nav = $(this.$navs[0]);
 			$nav.find('a').click();
 			this.resetNavValidation();
-			_get2(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'resetForm', this).call(this);
+			_get2(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), "resetForm", this).call(this);
 			return this;
 		}
 	}]);

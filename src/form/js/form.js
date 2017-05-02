@@ -360,7 +360,7 @@ class Form extends Template {
 	populateForm(data){
 		this._cacheData(data);
 		this._processData(data);
-		this.$form.populateChildren(data);
+		this.$form.populateChildren(this._processedData);
 		return this;
 	}
 
@@ -387,6 +387,8 @@ class Form extends Template {
 
 		if(this.feedback)
 			this.feedback.slideUp();
+
+		this.toggleButtons(true);
 
 		// todo: implement for alternative validators
 		if(this.validator){
