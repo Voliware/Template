@@ -1408,6 +1408,8 @@ var Template = function () {
 	}, {
 		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
+			// var template = '<div></div';
+			// this._useTemplate(template);
 			return this;
 		}
 

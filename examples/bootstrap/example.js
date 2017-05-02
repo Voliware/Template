@@ -1,5 +1,5 @@
 var p1;
-
+var form;
 $(document).on('ready', function(){
 	var $toggle = $('#toggle');
 	var $panel = $('#panel');
@@ -85,4 +85,29 @@ $(document).on('ready', function(){
 	tabManager.build(tabs);
 	navManager.build(navs);
 
+
+	form = new BootstrapForm({
+		validator : Form.validators.formValidation,
+		template : $('#buildForm'),
+		submitRequest : function(data){
+			console.log(data);
+		}
+	})
+	.build({
+		0 : {
+			label : 'TEST',
+			input : {
+				tag : 'input',
+				name: 'asd',
+				type: 'text'
+			}
+		},
+		1 : {
+			label : 'select',
+			input : {
+				tag : 'select',
+				name : 'dada'
+			}
+		}
+	})
 });

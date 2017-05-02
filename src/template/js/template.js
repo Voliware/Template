@@ -114,6 +114,8 @@ class Template {
 	 * @private
 	 */
 	_useDefaultTemplate() {
+		// var template = '<div></div';
+		// this._useTemplate(template);
 		return this;
 	}
 

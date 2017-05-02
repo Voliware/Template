@@ -6,6 +6,7 @@ var basicForm;
 var feedbackForm;
 var singleValueForm;
 var populateForm;
+var buildForm;
 $(document).on('ready', function(){
 	basicForm = new Form({
 		validator : Form.validators.formValidation,
@@ -44,4 +45,20 @@ $(document).on('ready', function(){
 		height : 2,
 		gender : 0
 	});
+
+	buildForm = new Form({
+		validator : Form.validators.formValidation,
+		template : $('#buildForm'),
+		submitRequest : submitRequest
+	})
+	.build({
+		0 : {
+			label : 'TEST',
+			input : {
+				tag : 'input',
+				name: 'asd',
+				type: 'text'
+			}
+		}
+	})
 });

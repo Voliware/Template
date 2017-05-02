@@ -22,6 +22,7 @@
             <li><a href="#feedback" data-toggle="tab">Feedback Form</a></li>
             <li><a href="#singleValue" data-toggle="tab">Single Value Form</a></li>
             <li><a href="#populate" data-toggle="tab">Server Populated Form</a></li>
+            <li><a href="#build" data-toggle="tab">Dynamically Built Form</a></li>
         </ul>
         <div class="tab-content">
             <div id="basic" class="tab-pane fade in active">
@@ -134,6 +135,21 @@
                     </div>
                 </form>
             </div>
+			<div id="build" class="tab-pane fade out">
+				<div class="well">
+					<span>Form populated by backend data.</span>
+				</div>
+				<form id="buildForm">
+					<div class="form-body">
+					</div>
+					<div class="form-footer">
+						<div class="form-group">
+							<button type="button" class="form-submit btn btn-default form-reset">Reset</button>
+							<button type="submit" class="form-submit btn btn-default">Submit</button>
+						</div>
+					</div>
+				</form>
+			</div>
         </div>
     </body>
 </html>

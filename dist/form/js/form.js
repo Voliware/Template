@@ -1,8 +1,8 @@
-'use strict';
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -11,532 +11,403 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /*!
- * form
+ * formInput
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  */
 
 /**
- * Templates, serializes, and submits forms
+ * Form input
  * @extends Template
  */
-var Form = function (_Template) {
-	_inherits(Form, _Template);
+var FormInput = function (_Template) {
+	_inherits(FormInput, _Template);
 
 	/**
   * Constructor
   * @param {object} [options]
-  * @param {boolean} [options.feedback=true] - whether to show feedback during submissions
-  * @param {string} [options.submitUrl] - the submitUrl or path to submit the form to
-  * @param {function} [options.submitRequest=null] - if set, ignores submitUrl and uses this function to submit data
-  * @param {number} [options.serializeMode=0] - the mode in which to serialize data
-  * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
-  * @param {string[]} [options.excluded=[':disabled']] - exluded fields via css pseudo selectors
-  * @param {object} [options.validator] - validator setttings
-  * @param {string} [options.validator.api] - the validator api to use
-  * @param {object} [options.validator.options] - the validator options
-  * @param {object} [options.struct] - the template struct to build the form from, if using a template
-  * @param {string} [options.struct.$wrapper='form'] - the form element
-  * @param {string} [options.struct.$header='.form-header'] - the header selector
-  * @param {string} [options.struct.$body='.form-body'] - the body selector
-  * @param {string} [options.struct.$footer='.form-footer'] - the footer selector
-  * @param {string} [options.struct.$cancel='.form-cancel'] - the cancel button selector
-  * @param {string} [options.struct.$reset='.form-reset'] - the reset button selector
-  * @param {string} [options.struct.$submit='button[type="submit"]'] - the submit button selector
-  * @returns {Form}
+  * @returns {FormInput}
   */
-	function Form(options) {
+	function FormInput(options) {
 		var _ret;
 
-		_classCallCheck(this, Form);
+		_classCallCheck(this, FormInput);
 
 		var defaults = {
-			feedback: true,
-			useTemplate: true,
-			submitUrl: "",
-			submitRequest: null,
-			serializeMode: FormSerializer.serializeMode.toString,
-			checkboxMode: FormSerializer.checkboxMode.number,
-			excluded: [':disabled'],
-			// css classes for each form component
 			struct: {
-				$wrapper: 'form',
-				$feedback: '.form-feedback',
-				$header: '.form-header',
-				$body: '.form-body',
-				$footer: '.form-footer',
-				$cancel: '.form-cancel',
-				$reset: '.form-reset',
-				$submit: 'button[type="submit"]'
-			},
-			validator: null
+				$wrapper: '.form-input'
+			}
 		};
 
-		var _this = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, $Util.opts(defaults, options, 'replace')));
+		// properties
+		var _this = _possibleConstructorReturn(this, (FormInput.__proto__ || Object.getPrototypeOf(FormInput)).call(this, $Util.opts(defaults, options)));
 
-		var self = _this;
-
-		// store serialized data
-		_this._serializedData = {};
-
-		// alias
-		// this exists solely for Wizard !!
-		var $form = _this.$wrapper.find('form');
-		_this.$form = $form.length > 0 ? $form : _this.$wrapper;
-
-		// components
-		_this.formSerializer = new FormSerializer({
-			serializeMode: _this.settings.serializeMode,
-			checkboxMode: _this.settings.checkboxMode,
-			excluded: _this.settings.excluded
-		});
-		_this.validator = null;
-		_this.feedback = null;
-
-		// handlers
-		// default submit handler
-		_this.$form.on('submit', function (e) {
-			e.preventDefault();
-			self.serializeForm()._submit();
-		});
-
-		// cancel
-		_this.$cancel.click(function () {
-			self.resetForm();
-		});
-
-		// reset
-		_this.$reset.click(function () {
-			self.resetForm();
-		});
-
-		// set up validator
-		if (_this.settings.validator) _this._setupValidator();
-
-		// set up feedback
-		if (_this.settings.feedback) _this._setupFeedback();
+		_this.type = "text";
+		_this.tag = "input";
+		_this.disabled = false;
+		_this.required = false;
+		_this.name = "input";
+		_this.maxlength = undefined;
+		_this.max = undefined;
+		_this.min = undefined;
+		_this.step = undefined;
+		_this.val = null;
 
 		return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	}
 
-	// setup
-
 	/**
-  * Default form template
-  * @returns {Form}
-  * @private
+  * Set properties from data
+  * @param {object} data
+  * @returns {FormInput}
   */
 
 
-	_createClass(Form, [{
-		key: '_useDefaultTemplate',
+	_createClass(FormInput, [{
+		key: "set",
+		value: function set(data) {
+			Object.set(this, data);
+			return this;
+		}
+
+		/**
+   * Default template
+   * @private
+   */
+
+	}, {
+		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
-			var template = '<form class="form">' + '<div class="form-feedback"></div>' + '<div class="form-header"></div>' + '<div class="form-body"></div>' + '<div class="form-footer">' + '<button type="submit" class="form-submit">Submit</button>' + '<button type="button" class="form-reset">Reset</button>' + '<button type="button" class="form-cancel">Cancel</button>' + '</div>' + '</form>';
-
-			this._useTemplate($(template));
-
+			var $template = $('<input class="form-input"/>');
+			this._useTemplate($template);
 			return this;
 		}
 
 		/**
-   * Attaches a validator to the form
-   * @returns {Form}
+   * Use template
+   * @param {jQuery} $template
+   * @returns {FormInput}
    * @private
    */
 
 	}, {
-		key: '_setupValidator',
-		value: function _setupValidator() {
-			var v = this.settings.validator;
-			switch (v.api) {
-				case 'formValidation':
-					Form.validators.formValidation.setup(this, this.$form, v.options);
-					break;
-			}
+		key: "_useTemplate",
+		value: function _useTemplate($template) {
+			_get(FormInput.prototype.__proto__ || Object.getPrototypeOf(FormInput.prototype), "_useTemplate", this).call(this, $template);
+			this._setAttrs()._setProps()._setVal();
 			return this;
 		}
 
 		/**
-   * Setup the feedback
-   * @returns {Form}
+   * Set attributes
+   * @returns {FormInput}
    * @private
    */
 
 	}, {
-		key: '_setupFeedback',
-		value: function _setupFeedback() {
-			this.feedback = new Feedback();
-			if (!this.$feedback.length) {
-				this.$feedback = $('<div class="form-feedback"></div>');
-				this.$form.prepend(this.$feedback);
-			}
-			this.$feedback.html(this.feedback.$wrapper);
-			return this;
-		}
-
-		/**
-   * Prepare the form with a loading message
-   * @returns {Form}
-   * @private
-   */
-
-	}, {
-		key: '_prepare',
-		value: function _prepare() {
-			this.toggleForm(false);
-			this.feedback.show();
-			this.feedback.setFeedback('processing', 'Getting data...');
-			return this;
-		}
-
-		// ready
-
-		/**
-   * Set the form to ready by hiding
-   * feedback and showing the form components
-   * @returns {Form}
-   * @private
-   */
-
-	}, {
-		key: '_ready',
-		value: function _ready() {
-			this.feedback.slideUp();
-			this.slideToggleForm(true);
-			return this;
-		}
-
-		// submit
-
-		/**
-   * Submits the form
-   * @returns {jQuery}
-   * @private
-   */
-
-	}, {
-		key: '_submit',
-		value: function _submit() {
-			var self = this;
-
-			this.trigger('beforeSubmit', this);
-
-			if (this.feedback) this.feedback.setFeedback('processing', 'Processing...');
-
-			return this._doSubmit().done(function (data) {
-				self._done(data);
-			}).fail(function (err) {
-				self._fail(err);
-			}).always(function () {
-				self._always();
+		key: "_setAttrs",
+		value: function _setAttrs() {
+			this.$wrapper.attr({
+				maxlength: this.maxlength,
+				max: this.max,
+				min: this.min,
+				name: this.name,
+				step: this.step,
+				type: this.type
 			});
-		}
-
-		/**
-   * Actual submit function
-   * @returns {jQuery}
-   * @private
-   */
-
-	}, {
-		key: '_doSubmit',
-		value: function _doSubmit() {
-			var s = this.settings;
-
-			if (s.submitRequest) return s.submitRequest(this._serializedData);else return $.post(s.submitUrl, this._serializedData);
-		}
-
-		// submit handlers
-
-		/**
-   * Form submission success handler
-   * @param {object} data
-   * @returns {Form}
-   * @private
-   */
-
-	}, {
-		key: '_done',
-		value: function _done(data) {
-			if (this.feedback) this.feedback.setFeedback('success', ' Operation was successful');
-			this.trigger('done', data);
 			return this;
 		}
 
 		/**
-   * Form submission fail handler
-   * @param {object} err
-   * @returns {Form}
+   * Set props
+   * @returns {FormInput}
    * @private
    */
 
 	}, {
-		key: '_fail',
-		value: function _fail(err) {
-			if (this.feedback) this.feedback.setFeedback('danger', 'Operation has failed');
-			this.trigger('fail', err);
+		key: "_setProps",
+		value: function _setProps() {
+			this.$wrapper.prop('required', this.required);
+			this.$wrapper.prop('disabled', this.disabled);
 			return this;
 		}
 
 		/**
-   * Form submission always handler
-   * @returns {Form}
+   * Set the value
+   * @returns {FormInput}
    * @private
    */
 
 	}, {
-		key: '_always',
-		value: function _always() {
-			this.toggleButtons(true);
-			this.trigger('always');
-			return this;
-		}
-
-		// data
-
-		/**
-   * Get form data from the backend
-   * @returns {jQuery}
-   * @private
-   */
-
-	}, {
-		key: '_getFormData',
-		value: function _getFormData() {
-			return $.Deferred().resolve().promise();
-		}
-
-		// public
-
-		/**
-   * Toggle the button states
-   * @param {boolean} state
-   * @returns {Form}
-   */
-
-	}, {
-		key: 'toggleButtons',
-		value: function toggleButtons(state) {
-			this.$cancel.prop('disabled', !state);
-			this.$reset.prop('disabled', !state);
-			this.$submit.prop('disabled', !state).toggleClass('disabled', !state);
-			return this;
-		}
-
-		/**
-   * Lock the submit button for some amount of ms
-   * @param {number} ms - time to lock in milliseconds
-   */
-
-	}, {
-		key: 'lockSubmit',
-		value: function lockSubmit(ms) {
-			var self = this;
-			var html = this.$submit.html();
-
-			this.$submit.prop('disabled', true);
-			setTimeout(function () {
-				self.$submit.prop('disabled', false);
-				self.$submit.html(html);
-			}, ms);
-
-			var c = 0;
-			var timer = setInterval(setButtonHtml, 1000);
-			setButtonHtml();
-
-			/**
-    * Set the button html to the time left on the lock
-    */
-			function setButtonHtml() {
-				if (c >= ms) {
-					clearInterval(timer);
-				} else {
-					var time = Math.floor((ms - c) / 1000);
-					// don't show 0
-					time = time || 1;
-					var _html = html + " | " + time;
-					self.$submit.html(_html);
-					c += 1000;
-				}
+		key: "_setVal",
+		value: function _setVal() {
+			if (this.val !== null) {
+				this.$wrapper.val(this.val);
 			}
-		}
-
-		/**
-   * Toggle the form body
-   * @param {boolean} state
-   * @returns {Form}
-   */
-
-	}, {
-		key: 'toggleForm',
-		value: function toggleForm(state) {
-			this.$body.toggle(state);
-			this.$footer.toggle(state);
-			return this;
-		}
-
-		/**
-   * Slide toggle the form body
-   * @param {boolean} state
-   * @returns {Form}
-   */
-
-	}, {
-		key: 'slideToggleForm',
-		value: function slideToggleForm(state) {
-			this.$body.slideToggleState(state);
-			this.$footer.slideToggleState(state);
-			return this;
-		}
-
-		/**
-   * Populate form fields
-   * @param {object} data - collection of properties whos
-   * key match an input or select name, and
-   * whos value is appropriate for that field
-   * @returns {Form}
-   */
-
-	}, {
-		key: 'populateForm',
-		value: function populateForm(data) {
-			this._cacheData(data);
-			this._processData(data);
-			this.$form.populateChildren(this._processedData);
-			return this;
-		}
-
-		/**
-   * Public function to serialize the form,
-   * as jQuery uses serialize already
-   * @returns {Form}
-   */
-
-	}, {
-		key: 'serializeForm',
-		value: function serializeForm() {
-			this._serializedData = this.formSerializer.serialize(this.$form);
-			return this;
-		}
-
-		/**
-   * Reset the form, using populated data
-   * or setting to default values
-   * @returns {Form}
-   */
-
-	}, {
-		key: 'resetForm',
-		value: function resetForm() {
-			if (!$.isEmptyObject(this._cachedData)) this.populateForm(this._cachedData);else this.$form[0].reset();
-
-			if (this.feedback) this.feedback.slideUp();
-
-			this.toggleButtons(true);
-
-			// todo: implement for alternative validators
-			if (this.validator) {
-				switch (this.settings.validator.api) {
-					case 'formValidation':
-						this.validator.resetForm();
-						break;
-				}
-			}
-
-			return this;
-		}
-
-		/**
-   * Validate the form
-   * @returns {boolean}
-   */
-
-	}, {
-		key: 'validate',
-		value: function validate() {
-			var isValid = false;
-			if (this.validator) {
-				// todo: implement for alternative validators
-				switch (this.settings.validator.api) {
-					case 'formValidation':
-						this.validator.resetForm();
-						this.validator.validateContainer(this.$form);
-						isValid = this.validator.isValidContainer(this.$form);
-						break;
-				}
-			}
-			return isValid;
-		}
-
-		// initializers
-
-		/**
-   * Remove all data from the form and reset it
-   * @returns {Form}
-   */
-
-	}, {
-		key: 'clean',
-		value: function clean() {
-			this._cachedData = {};
-			this.resetForm();
-			this.toggleForm(true);
-			return this;
-		}
-
-		/**
-   * Initialize as a clean form with
-   * default values from the DOM
-   * @returns {Form}
-   */
-
-	}, {
-		key: 'initialize',
-		value: function initialize() {
-			this.clean();
 			return this;
 		}
 	}]);
 
-	return Form;
+	return FormInput;
 }(Template);
+/*!
+ * formSelect
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
 
-Form.validators = {
+/**
+ * Form select
+ * @extends FormInput
+ */
+
+
+var FormSelect = function (_FormInput) {
+	_inherits(FormSelect, _FormInput);
 
 	/**
-  * formValidation api
+  * Constructor
+  * @param {object} [options]
+  * @returns {FormInput}
   */
-	formValidation: {
-		api: 'formValidation',
-		options: {
-			framework: 'bootstrap',
-			excluded: [':disabled', ':hidden', ':not(:visible)'],
-			icon: {
-				valid: 'glyphicon glyphicon-ok',
-				invalid: 'glyphicon glyphicon-remove',
-				validating: 'glyphicon glyphicon-refresh'
-			}
-		},
+	function FormSelect(options) {
+		var _ret2;
+
+		_classCallCheck(this, FormSelect);
+
+		// properties
+		var _this2 = _possibleConstructorReturn(this, (FormSelect.__proto__ || Object.getPrototypeOf(FormSelect)).call(this, options));
+
+		_this2.tag = "select";
+		_this2.type = undefined;
+
+		return _ret2 = _this2, _possibleConstructorReturn(_this2, _ret2);
+	}
+
+	/**
+  * Set attributes
+  * @returns {FormInput}
+  * @private
+  */
+
+
+	_createClass(FormSelect, [{
+		key: "_setAttrs",
+		value: function _setAttrs() {
+			this.$wrapper.attr({
+				name: this.name
+			});
+			return this;
+		}
 
 		/**
-   * formValidation setup
-   * @param {Form} form
-   * @param {jQuery} $form
-   * @param {object} options
+   * Add options to the select
+   * @param {*} arguments - Either an object of key/value pairs, where the key is the
+   * option value and the value is the string within the tags,
+   * or a key and value as two parameters to add one option
+   * @returns {FormSelect}
    */
-		setup: function setup(form, $form, options) {
-			$form.off('submit');
-			// allows re-creation of the Form
-			if ($form.data('formValidation')) $form.data('formValidation').destroy();
-			$form.formValidation(options).on('success.form.fv', function (e) {
-				e.preventDefault();
-				form.toggleButtons(false);
-				form.serializeForm()._submit();
-			});
-			form.validator = $form.data('formValidation');
+
+	}, {
+		key: "addToSelect",
+		value: function addToSelect() {
+			var _$wrapper;
+
+			(_$wrapper = this.$wrapper).addToSelect.apply(_$wrapper, arguments);
+			return this;
 		}
+
+		/**
+   * Select an option
+   * @param {string} val
+   * @returns {FormSelect}
+   */
+
+	}, {
+		key: "selectOption",
+		value: function selectOption(val) {
+			this.$wrapper.val(val);
+			return this;
+		}
+	}]);
+
+	return FormSelect;
+}(FormInput);
+/*!
+ * formGroup
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Form group
+ * @extends Template
+ */
+
+
+var FormGroup = function (_Template2) {
+	_inherits(FormGroup, _Template2);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @returns {FormGroup}
+  */
+	function FormGroup(options) {
+		var _ret3;
+
+		_classCallCheck(this, FormGroup);
+
+		var defaults = {
+			formInput: FormInput,
+			formSelect: FormSelect,
+			struct: {
+				$wrapper: '.form-group',
+				$label: 'label',
+				$inputWrapper: '.form-input-wrapper',
+				$input: 'input'
+			}
+		};
+
+		var _this3 = _possibleConstructorReturn(this, (FormGroup.__proto__ || Object.getPrototypeOf(FormGroup)).call(this, $Util.opts(defaults, options)));
+
+		_this3.input = null;
+
+		return _ret3 = _this3, _possibleConstructorReturn(_this3, _ret3);
 	}
-};
+
+	/**
+  * Default template
+  * @private
+  */
+
+
+	_createClass(FormGroup, [{
+		key: "_useDefaultTemplate",
+		value: function _useDefaultTemplate() {
+			var template = '<div class="form-group">' + '<label></label>' + '<div class="form-input-wrapper">' + '</div>' + '</div>';
+
+			this._useTemplate(template);
+			return this;
+		}
+
+		/**
+   * Create an input or select from data
+   * @param {object} data
+   * @returns {FormGroup}
+   */
+
+	}, {
+		key: "createInput",
+		value: function createInput(data) {
+			this.input = data.tag === "input" ? new this.settings.formInput() : new this.settings.formSelect();
+			this.input.set(data);
+			this.setInput(this.input);
+			return this;
+		}
+
+		/**
+   * Set the input into the input wrapper
+   * @param {FormInput|FormSelect|jQuery} $input
+   * @returns {FormGroup}
+   */
+
+	}, {
+		key: "setInput",
+		value: function setInput($input) {
+			$input = $input instanceof Template ? $input.$wrapper : $input;
+			this.$inputWrapper.html($input);
+			this.$input = $input;
+			return this;
+		}
+
+		/**
+   * Set the label
+   * @param {jQuery|string} label
+   * @returns {FormGroup}
+   */
+
+	}, {
+		key: "setLabel",
+		value: function setLabel(label) {
+			this.$label.html(label);
+			return this;
+		}
+	}]);
+
+	return FormGroup;
+}(Template);
+/*!
+ * formGroupManager
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Form group manager
+ * @extends TemplateManager
+ */
+
+
+var FormGroupManager = function (_TemplateManager) {
+	_inherits(FormGroupManager, _TemplateManager);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @returns {FormGroupManager}
+  */
+	function FormGroupManager(options) {
+		var _ret4;
+
+		_classCallCheck(this, FormGroupManager);
+
+		var defaults = {
+			identifier: 'label',
+			template: FormGroup
+		};
+
+		var _this4 = _possibleConstructorReturn(this, (FormGroupManager.__proto__ || Object.getPrototypeOf(FormGroupManager)).call(this, $Util.opts(defaults, options)));
+
+		return _ret4 = _this4, _possibleConstructorReturn(_this4, _ret4);
+	}
+
+	/**
+  * Create a template object that this manager manages
+  * @param {string} id - id of the object to create and then manage
+  * @param {object} [data={}] - data to populate a jquery template with or construct a Template with
+  * @returns {*|null|Template}
+  * @private
+  */
+
+
+	_createClass(FormGroupManager, [{
+		key: "_create",
+		value: function _create(id) {
+			var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+			var formGroup = new this.settings.template().createInput(data.input).setLabel(data.label);
+			return this._add(formGroup, id);
+		}
+
+		/**
+   * Populate the template
+   * @param {jQuery|Template} formGroup
+   * @param {*} data
+   * @returns {TemplateManager}
+   * @private
+   */
+
+	}, {
+		key: "_populateTemplate",
+		value: function _populateTemplate(formGroup, data) {
+			formGroup.createInput(data.input).setLabel(data.label);
+			return this;
+		}
+	}]);
+
+	return FormGroupManager;
+}(TemplateManager);
 /*!
  * formSerializer
  * https://github.com/Voliware/Template
@@ -546,6 +417,7 @@ Form.validators = {
 /**
  * Serializes a form
  */
+
 
 var FormSerializer = function () {
 
@@ -581,7 +453,7 @@ var FormSerializer = function () {
 
 
 	_createClass(FormSerializer, [{
-		key: '_getElName',
+		key: "_getElName",
 		value: function _getElName($el) {
 			if (typeof $el.attr('name') !== "undefined") return $el.attr('name');
 			if (typeof $el.data('name') !== "undefined") return $el.data('name');
@@ -599,7 +471,7 @@ var FormSerializer = function () {
    */
 
 	}, {
-		key: '_convertCheckbox',
+		key: "_convertCheckbox",
 		value: function _convertCheckbox($checkbox, mode) {
 			var checked = $checkbox.is(':checked');
 			switch (mode) {
@@ -625,7 +497,7 @@ var FormSerializer = function () {
    */
 
 	}, {
-		key: 'serialize',
+		key: "serialize",
 		value: function serialize($form) {
 			var self = this;
 			var formData = new FormSerializerData();
@@ -771,7 +643,7 @@ var FormSerializerData = function () {
 
 
 	_createClass(FormSerializerData, [{
-		key: 'set',
+		key: "set",
 		value: function set(data) {
 			this.data = data;
 			return this;
@@ -783,7 +655,7 @@ var FormSerializerData = function () {
    */
 
 	}, {
-		key: 'toString',
+		key: "toString",
 		value: function toString() {
 			var data = "";
 			var c = 0;
@@ -802,7 +674,7 @@ var FormSerializerData = function () {
    */
 
 	}, {
-		key: 'toOrderedString',
+		key: "toOrderedString",
 		value: function toOrderedString() {
 			var data = "";
 			var ordered = [];
@@ -836,7 +708,7 @@ var FormSerializerData = function () {
    */
 
 	}, {
-		key: 'toObject',
+		key: "toObject",
 		value: function toObject() {
 			var data = {};
 			Util.each(this.data, function (i, e) {
@@ -853,7 +725,7 @@ var FormSerializerData = function () {
    */
 
 	}, {
-		key: 'toValue',
+		key: "toValue",
 		value: function toValue() {
 			var data = null;
 			// data will be the last iterated object value
@@ -870,6 +742,555 @@ var FormSerializerData = function () {
 	return FormSerializerData;
 }();
 /*!
+ * form
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Templates, serializes, and submits forms
+ * @extends Template
+ */
+
+
+var Form = function (_Template3) {
+	_inherits(Form, _Template3);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @param {boolean} [options.feedback=true] - whether to show feedback during submissions
+  * @param {string} [options.submitUrl] - the submitUrl or path to submit the form to
+  * @param {function} [options.submitRequest=null] - if set, ignores submitUrl and uses this function to submit data
+  * @param {number} [options.serializeMode=0] - the mode in which to serialize data
+  * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
+  * @param {number} [options.formGroupManager=FormGroupManager] -
+  * @param {string[]} [options.excluded=[':disabled']] - exluded fields via css pseudo selectors
+  * @param {object} [options.validator] - validator setttings
+  * @param {string} [options.validator.api] - the validator api to use
+  * @param {object} [options.validator.options] - the validator options
+  * @param {object} [options.struct] - the template struct to build the form from, if using a template
+  * @param {string} [options.struct.$wrapper='form'] - the form element
+  * @param {string} [options.struct.$header='.form-header'] - the header selector
+  * @param {string} [options.struct.$body='.form-body'] - the body selector
+  * @param {string} [options.struct.$footer='.form-footer'] - the footer selector
+  * @param {string} [options.struct.$cancel='.form-cancel'] - the cancel button selector
+  * @param {string} [options.struct.$reset='.form-reset'] - the reset button selector
+  * @param {string} [options.struct.$submit='button[type="submit"]'] - the submit button selector
+  * @returns {Form}
+  */
+	function Form(options) {
+		var _ret5;
+
+		_classCallCheck(this, Form);
+
+		var defaults = {
+			feedback: true,
+			useTemplate: true,
+			submitUrl: "",
+			submitRequest: null,
+			serializeMode: FormSerializer.serializeMode.toString,
+			checkboxMode: FormSerializer.checkboxMode.number,
+			excluded: [':disabled'],
+			formGroupManager: FormGroupManager,
+			// css classes for each form component
+			struct: {
+				$wrapper: 'form',
+				$feedback: '.form-feedback',
+				$header: '.form-header',
+				$body: '.form-body',
+				$footer: '.form-footer',
+				$cancel: '.form-cancel',
+				$reset: '.form-reset',
+				$submit: 'button[type="submit"]'
+			},
+			validator: null
+		};
+
+		var _this5 = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, $Util.opts(defaults, options, 'replace')));
+
+		var self = _this5;
+
+		// store serialized data
+		_this5._serializedData = {};
+
+		// alias
+		// this exists solely for Wizard !!
+		var $form = _this5.$wrapper.find('form');
+		_this5.$form = $form.length > 0 ? $form : _this5.$wrapper;
+
+		// components
+		_this5.formSerializer = new FormSerializer({
+			serializeMode: _this5.settings.serializeMode,
+			checkboxMode: _this5.settings.checkboxMode,
+			excluded: _this5.settings.excluded
+		});
+		_this5.validator = null;
+		_this5.feedback = null;
+		_this5.formGoupManager = new _this5.settings.formGroupManager({
+			$wrapper: _this5.$body
+		});
+
+		// handlers
+		// default submit handler
+		_this5.$form.on('submit', function (e) {
+			e.preventDefault();
+			self.serializeForm()._submit();
+		});
+
+		// cancel
+		_this5.$cancel.click(function () {
+			self.resetForm();
+		});
+
+		// reset
+		_this5.$reset.click(function () {
+			self.resetForm();
+		});
+
+		// set up validator
+		if (_this5.settings.validator) _this5._setupValidator();
+
+		// set up feedback
+		if (_this5.settings.feedback) _this5._setupFeedback();
+
+		return _ret5 = _this5, _possibleConstructorReturn(_this5, _ret5);
+	}
+
+	// setup
+
+	/**
+  * Default form template
+  * @returns {Form}
+  * @private
+  */
+
+
+	_createClass(Form, [{
+		key: "_useDefaultTemplate",
+		value: function _useDefaultTemplate() {
+			var template = '<form class="form">' + '<div class="form-feedback"></div>' + '<div class="form-header"></div>' + '<div class="form-body"></div>' + '<div class="form-footer">' + '<button type="submit" class="form-submit">Submit</button>' + '<button type="button" class="form-reset">Reset</button>' + '<button type="button" class="form-cancel">Cancel</button>' + '</div>' + '</form>';
+
+			this._useTemplate($(template));
+
+			return this;
+		}
+
+		/**
+   * Attaches a validator to the form
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: "_setupValidator",
+		value: function _setupValidator() {
+			var v = this.settings.validator;
+			switch (v.api) {
+				case 'formValidation':
+					Form.validators.formValidation.setup(this, this.$form, v.options);
+					break;
+			}
+			return this;
+		}
+
+		/**
+   * Setup the feedback
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: "_setupFeedback",
+		value: function _setupFeedback() {
+			this.feedback = new Feedback();
+			if (!this.$feedback.length) {
+				this.$feedback = $('<div class="form-feedback"></div>');
+				this.$form.prepend(this.$feedback);
+			}
+			this.$feedback.html(this.feedback.$wrapper);
+			return this;
+		}
+
+		/**
+   * Prepare the form with a loading message
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: "_prepare",
+		value: function _prepare() {
+			this.toggleForm(false);
+			this.feedback.show();
+			this.feedback.setFeedback('processing', 'Getting data...');
+			return this;
+		}
+
+		// form builder
+
+		/**
+   * Build inputs from cols
+   * @param {object} data - data for a form input
+   * @returns {Form}
+   */
+
+	}, {
+		key: "build",
+		value: function build(data) {
+			this.formGoupManager.build(data);
+			return this;
+		}
+
+		// ready
+
+		/**
+   * Set the form to ready by hiding
+   * feedback and showing the form components
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: "_ready",
+		value: function _ready() {
+			this.feedback.slideUp();
+			this.slideToggleForm(true);
+			return this;
+		}
+
+		// submit
+
+		/**
+   * Submits the form
+   * @returns {jQuery}
+   * @private
+   */
+
+	}, {
+		key: "_submit",
+		value: function _submit() {
+			var self = this;
+
+			this.trigger('beforeSubmit', this);
+
+			if (this.feedback) this.feedback.setFeedback('processing', 'Processing...');
+
+			return this._doSubmit().done(function (data) {
+				self._done(data);
+			}).fail(function (err) {
+				self._fail(err);
+			}).always(function () {
+				self._always();
+			});
+		}
+
+		/**
+   * Actual submit function
+   * @returns {jQuery}
+   * @private
+   */
+
+	}, {
+		key: "_doSubmit",
+		value: function _doSubmit() {
+			var s = this.settings;
+
+			if (s.submitRequest) return s.submitRequest(this._serializedData);else return $.post(s.submitUrl, this._serializedData);
+		}
+
+		// submit handlers
+
+		/**
+   * Form submission success handler
+   * @param {object} data
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: "_done",
+		value: function _done(data) {
+			if (this.feedback) this.feedback.setFeedback('success', ' Operation was successful');
+			this.trigger('done', data);
+			return this;
+		}
+
+		/**
+   * Form submission fail handler
+   * @param {object} err
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: "_fail",
+		value: function _fail(err) {
+			if (this.feedback) this.feedback.setFeedback('danger', 'Operation has failed');
+			this.trigger('fail', err);
+			return this;
+		}
+
+		/**
+   * Form submission always handler
+   * @returns {Form}
+   * @private
+   */
+
+	}, {
+		key: "_always",
+		value: function _always() {
+			this.toggleButtons(true);
+			this.trigger('always');
+			return this;
+		}
+
+		// data
+
+		/**
+   * Get form data from the backend
+   * @returns {jQuery}
+   * @private
+   */
+
+	}, {
+		key: "_getFormData",
+		value: function _getFormData() {
+			return $.Deferred().resolve().promise();
+		}
+
+		// public
+
+		/**
+   * Toggle the button states
+   * @param {boolean} state
+   * @returns {Form}
+   */
+
+	}, {
+		key: "toggleButtons",
+		value: function toggleButtons(state) {
+			this.$cancel.prop('disabled', !state);
+			this.$reset.prop('disabled', !state);
+			this.$submit.prop('disabled', !state).toggleClass('disabled', !state);
+			return this;
+		}
+
+		/**
+   * Lock the submit button for some amount of ms
+   * @param {number} ms - time to lock in milliseconds
+   */
+
+	}, {
+		key: "lockSubmit",
+		value: function lockSubmit(ms) {
+			var self = this;
+			var html = this.$submit.html();
+
+			this.$submit.prop('disabled', true);
+			setTimeout(function () {
+				self.$submit.prop('disabled', false);
+				self.$submit.html(html);
+			}, ms);
+
+			var c = 0;
+			var timer = setInterval(setButtonHtml, 1000);
+			setButtonHtml();
+
+			/**
+    * Set the button html to the time left on the lock
+    */
+			function setButtonHtml() {
+				if (c >= ms) {
+					clearInterval(timer);
+				} else {
+					var time = Math.floor((ms - c) / 1000);
+					// don't show 0
+					time = time || 1;
+					var _html = html + " | " + time;
+					self.$submit.html(_html);
+					c += 1000;
+				}
+			}
+		}
+
+		/**
+   * Toggle the form body
+   * @param {boolean} state
+   * @returns {Form}
+   */
+
+	}, {
+		key: "toggleForm",
+		value: function toggleForm(state) {
+			this.$body.toggle(state);
+			this.$footer.toggle(state);
+			return this;
+		}
+
+		/**
+   * Slide toggle the form body
+   * @param {boolean} state
+   * @returns {Form}
+   */
+
+	}, {
+		key: "slideToggleForm",
+		value: function slideToggleForm(state) {
+			this.$body.slideToggleState(state);
+			this.$footer.slideToggleState(state);
+			return this;
+		}
+
+		/**
+   * Populate form fields
+   * @param {object} data - collection of properties whos
+   * key match an input or select name, and
+   * whos value is appropriate for that field
+   * @returns {Form}
+   */
+
+	}, {
+		key: "populateForm",
+		value: function populateForm(data) {
+			this._cacheData(data);
+			this._processData(data);
+			this.$form.populateChildren(this._processedData);
+			return this;
+		}
+
+		/**
+   * Public function to serialize the form,
+   * as jQuery uses serialize already
+   * @returns {Form}
+   */
+
+	}, {
+		key: "serializeForm",
+		value: function serializeForm() {
+			this._serializedData = this.formSerializer.serialize(this.$form);
+			return this;
+		}
+
+		/**
+   * Reset the form, using populated data
+   * or setting to default values
+   * @returns {Form}
+   */
+
+	}, {
+		key: "resetForm",
+		value: function resetForm() {
+			if (!$.isEmptyObject(this._cachedData)) this.populateForm(this._cachedData);else this.$form[0].reset();
+
+			if (this.feedback) this.feedback.slideUp();
+
+			this.toggleButtons(true);
+
+			// todo: implement for alternative validators
+			if (this.validator) {
+				switch (this.settings.validator.api) {
+					case 'formValidation':
+						this.validator.resetForm();
+						break;
+				}
+			}
+
+			return this;
+		}
+
+		/**
+   * Validate the form
+   * @returns {boolean}
+   */
+
+	}, {
+		key: "validate",
+		value: function validate() {
+			var isValid = false;
+			if (this.validator) {
+				// todo: implement for alternative validators
+				switch (this.settings.validator.api) {
+					case 'formValidation':
+						this.validator.resetForm();
+						this.validator.validateContainer(this.$form);
+						isValid = this.validator.isValidContainer(this.$form);
+						break;
+				}
+			}
+			return isValid;
+		}
+
+		// initializers
+
+		/**
+   * Remove all data from the form and reset it
+   * @returns {Form}
+   */
+
+	}, {
+		key: "clean",
+		value: function clean() {
+			this._cachedData = {};
+			this.resetForm();
+			this.toggleForm(true);
+			return this;
+		}
+
+		/**
+   * Initialize as a clean form with
+   * default values from the DOM
+   * @returns {Form}
+   */
+
+	}, {
+		key: "initialize",
+		value: function initialize() {
+			this.clean();
+			return this;
+		}
+	}]);
+
+	return Form;
+}(Template);
+
+Form.validators = {
+
+	/**
+  * formValidation api
+  */
+	formValidation: {
+		api: 'formValidation',
+		options: {
+			framework: 'bootstrap',
+			excluded: [':disabled', ':hidden', ':not(:visible)'],
+			icon: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			}
+		},
+
+		/**
+   * formValidation setup
+   * @param {Form} form
+   * @param {jQuery} $form
+   * @param {object} options
+   */
+		setup: function setup(form, $form, options) {
+			$form.off('submit');
+			// allows re-creation of the Form
+			if ($form.data('formValidation')) $form.data('formValidation').destroy();
+			$form.formValidation(options).on('success.form.fv', function (e) {
+				e.preventDefault();
+				form.toggleButtons(false);
+				form.serializeForm()._submit();
+			});
+			form.validator = $form.data('formValidation');
+		}
+	}
+};
+/*!
  * wizard
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -880,7 +1301,6 @@ var FormSerializerData = function () {
  * and controls a form wizard
  * @extends Form
  */
-
 
 var Wizard = function (_Form) {
 	_inherits(Wizard, _Form);
@@ -899,7 +1319,7 @@ var Wizard = function (_Form) {
   * @returns {Wizard}
   */
 	function Wizard(options) {
-		var _ret2;
+		var _ret6;
 
 		_classCallCheck(this, Wizard);
 
@@ -915,19 +1335,19 @@ var Wizard = function (_Form) {
 			}
 		};
 
-		var _this2 = _possibleConstructorReturn(this, (Wizard.__proto__ || Object.getPrototypeOf(Wizard)).call(this, $Util.opts(defaults, options)));
+		var _this6 = _possibleConstructorReturn(this, (Wizard.__proto__ || Object.getPrototypeOf(Wizard)).call(this, $Util.opts(defaults, options)));
 
-		_this2.stepCount = _this2.$tabs.length;
-		_this2.step = 0;
+		_this6.stepCount = _this6.$tabs.length;
+		_this6.step = 0;
 
 		// show or hide pagination and form buttons
-		_this2.toggleSubmitButton(_this2.stepCount === 1);
-		_this2.togglePreviousButton(false);
-		_this2.toggleNextButton(_this2.stepCount > 1);
+		_this6.toggleSubmitButton(_this6.stepCount === 1);
+		_this6.togglePreviousButton(false);
+		_this6.toggleNextButton(_this6.stepCount > 1);
 
-		_this2._setHandlers();
+		_this6._setHandlers();
 
-		return _ret2 = _this2, _possibleConstructorReturn(_this2, _ret2);
+		return _ret6 = _this6, _possibleConstructorReturn(_this6, _ret6);
 	}
 
 	/**
@@ -938,7 +1358,7 @@ var Wizard = function (_Form) {
 
 
 	_createClass(Wizard, [{
-		key: '_clearHandlers',
+		key: "_clearHandlers",
 		value: function _clearHandlers() {
 			this.$next.off('click.wizard');
 			this.$previous.off('click.wizard');
@@ -955,7 +1375,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_setHandlers',
+		key: "_setHandlers",
 		value: function _setHandlers() {
 			var self = this;
 
@@ -1008,9 +1428,9 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_useDefaultTemplate',
+		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
-			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), '_useDefaultTemplate', this).call(this);
+			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), "_useDefaultTemplate", this).call(this);
 
 			// to avoid duplicate $wrapper's (Wizard inherits Form)
 			// set this.$form to Form's $wrapper
@@ -1040,7 +1460,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_setupValidator',
+		key: "_setupValidator",
 		value: function _setupValidator() {
 			var v = this.settings.validator;
 			switch (v.api) {
@@ -1062,7 +1482,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_setupFeedback',
+		key: "_setupFeedback",
 		value: function _setupFeedback() {
 			this.feedback = new Feedback();
 			if (!this.$feedback.length) {
@@ -1083,7 +1503,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_setPagination',
+		key: "_setPagination",
 		value: function _setPagination(step) {
 			// simply hide everything first
 			this.togglePreviousButton(false);
@@ -1121,7 +1541,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getNav',
+		key: "_getNav",
 		value: function _getNav(index) {
 			return $(this.$navs.get(index));
 		}
@@ -1134,7 +1554,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getNavFromTab',
+		key: "_getNavFromTab",
 		value: function _getNavFromTab($tab) {
 			var index = this.$tabs.index($tab);
 			return this._getNav(index);
@@ -1147,7 +1567,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getPreviousNav',
+		key: "_getPreviousNav",
 		value: function _getPreviousNav() {
 			return $(this.$navs.get(this.step - 1));
 		}
@@ -1159,7 +1579,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getCurrentNav',
+		key: "_getCurrentNav",
 		value: function _getCurrentNav() {
 			return $(this.$navs.get(this.step));
 		}
@@ -1171,7 +1591,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getNextNav',
+		key: "_getNextNav",
 		value: function _getNextNav() {
 			return $(this.$navs.get(this.step + 1));
 		}
@@ -1185,7 +1605,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_toggleNavInvalid',
+		key: "_toggleNavInvalid",
 		value: function _toggleNavInvalid($nav) {
 			var state = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
@@ -1203,7 +1623,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getTab',
+		key: "_getTab",
 		value: function _getTab(index) {
 			return $(this.$tabs.get(index));
 		}
@@ -1215,7 +1635,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getCurrentTab',
+		key: "_getCurrentTab",
 		value: function _getCurrentTab() {
 			return $(this.$tabs.get(this.step));
 		}
@@ -1227,7 +1647,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getNextTab',
+		key: "_getNextTab",
 		value: function _getNextTab() {
 			return this.step !== this.stepCount ? $(this.$tabs.get(this.step + 1)) : null;
 		}
@@ -1239,7 +1659,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: '_getPreviousTab',
+		key: "_getPreviousTab",
 		value: function _getPreviousTab() {
 			return this.step > 0 ? $(this.$tabs.get(this.step - 1)) : null;
 		}
@@ -1253,7 +1673,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'validateTab',
+		key: "validateTab",
 		value: function validateTab($tab) {
 			var api = this.settings.validator.api;
 			var valid = true;
@@ -1277,7 +1697,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'validateCurrentTab',
+		key: "validateCurrentTab",
 		value: function validateCurrentTab() {
 			var $tab = this._getCurrentTab();
 			return this.validateTab($tab);
@@ -1289,7 +1709,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'validatePreviousTab',
+		key: "validatePreviousTab",
 		value: function validatePreviousTab() {
 			var $tab = this._getPreviousTab();
 			return this.validateTab($tab);
@@ -1301,7 +1721,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'validateNextTab',
+		key: "validateNextTab",
 		value: function validateNextTab() {
 			var $tab = this._getNextTab();
 			return this.validateTab($tab);
@@ -1313,7 +1733,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'validateAllTabs',
+		key: "validateAllTabs",
 		value: function validateAllTabs() {
 			var self = this;
 			var valid = true;
@@ -1342,7 +1762,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'toggleNextButton',
+		key: "toggleNextButton",
 		value: function toggleNextButton() {
 			var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -1357,7 +1777,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'togglePreviousButton',
+		key: "togglePreviousButton",
 		value: function togglePreviousButton() {
 			var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -1372,7 +1792,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'toggleSubmitButton',
+		key: "toggleSubmitButton",
 		value: function toggleSubmitButton() {
 			var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -1387,9 +1807,9 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'toggleForm',
+		key: "toggleForm",
 		value: function toggleForm(state) {
-			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'toggleForm', this).call(this, state);
+			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), "toggleForm", this).call(this, state);
 			this.$nav.toggle(state);
 			return this;
 		}
@@ -1401,9 +1821,9 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'slideToggleForm',
+		key: "slideToggleForm",
 		value: function slideToggleForm(state) {
-			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'slideToggleForm', this).call(this, state);
+			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), "slideToggleForm", this).call(this, state);
 			this.$nav.slideToggleState(state);
 			return this;
 		}
@@ -1416,7 +1836,7 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'resetNavValidation',
+		key: "resetNavValidation",
 		value: function resetNavValidation() {
 			for (var i = 0; i < this.$navs.length; i++) {
 				var $nav = $(this.$navs[i]);
@@ -1431,12 +1851,12 @@ var Wizard = function (_Form) {
    */
 
 	}, {
-		key: 'resetForm',
+		key: "resetForm",
 		value: function resetForm() {
 			var $nav = $(this.$navs[0]);
 			$nav.find('a').click();
 			this.resetNavValidation();
-			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), 'resetForm', this).call(this);
+			_get(Wizard.prototype.__proto__ || Object.getPrototypeOf(Wizard.prototype), "resetForm", this).call(this);
 			return this;
 		}
 	}]);

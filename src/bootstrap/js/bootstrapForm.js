@@ -16,7 +16,10 @@ class BootstrapForm extends Form {
 	 * @returns {BootstrapForm}
 	 */
 	constructor(options){
-		super(options);
+		var defaults = {
+			formGroupManager : BootstrapFormGroupManager,
+		};
+		super($Util.opts(defaults, options, 'replace'));
 		return this;
 	}
 

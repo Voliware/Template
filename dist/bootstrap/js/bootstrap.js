@@ -306,6 +306,187 @@ BootstrapFeedback.icon = {
 	processing: 'glyphicon-refresh glyphicon-refresh-spin'
 };
 /*!
+ * bootstrapFormGroup
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Bootstrap form group
+ * @extends FormGroup
+ */
+
+var BootstrapFormGroup = function (_FormGroup) {
+	_inherits(BootstrapFormGroup, _FormGroup);
+
+	/**
+  * Constructor
+  * @param {object} options
+  * @returns {FormGroup}
+  */
+	function BootstrapFormGroup(options) {
+		var _ret3;
+
+		_classCallCheck(this, BootstrapFormGroup);
+
+		var defaults = {
+			formInput: BootstrapFormInput,
+			formSelect: BootstrapFormSelect
+		};
+
+		var _this3 = _possibleConstructorReturn(this, (BootstrapFormGroup.__proto__ || Object.getPrototypeOf(BootstrapFormGroup)).call(this, $Util.opts(defaults, options)));
+
+		return _ret3 = _this3, _possibleConstructorReturn(_this3, _ret3);
+	}
+
+	/**
+  * Default template
+  * @private
+  */
+
+
+	_createClass(BootstrapFormGroup, [{
+		key: '_useDefaultTemplate',
+		value: function _useDefaultTemplate() {
+			var template = '<div class="form-group row">' + '<label class="col-sm-4 control-label"></label>' + '<div class="col-sm-8 form-input-wrapper">' + '</div>' + '</div>';
+
+			this._useTemplate(template);
+		}
+	}]);
+
+	return BootstrapFormGroup;
+}(FormGroup);
+/*!
+ * bootstrapFormGroupManager
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Bootstrap form group manager
+ * @extends FormGroupManager
+ */
+
+
+var BootstrapFormGroupManager = function (_FormGroupManager) {
+	_inherits(BootstrapFormGroupManager, _FormGroupManager);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @returns {BootstrapFormGroupManager}
+  */
+	function BootstrapFormGroupManager(options) {
+		var _ret4;
+
+		_classCallCheck(this, BootstrapFormGroupManager);
+
+		var defaults = {
+			template: BootstrapFormGroup
+		};
+
+		var _this4 = _possibleConstructorReturn(this, (BootstrapFormGroupManager.__proto__ || Object.getPrototypeOf(BootstrapFormGroupManager)).call(this, $Util.opts(defaults, options)));
+
+		return _ret4 = _this4, _possibleConstructorReturn(_this4, _ret4);
+	}
+
+	return BootstrapFormGroupManager;
+}(FormGroupManager);
+/*!
+ * bootstrapFormInput
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Bootstrap form input
+ * @extends FormInput
+ */
+
+
+var BootstrapFormInput = function (_FormInput) {
+	_inherits(BootstrapFormInput, _FormInput);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @returns {BootstrapFormInput}
+  */
+	function BootstrapFormInput(options) {
+		var _ret5;
+
+		_classCallCheck(this, BootstrapFormInput);
+
+		var _this5 = _possibleConstructorReturn(this, (BootstrapFormInput.__proto__ || Object.getPrototypeOf(BootstrapFormInput)).call(this, options));
+
+		return _ret5 = _this5, _possibleConstructorReturn(_this5, _ret5);
+	}
+
+	/**
+  * Default template
+  * @private
+  */
+
+
+	_createClass(BootstrapFormInput, [{
+		key: '_useDefaultTemplate',
+		value: function _useDefaultTemplate() {
+			var $template = $('<input class="form-input form-control"/>');
+			this._useTemplate($template);
+			return this;
+		}
+	}]);
+
+	return BootstrapFormInput;
+}(FormInput);
+/*!
+ * bootstrapFormSelect
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Bootstrap form select
+ * @extends FormSelect
+ */
+
+
+var BootstrapFormSelect = function (_FormSelect) {
+	_inherits(BootstrapFormSelect, _FormSelect);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @returns {BootstrapFormSelect}
+  */
+	function BootstrapFormSelect(options) {
+		var _ret6;
+
+		_classCallCheck(this, BootstrapFormSelect);
+
+		var _this6 = _possibleConstructorReturn(this, (BootstrapFormSelect.__proto__ || Object.getPrototypeOf(BootstrapFormSelect)).call(this, options));
+
+		return _ret6 = _this6, _possibleConstructorReturn(_this6, _ret6);
+	}
+
+	/**
+  * Default template
+  * @private
+  */
+
+
+	_createClass(BootstrapFormSelect, [{
+		key: '_useDefaultTemplate',
+		value: function _useDefaultTemplate() {
+			var $template = $('<select class="form-input form-control"></select>');
+			this._useTemplate($template);
+			return this;
+		}
+	}]);
+
+	return BootstrapFormSelect;
+}(FormSelect);
+/*!
  * bootstrapForm
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -316,6 +497,7 @@ BootstrapFeedback.icon = {
  * @extends Form
  */
 
+
 var BootstrapForm = function (_Form) {
 	_inherits(BootstrapForm, _Form);
 
@@ -325,13 +507,17 @@ var BootstrapForm = function (_Form) {
   * @returns {BootstrapForm}
   */
 	function BootstrapForm(options) {
-		var _ret3;
+		var _ret7;
 
 		_classCallCheck(this, BootstrapForm);
 
-		var _this3 = _possibleConstructorReturn(this, (BootstrapForm.__proto__ || Object.getPrototypeOf(BootstrapForm)).call(this, options));
+		var defaults = {
+			formGroupManager: BootstrapFormGroupManager
+		};
 
-		return _ret3 = _this3, _possibleConstructorReturn(_this3, _ret3);
+		var _this7 = _possibleConstructorReturn(this, (BootstrapForm.__proto__ || Object.getPrototypeOf(BootstrapForm)).call(this, $Util.opts(defaults, options, 'replace')));
+
+		return _ret7 = _this7, _possibleConstructorReturn(_this7, _ret7);
 	}
 
 	/**
@@ -386,7 +572,7 @@ var BootstrapModal = function (_Template) {
   * @returns {BootstrapModal}
   */
 	function BootstrapModal(options) {
-		var _ret4;
+		var _ret8;
 
 		_classCallCheck(this, BootstrapModal);
 
@@ -403,9 +589,9 @@ var BootstrapModal = function (_Template) {
 			}
 		};
 
-		var _this4 = _possibleConstructorReturn(this, (BootstrapModal.__proto__ || Object.getPrototypeOf(BootstrapModal)).call(this, $Util.opts(defaults, options)));
+		var _this8 = _possibleConstructorReturn(this, (BootstrapModal.__proto__ || Object.getPrototypeOf(BootstrapModal)).call(this, $Util.opts(defaults, options)));
 
-		return _ret4 = _this4, _possibleConstructorReturn(_this4, _ret4);
+		return _ret8 = _this8, _possibleConstructorReturn(_this8, _ret8);
 	}
 
 	/**
@@ -451,16 +637,16 @@ var BootstrapModalForm = function (_BootstrapModal) {
   * @returns {BootstrapModalForm}
   */
 	function BootstrapModalForm(options) {
-		var _ret5;
+		var _ret9;
 
 		_classCallCheck(this, BootstrapModalForm);
 
 		// properties
-		var _this5 = _possibleConstructorReturn(this, (BootstrapModalForm.__proto__ || Object.getPrototypeOf(BootstrapModalForm)).call(this, options));
+		var _this9 = _possibleConstructorReturn(this, (BootstrapModalForm.__proto__ || Object.getPrototypeOf(BootstrapModalForm)).call(this, options));
 
-		_this5.form = null;
+		_this9.form = null;
 
-		return _ret5 = _this5, _possibleConstructorReturn(_this5, _ret5);
+		return _ret9 = _this9, _possibleConstructorReturn(_this9, _ret9);
 	}
 
 	/**
@@ -549,7 +735,7 @@ var BootstrapNav = function (_Template2) {
   * @returns {BootstrapNav}
   */
 	function BootstrapNav(options) {
-		var _ret6;
+		var _ret10;
 
 		_classCallCheck(this, BootstrapNav);
 
@@ -560,9 +746,9 @@ var BootstrapNav = function (_Template2) {
 			}
 		};
 
-		var _this6 = _possibleConstructorReturn(this, (BootstrapNav.__proto__ || Object.getPrototypeOf(BootstrapNav)).call(this, $Util.opts(defaults, options)));
+		var _this10 = _possibleConstructorReturn(this, (BootstrapNav.__proto__ || Object.getPrototypeOf(BootstrapNav)).call(this, $Util.opts(defaults, options)));
 
-		return _ret6 = _this6, _possibleConstructorReturn(_this6, _ret6);
+		return _ret10 = _this10, _possibleConstructorReturn(_this10, _ret10);
 	}
 
 	/**
@@ -637,7 +823,7 @@ var BootstrapNavManager = function (_TemplateManager) {
   * @returns {BootstrapNavManager}
   */
 	function BootstrapNavManager(options) {
-		var _ret7;
+		var _ret11;
 
 		_classCallCheck(this, BootstrapNavManager);
 
@@ -647,10 +833,10 @@ var BootstrapNavManager = function (_TemplateManager) {
 		};
 
 		// alias
-		var _this7 = _possibleConstructorReturn(this, (BootstrapNavManager.__proto__ || Object.getPrototypeOf(BootstrapNavManager)).call(this, $Util.opts(defaults, options)));
+		var _this11 = _possibleConstructorReturn(this, (BootstrapNavManager.__proto__ || Object.getPrototypeOf(BootstrapNavManager)).call(this, $Util.opts(defaults, options)));
 
-		_this7.navs = _this7.objects;
-		return _ret7 = _this7, _possibleConstructorReturn(_this7, _ret7);
+		_this11.navs = _this11.objects;
+		return _ret11 = _this11, _possibleConstructorReturn(_this11, _ret11);
 	}
 
 	/**
@@ -715,7 +901,7 @@ var BootstrapPanel = function (_Template3) {
   * @returns {BootstrapPanel}
   */
 	function BootstrapPanel(options) {
-		var _ret8;
+		var _ret12;
 
 		_classCallCheck(this, BootstrapPanel);
 
@@ -734,17 +920,17 @@ var BootstrapPanel = function (_Template3) {
 			}
 		};
 
-		var _this8 = _possibleConstructorReturn(this, (BootstrapPanel.__proto__ || Object.getPrototypeOf(BootstrapPanel)).call(this, $Util.opts(defaults, options)));
+		var _this12 = _possibleConstructorReturn(this, (BootstrapPanel.__proto__ || Object.getPrototypeOf(BootstrapPanel)).call(this, $Util.opts(defaults, options)));
 
-		var self = _this8;
+		var self = _this12;
 
 		// properties
-		_this8.isCollapsed = false;
-		_this8.isClosed = false;
+		_this12.isCollapsed = false;
+		_this12.isClosed = false;
 
-		_this8._attachHandlers();
+		_this12._attachHandlers();
 
-		return _ret8 = _this8, _possibleConstructorReturn(_this8, _ret8);
+		return _ret12 = _this12, _possibleConstructorReturn(_this12, _ret12);
 	}
 
 	/**
@@ -848,7 +1034,7 @@ var BootstrapPanelManager = function (_TemplateManager2) {
   * @returns {BootstrapPanelManager}
   */
 	function BootstrapPanelManager(options) {
-		var _ret9;
+		var _ret13;
 
 		_classCallCheck(this, BootstrapPanelManager);
 
@@ -858,11 +1044,11 @@ var BootstrapPanelManager = function (_TemplateManager2) {
 		};
 
 		// alias
-		var _this9 = _possibleConstructorReturn(this, (BootstrapPanelManager.__proto__ || Object.getPrototypeOf(BootstrapPanelManager)).call(this, $Util.opts(defaults, options)));
+		var _this13 = _possibleConstructorReturn(this, (BootstrapPanelManager.__proto__ || Object.getPrototypeOf(BootstrapPanelManager)).call(this, $Util.opts(defaults, options)));
 
-		_this9.panels = _this9.objects;
+		_this13.panels = _this13.objects;
 
-		return _ret9 = _this9, _possibleConstructorReturn(_this9, _ret9);
+		return _ret13 = _this13, _possibleConstructorReturn(_this13, _ret13);
 	}
 
 	return BootstrapPanelManager;
@@ -901,7 +1087,7 @@ var BootstrapCard = function (_BootstrapPanel) {
   * @returns {BootstrapCard}
   */
 	function BootstrapCard(options) {
-		var _ret10;
+		var _ret14;
 
 		_classCallCheck(this, BootstrapCard);
 
@@ -920,9 +1106,9 @@ var BootstrapCard = function (_BootstrapPanel) {
 			}
 		};
 
-		var _this10 = _possibleConstructorReturn(this, (BootstrapCard.__proto__ || Object.getPrototypeOf(BootstrapCard)).call(this, $Util.opts(defaults, options)));
+		var _this14 = _possibleConstructorReturn(this, (BootstrapCard.__proto__ || Object.getPrototypeOf(BootstrapCard)).call(this, $Util.opts(defaults, options)));
 
-		return _ret10 = _this10, _possibleConstructorReturn(_this10, _ret10);
+		return _ret14 = _this14, _possibleConstructorReturn(_this14, _ret14);
 	}
 
 	/**
@@ -986,7 +1172,7 @@ var BootstrapCardManager = function (_TemplateManager3) {
   * @returns {BootstrapCardManager}
   */
 	function BootstrapCardManager(options) {
-		var _ret11;
+		var _ret15;
 
 		_classCallCheck(this, BootstrapCardManager);
 
@@ -996,11 +1182,11 @@ var BootstrapCardManager = function (_TemplateManager3) {
 		};
 
 		// alias
-		var _this11 = _possibleConstructorReturn(this, (BootstrapCardManager.__proto__ || Object.getPrototypeOf(BootstrapCardManager)).call(this, $Util.opts(defaults, options)));
+		var _this15 = _possibleConstructorReturn(this, (BootstrapCardManager.__proto__ || Object.getPrototypeOf(BootstrapCardManager)).call(this, $Util.opts(defaults, options)));
 
-		_this11.cards = _this11.objects;
+		_this15.cards = _this15.objects;
 
-		return _ret11 = _this11, _possibleConstructorReturn(_this11, _ret11);
+		return _ret15 = _this15, _possibleConstructorReturn(_this15, _ret15);
 	}
 
 	return BootstrapCardManager;
@@ -1032,7 +1218,7 @@ var BootstrapProgress = function (_Template4) {
   * @returns {BootstrapProgress}
   */
 	function BootstrapProgress(options) {
-		var _ret12;
+		var _ret16;
 
 		_classCallCheck(this, BootstrapProgress);
 
@@ -1046,11 +1232,11 @@ var BootstrapProgress = function (_Template4) {
 			showPercent: true
 		};
 
-		var _this12 = _possibleConstructorReturn(this, (BootstrapProgress.__proto__ || Object.getPrototypeOf(BootstrapProgress)).call(this, $Util.opts(defaults, options)));
+		var _this16 = _possibleConstructorReturn(this, (BootstrapProgress.__proto__ || Object.getPrototypeOf(BootstrapProgress)).call(this, $Util.opts(defaults, options)));
 
-		_this12.percent = 0;
+		_this16.percent = 0;
 
-		return _ret12 = _this12, _possibleConstructorReturn(_this12, _ret12);
+		return _ret16 = _this16, _possibleConstructorReturn(_this16, _ret16);
 	}
 
 	/**
@@ -1152,7 +1338,7 @@ var BootstrapLoader = function (_BootstrapProgress) {
   * @returns {BootstrapLoader}
   */
 	function BootstrapLoader(options) {
-		var _ret13;
+		var _ret17;
 
 		_classCallCheck(this, BootstrapLoader);
 
@@ -1166,12 +1352,12 @@ var BootstrapLoader = function (_BootstrapProgress) {
 		};
 
 		// properties
-		var _this13 = _possibleConstructorReturn(this, (BootstrapLoader.__proto__ || Object.getPrototypeOf(BootstrapLoader)).call(this, $Util.opts(defaults, options)));
+		var _this17 = _possibleConstructorReturn(this, (BootstrapLoader.__proto__ || Object.getPrototypeOf(BootstrapLoader)).call(this, $Util.opts(defaults, options)));
 
-		_this13.stepCount = _this13.settings.steps.length;
-		_this13.step = 0;
+		_this17.stepCount = _this17.settings.steps.length;
+		_this17.step = 0;
 
-		return _ret13 = _this13, _possibleConstructorReturn(_this13, _ret13);
+		return _ret17 = _this17, _possibleConstructorReturn(_this17, _ret17);
 	}
 
 	/**
@@ -1375,7 +1561,7 @@ var BootstrapTab = function (_Template5) {
   * @returns {BootstrapTab}
   */
 	function BootstrapTab(options) {
-		var _ret14;
+		var _ret18;
 
 		_classCallCheck(this, BootstrapTab);
 
@@ -1385,9 +1571,9 @@ var BootstrapTab = function (_Template5) {
 			}
 		};
 
-		var _this14 = _possibleConstructorReturn(this, (BootstrapTab.__proto__ || Object.getPrototypeOf(BootstrapTab)).call(this, $Util.opts(defaults, options)));
+		var _this18 = _possibleConstructorReturn(this, (BootstrapTab.__proto__ || Object.getPrototypeOf(BootstrapTab)).call(this, $Util.opts(defaults, options)));
 
-		return _ret14 = _this14, _possibleConstructorReturn(_this14, _ret14);
+		return _ret18 = _this18, _possibleConstructorReturn(_this18, _ret18);
 	}
 
 	/**
@@ -1446,7 +1632,7 @@ var BootstrapTabManager = function (_TemplateManager4) {
   * @returns {BootstrapTabManager}
   */
 	function BootstrapTabManager(options) {
-		var _ret15;
+		var _ret19;
 
 		_classCallCheck(this, BootstrapTabManager);
 
@@ -1456,10 +1642,10 @@ var BootstrapTabManager = function (_TemplateManager4) {
 		};
 
 		// alias
-		var _this15 = _possibleConstructorReturn(this, (BootstrapTabManager.__proto__ || Object.getPrototypeOf(BootstrapTabManager)).call(this, $Util.opts(defaults, options)));
+		var _this19 = _possibleConstructorReturn(this, (BootstrapTabManager.__proto__ || Object.getPrototypeOf(BootstrapTabManager)).call(this, $Util.opts(defaults, options)));
 
-		_this15.tabs = _this15.objects;
-		return _ret15 = _this15, _possibleConstructorReturn(_this15, _ret15);
+		_this19.tabs = _this19.objects;
+		return _ret19 = _this19, _possibleConstructorReturn(_this19, _ret19);
 	}
 
 	/**
@@ -1521,7 +1707,7 @@ var BootstrapToggle = function (_Template6) {
   * @returns {BootstrapToggle}
   */
 	function BootstrapToggle(options) {
-		var _ret16;
+		var _ret20;
 
 		_classCallCheck(this, BootstrapToggle);
 
@@ -1537,16 +1723,16 @@ var BootstrapToggle = function (_Template6) {
 		};
 
 		// redirect jquery dom events to container
-		var _this16 = _possibleConstructorReturn(this, (BootstrapToggle.__proto__ || Object.getPrototypeOf(BootstrapToggle)).call(this, $Util.opts(defaults, options)));
+		var _this20 = _possibleConstructorReturn(this, (BootstrapToggle.__proto__ || Object.getPrototypeOf(BootstrapToggle)).call(this, $Util.opts(defaults, options)));
 
-		_this16.after = _this16._after;
-		_this16.append = _this16._append;
-		_this16.appendTo = _this16._appendTo;
-		_this16.before = _this16._before;
-		_this16.prepend = _this16._prepend;
-		_this16.prependTo = _this16._prependTo;
+		_this20.after = _this20._after;
+		_this20.append = _this20._append;
+		_this20.appendTo = _this20._appendTo;
+		_this20.before = _this20._before;
+		_this20.prepend = _this20._prepend;
+		_this20.prependTo = _this20._prependTo;
 
-		return _ret16 = _this16, _possibleConstructorReturn(_this16, _ret16);
+		return _ret20 = _this20, _possibleConstructorReturn(_this20, _ret20);
 	}
 
 	/**
@@ -1644,13 +1830,13 @@ var BootstrapWizard = function (_Wizard) {
   * @returns {BootstrapWizard}
   */
 	function BootstrapWizard(options) {
-		var _ret17;
+		var _ret21;
 
 		_classCallCheck(this, BootstrapWizard);
 
-		var _this17 = _possibleConstructorReturn(this, (BootstrapWizard.__proto__ || Object.getPrototypeOf(BootstrapWizard)).call(this, options));
+		var _this21 = _possibleConstructorReturn(this, (BootstrapWizard.__proto__ || Object.getPrototypeOf(BootstrapWizard)).call(this, options));
 
-		return _ret17 = _this17, _possibleConstructorReturn(_this17, _ret17);
+		return _ret21 = _this21, _possibleConstructorReturn(_this21, _ret21);
 	}
 
 	/**

@@ -45,6 +45,10 @@ function buildBootstrap(){
 		src.bootstrap.js + 'bootstrap.js',
 		src.bootstrap.js + 'bootstrapControlTable.js',
 		src.bootstrap.js + 'bootstrapFeedback.js',
+		src.bootstrap.js + 'bootstrapFormGroup.js',
+		src.bootstrap.js + 'bootstrapFormGroupManager.js',
+		src.bootstrap.js + 'bootstrapFormInput.js',
+		src.bootstrap.js + 'bootstrapFormSelect.js',
 		src.bootstrap.js + 'bootstrapForm.js',
 		src.bootstrap.js + 'bootstrapModal.js',
 		src.bootstrap.js + 'bootstrapModalForm.js',
@@ -81,9 +85,13 @@ function buildBootstrap(){
  */
 function buildForm(){
 	var js = [
-		src.form.js + 'form.js',
+		src.form.js + 'formInput.js',
+		src.form.js + 'formSelect.js',
+		src.form.js + 'formGroup.js',
+		src.form.js + 'formGroupManager.js',
 		src.form.js + 'formSerializer.js',
 		src.form.js + 'formSerializerData.js',
+		src.form.js + 'form.js',
 		src.form.js + 'wizard.js'
 	];
 	buildJs(js, dist.form.js, 'form');
@@ -170,9 +178,13 @@ function buildPackage(){
 		src.table.js + 'table.js',
 		src.table.js + 'renderTable.js',
 		src.table.js + 'controlTable.js',
-		src.form.js + 'form.js',
+		src.form.js + 'formInput.js',
+		src.form.js + 'formSelect.js',
+		src.form.js + 'formGroup.js',
+		src.form.js + 'formGroupManager.js',
 		src.form.js + 'formSerializer.js',
 		src.form.js + 'formSerializerData.js',
+		src.form.js + 'form.js',
 		src.form.js + 'wizard.js'
 	];
 	buildJs(js, dist['template-package'].js, 'template-package');
@@ -205,13 +217,21 @@ function buildPackageBootstrap(){
 		src.table.js + 'table.js',
 		src.table.js + 'renderTable.js',
 		src.table.js + 'controlTable.js',
-		src.form.js + 'form.js',
+		src.form.js + 'formInput.js',
+		src.form.js + 'formSelect.js',
+		src.form.js + 'formGroup.js',
+		src.form.js + 'formGroupManager.js',
 		src.form.js + 'formSerializer.js',
 		src.form.js + 'formSerializerData.js',
+		src.form.js + 'form.js',
 		src.form.js + 'wizard.js',
 		src.bootstrap.js + 'bootstrap.js',
 		src.bootstrap.js + 'bootstrapControlTable.js',
 		src.bootstrap.js + 'bootstrapFeedback.js',
+		src.bootstrap.js + 'bootstrapFormGroup.js',
+		src.bootstrap.js + 'bootstrapFormGroupManager.js',
+		src.bootstrap.js + 'bootstrapFormInput.js',
+		src.bootstrap.js + 'bootstrapFormSelect.js',
 		src.bootstrap.js + 'bootstrapForm.js',
 		src.bootstrap.js + 'bootstrapModal.js',
 		src.bootstrap.js + 'bootstrapModalForm.js',

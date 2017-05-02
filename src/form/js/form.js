@@ -18,6 +18,7 @@ class Form extends Template {
 	 * @param {function} [options.submitRequest=null] - if set, ignores submitUrl and uses this function to submit data
 	 * @param {number} [options.serializeMode=0] - the mode in which to serialize data
 	 * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
+	 * @param {number} [options.formGroupManager=FormGroupManager] -
 	 * @param {string[]} [options.excluded=[':disabled']] - exluded fields via css pseudo selectors
 	 * @param {object} [options.validator] - validator setttings
 	 * @param {string} [options.validator.api] - the validator api to use
@@ -41,6 +42,7 @@ class Form extends Template {
 			serializeMode : FormSerializer.serializeMode.toString,
 			checkboxMode : FormSerializer.checkboxMode.number,
 			excluded : [':disabled'],
+			formGroupManager : FormGroupManager,
 			// css classes for each form component
 			struct: {
 				$wrapper: 'form',
@@ -76,6 +78,9 @@ class Form extends Template {
 		});
 		this.validator = null;
 		this.feedback = null;
+		this.formGoupManager = new this.settings.formGroupManager({
+			$wrapper : this.$body
+		});
 
 		// handlers
 		// default submit handler
@@ -170,6 +175,18 @@ class Form extends Template {
 		this.toggleForm(false);
 		this.feedback.show();
 		this.feedback.setFeedback('processing', 'Getting data...');
+		return this;
+	}
+	
+	// form builder
+
+	/**
+	 * Build inputs from cols
+	 * @param {object} data - data for a form input
+	 * @returns {Form}
+	 */
+	build(data){
+		this.formGoupManager.build(data);
 		return this;
 	}
 

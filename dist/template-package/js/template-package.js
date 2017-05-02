@@ -1408,6 +1408,8 @@ var Template = function () {
 	}, {
 		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
+			// var template = '<div></div';
+			// this._useTemplate(template);
 			return this;
 		}
 
@@ -2760,6 +2762,739 @@ var ControlTable = function (_RenderTable) {
 	return ControlTable;
 }(RenderTable);
 /*!
+ * formInput
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Form input
+ * @extends Template
+ */
+
+
+var FormInput = function (_Template4) {
+	_inherits(FormInput, _Template4);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @returns {FormInput}
+  */
+	function FormInput(options) {
+		var _ret8;
+
+		_classCallCheck(this, FormInput);
+
+		var defaults = {
+			struct: {
+				$wrapper: '.form-input'
+			}
+		};
+
+		// properties
+		var _this8 = _possibleConstructorReturn(this, (FormInput.__proto__ || Object.getPrototypeOf(FormInput)).call(this, $Util.opts(defaults, options)));
+
+		_this8.type = "text";
+		_this8.tag = "input";
+		_this8.disabled = false;
+		_this8.required = false;
+		_this8.name = "input";
+		_this8.maxlength = undefined;
+		_this8.max = undefined;
+		_this8.min = undefined;
+		_this8.step = undefined;
+		_this8.val = null;
+
+		return _ret8 = _this8, _possibleConstructorReturn(_this8, _ret8);
+	}
+
+	/**
+  * Set properties from data
+  * @param {object} data
+  * @returns {FormInput}
+  */
+
+
+	_createClass(FormInput, [{
+		key: "set",
+		value: function set(data) {
+			Object.set(this, data);
+			return this;
+		}
+
+		/**
+   * Default template
+   * @private
+   */
+
+	}, {
+		key: "_useDefaultTemplate",
+		value: function _useDefaultTemplate() {
+			var $template = $('<input class="form-input"/>');
+			this._useTemplate($template);
+			return this;
+		}
+
+		/**
+   * Use template
+   * @param {jQuery} $template
+   * @returns {FormInput}
+   * @private
+   */
+
+	}, {
+		key: "_useTemplate",
+		value: function _useTemplate($template) {
+			_get2(FormInput.prototype.__proto__ || Object.getPrototypeOf(FormInput.prototype), "_useTemplate", this).call(this, $template);
+			this._setAttrs()._setProps()._setVal();
+			return this;
+		}
+
+		/**
+   * Set attributes
+   * @returns {FormInput}
+   * @private
+   */
+
+	}, {
+		key: "_setAttrs",
+		value: function _setAttrs() {
+			this.$wrapper.attr({
+				maxlength: this.maxlength,
+				max: this.max,
+				min: this.min,
+				name: this.name,
+				step: this.step,
+				type: this.type
+			});
+			return this;
+		}
+
+		/**
+   * Set props
+   * @returns {FormInput}
+   * @private
+   */
+
+	}, {
+		key: "_setProps",
+		value: function _setProps() {
+			this.$wrapper.prop('required', this.required);
+			this.$wrapper.prop('disabled', this.disabled);
+			return this;
+		}
+
+		/**
+   * Set the value
+   * @returns {FormInput}
+   * @private
+   */
+
+	}, {
+		key: "_setVal",
+		value: function _setVal() {
+			if (this.val !== null) {
+				this.$wrapper.val(this.val);
+			}
+			return this;
+		}
+	}]);
+
+	return FormInput;
+}(Template);
+/*!
+ * formSelect
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Form select
+ * @extends FormInput
+ */
+
+
+var FormSelect = function (_FormInput) {
+	_inherits(FormSelect, _FormInput);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @returns {FormInput}
+  */
+	function FormSelect(options) {
+		var _ret9;
+
+		_classCallCheck(this, FormSelect);
+
+		// properties
+		var _this9 = _possibleConstructorReturn(this, (FormSelect.__proto__ || Object.getPrototypeOf(FormSelect)).call(this, options));
+
+		_this9.tag = "select";
+		_this9.type = undefined;
+
+		return _ret9 = _this9, _possibleConstructorReturn(_this9, _ret9);
+	}
+
+	/**
+  * Set attributes
+  * @returns {FormInput}
+  * @private
+  */
+
+
+	_createClass(FormSelect, [{
+		key: "_setAttrs",
+		value: function _setAttrs() {
+			this.$wrapper.attr({
+				name: this.name
+			});
+			return this;
+		}
+
+		/**
+   * Add options to the select
+   * @param {*} arguments - Either an object of key/value pairs, where the key is the
+   * option value and the value is the string within the tags,
+   * or a key and value as two parameters to add one option
+   * @returns {FormSelect}
+   */
+
+	}, {
+		key: "addToSelect",
+		value: function addToSelect() {
+			var _$wrapper;
+
+			(_$wrapper = this.$wrapper).addToSelect.apply(_$wrapper, arguments);
+			return this;
+		}
+
+		/**
+   * Select an option
+   * @param {string} val
+   * @returns {FormSelect}
+   */
+
+	}, {
+		key: "selectOption",
+		value: function selectOption(val) {
+			this.$wrapper.val(val);
+			return this;
+		}
+	}]);
+
+	return FormSelect;
+}(FormInput);
+/*!
+ * formGroup
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Form group
+ * @extends Template
+ */
+
+
+var FormGroup = function (_Template5) {
+	_inherits(FormGroup, _Template5);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @returns {FormGroup}
+  */
+	function FormGroup(options) {
+		var _ret10;
+
+		_classCallCheck(this, FormGroup);
+
+		var defaults = {
+			formInput: FormInput,
+			formSelect: FormSelect,
+			struct: {
+				$wrapper: '.form-group',
+				$label: 'label',
+				$inputWrapper: '.form-input-wrapper',
+				$input: 'input'
+			}
+		};
+
+		var _this10 = _possibleConstructorReturn(this, (FormGroup.__proto__ || Object.getPrototypeOf(FormGroup)).call(this, $Util.opts(defaults, options)));
+
+		_this10.input = null;
+
+		return _ret10 = _this10, _possibleConstructorReturn(_this10, _ret10);
+	}
+
+	/**
+  * Default template
+  * @private
+  */
+
+
+	_createClass(FormGroup, [{
+		key: "_useDefaultTemplate",
+		value: function _useDefaultTemplate() {
+			var template = '<div class="form-group">' + '<label></label>' + '<div class="form-input-wrapper">' + '</div>' + '</div>';
+
+			this._useTemplate(template);
+			return this;
+		}
+
+		/**
+   * Create an input or select from data
+   * @param {object} data
+   * @returns {FormGroup}
+   */
+
+	}, {
+		key: "createInput",
+		value: function createInput(data) {
+			this.input = data.tag === "input" ? new this.settings.formInput() : new this.settings.formSelect();
+			this.input.set(data);
+			this.setInput(this.input);
+			return this;
+		}
+
+		/**
+   * Set the input into the input wrapper
+   * @param {FormInput|FormSelect|jQuery} $input
+   * @returns {FormGroup}
+   */
+
+	}, {
+		key: "setInput",
+		value: function setInput($input) {
+			$input = $input instanceof Template ? $input.$wrapper : $input;
+			this.$inputWrapper.html($input);
+			this.$input = $input;
+			return this;
+		}
+
+		/**
+   * Set the label
+   * @param {jQuery|string} label
+   * @returns {FormGroup}
+   */
+
+	}, {
+		key: "setLabel",
+		value: function setLabel(label) {
+			this.$label.html(label);
+			return this;
+		}
+	}]);
+
+	return FormGroup;
+}(Template);
+/*!
+ * formGroupManager
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Form group manager
+ * @extends TemplateManager
+ */
+
+
+var FormGroupManager = function (_TemplateManager) {
+	_inherits(FormGroupManager, _TemplateManager);
+
+	/**
+  * Constructor
+  * @param {object} [options]
+  * @returns {FormGroupManager}
+  */
+	function FormGroupManager(options) {
+		var _ret11;
+
+		_classCallCheck(this, FormGroupManager);
+
+		var defaults = {
+			identifier: 'label',
+			template: FormGroup
+		};
+
+		var _this11 = _possibleConstructorReturn(this, (FormGroupManager.__proto__ || Object.getPrototypeOf(FormGroupManager)).call(this, $Util.opts(defaults, options)));
+
+		return _ret11 = _this11, _possibleConstructorReturn(_this11, _ret11);
+	}
+
+	/**
+  * Create a template object that this manager manages
+  * @param {string} id - id of the object to create and then manage
+  * @param {object} [data={}] - data to populate a jquery template with or construct a Template with
+  * @returns {*|null|Template}
+  * @private
+  */
+
+
+	_createClass(FormGroupManager, [{
+		key: "_create",
+		value: function _create(id) {
+			var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+			var formGroup = new this.settings.template().createInput(data.input).setLabel(data.label);
+			return this._add(formGroup, id);
+		}
+
+		/**
+   * Populate the template
+   * @param {jQuery|Template} formGroup
+   * @param {*} data
+   * @returns {TemplateManager}
+   * @private
+   */
+
+	}, {
+		key: "_populateTemplate",
+		value: function _populateTemplate(formGroup, data) {
+			formGroup.createInput(data.input).setLabel(data.label);
+			return this;
+		}
+	}]);
+
+	return FormGroupManager;
+}(TemplateManager);
+/*!
+ * formSerializer
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * Serializes a form
+ */
+
+
+var FormSerializer = function () {
+
+	/**
+  * Construtor
+  * @param {object} [options]
+  * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
+  * @param {number} [options.mode=0] - the mode in which to serialize data
+  * mode in which to serialize checkboxes
+  * @returns {FormSerializer}
+  */
+	function FormSerializer(options) {
+		_classCallCheck(this, FormSerializer);
+
+		var defaults = {
+			checkboxMode: FormSerializer.checkboxMode.number,
+			serializeMode: FormSerializer.serializeMode.toString,
+			excluded: [':disabled']
+		};
+		// use extendext to replace entirely the excluded settings
+		this.settings = $Util.opts(defaults, options, 'replace');
+
+		return this;
+	}
+
+	/**
+  * Get either the [name]
+  * or [data-name] attr of an element
+  * @param {jQuery} $el
+  * @returns {string}
+  * @private
+  */
+
+
+	_createClass(FormSerializer, [{
+		key: "_getElName",
+		value: function _getElName($el) {
+			if (typeof $el.attr('name') !== "undefined") return $el.attr('name');
+			if (typeof $el.data('name') !== "undefined") return $el.data('name');
+
+			console.error("FormSerializer._getElName: field has no name or data-name attribute");
+			return '';
+		}
+
+		/**
+   * Convert a checkbox
+   * @param {jQuery} $checkbox
+   * @param {number} mode
+   * @returns {boolean|number|string}
+   * @private
+   */
+
+	}, {
+		key: "_convertCheckbox",
+		value: function _convertCheckbox($checkbox, mode) {
+			var checked = $checkbox.is(':checked');
+			switch (mode) {
+				case FormSerializer.checkboxMode.boolean:
+					return checked;
+					break;
+				case FormSerializer.checkboxMode.number:
+					return checked ? 1 : 0;
+					break;
+				case FormSerializer.checkboxMode.string:
+					return checked ? '1' : '0';
+					break;
+				case FormSerializer.checkboxMode.onOff:
+					return checked ? 'on' : 'off';
+					break;
+			}
+		}
+
+		/**
+   * Serialize a form
+   * @param {jQuery} $form
+   * @returns {object|string}
+   */
+
+	}, {
+		key: "serialize",
+		value: function serialize($form) {
+			var self = this;
+			var formData = new FormSerializerData();
+			var data = {};
+
+			$form.find('input, select').each(function (i, e) {
+				var $el = $(e);
+				var name = "";
+				var order = -1;
+				var type = "";
+				var tag = "";
+				var val = "";
+
+				var excluded = self.settings.excluded;
+				for (var x = 0; x < excluded.length; x++) {
+					if ($el.is(excluded[x])) return true;
+				}
+
+				if ($el.data('serialize') === false) return true;
+
+				// get the tag (input or select)
+				tag = $el[0].nodeName.toLowerCase();
+
+				// find the name
+				name = self._getElName($el);
+				if (typeof name === 'undefined') return true;
+
+				// see if it needs to be serialized in some order
+				if (typeof $el.data('order') !== "undefined") order = $el.data('order');
+
+				// handle <input>s
+				if (tag === 'input') {
+					type = $el.attr('type');
+					if (typeof type === 'undefined') return console.error("FormSerializer.serialize: input" + name + " must have a type");
+
+					switch (type) {
+						case 'checkbox':
+							val = self._convertCheckbox($el, self.settings.checkboxMode);
+							break;
+						case 'radio':
+							if ($el.is(':checked')) val = $el.val();else return true;
+							break;
+						case 'file':
+							var files = $el.get(0).files;
+							if (files.length === 0) {
+								return true;
+							}
+							val = files[0];
+							break;
+						default:
+							val = $el.val();
+							break;
+					}
+				}
+				// handle <select>s
+				else if (tag === 'select') {
+						val = $el.val();
+					} else {
+						console.error('FormSerializer.serialize: only inputs and selects can be serialized');
+					}
+
+				data[name] = {
+					val: val,
+					order: order
+				};
+			});
+
+			formData.set(data);
+
+			switch (this.settings.serializeMode) {
+				default:
+				case FormSerializer.serializeMode.toString:
+					return formData.toString();
+					break;
+				case FormSerializer.serializeMode.toOrderedString:
+					return formData.toOrderedString();
+					break;
+				case FormSerializer.serializeMode.toObject:
+					return formData.toObject();
+					break;
+				case FormSerializer.serializeMode.toValue:
+					return formData.toValue();
+					break;
+			}
+		}
+	}]);
+
+	return FormSerializer;
+}();
+
+/**
+ * Mode in which to convert checkboxes
+ */
+
+
+FormSerializer.checkboxMode = {
+	boolean: 0,
+	number: 1,
+	string: 2,
+	onOff: 3
+};
+
+/**
+ * Mode in which to serialize data
+ */
+FormSerializer.serializeMode = {
+	toString: 0,
+	toOrderedString: 1,
+	toObject: 2,
+	toValue: 3
+};
+
+/*!
+ * formSerializerData
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * An object that holds form data
+ * and can output it in different ways
+ */
+
+var FormSerializerData = function () {
+
+	/**
+  * Constructor
+  * @param {object} [data={}]
+  * @returns {FormSerializerData}
+  */
+	function FormSerializerData(data) {
+		_classCallCheck(this, FormSerializerData);
+
+		this.data = data || {};
+		return this;
+	}
+
+	/**
+  * Set the data
+  * @param {object} data
+  * @returns {FormSerializerData}
+  */
+
+
+	_createClass(FormSerializerData, [{
+		key: "set",
+		value: function set(data) {
+			this.data = data;
+			return this;
+		}
+
+		/**
+   * Convert the data to a serialized string
+   * @returns {string}
+   */
+
+	}, {
+		key: "toString",
+		value: function toString() {
+			var data = "";
+			var c = 0;
+			var len = Object.keys(this.data).length;
+			Util.each(this.data, function (i, e) {
+				data += i + "=" + e.val;
+				if (c++ < len - 1) data += "&";
+			});
+			return data;
+		}
+
+		/**
+   * Convert the data to an
+   * ordered serialized string
+   * @returns {string}
+   */
+
+	}, {
+		key: "toOrderedString",
+		value: function toOrderedString() {
+			var data = "";
+			var ordered = [];
+			var unordered = [];
+			Util.each(this.data, function (i, e) {
+				var obj = {
+					name: i,
+					val: e.val
+				};
+				if (e.order > -1) ordered[e.order] = obj;else unordered.push(obj);
+			});
+
+			var len = ordered.length;
+			for (var i = 0; i < len; i++) {
+				data += ordered[i].name + '=' + ordered[i].val;
+				if (i < len) data += "&";
+			}
+
+			len = unordered.length;
+			for (i = 0; i < len; i++) {
+				data += unordered[i].name + '=' + unordered[i].val;
+				if (i < len - 1) data += "&";
+			}
+
+			return data;
+		}
+
+		/**
+   * Convert the data to an object
+   * @returns {object}
+   */
+
+	}, {
+		key: "toObject",
+		value: function toObject() {
+			var data = {};
+			Util.each(this.data, function (i, e) {
+				// convert string numbers to real numbers
+				data[i] = e.val !== "" && !isNaN(e.val) ? parseInt(e.val) : data[i] = e.val;
+			});
+			return data;
+		}
+
+		/**
+   * Convert the data into a single value.
+   * This is only useful if the form only has one input.
+   * @returns {*}
+   */
+
+	}, {
+		key: "toValue",
+		value: function toValue() {
+			var data = null;
+			// data will be the last iterated object value
+			// using this function though, the form is
+			// expected to only have one input anyway
+			Util.each(this.data, function (i, e) {
+				// convert string numbers to real numbers
+				data = isNaN(e.val) ? e.val : parseInt(e.val);
+			});
+			return data;
+		}
+	}]);
+
+	return FormSerializerData;
+}();
+/*!
  * form
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -2771,8 +3506,8 @@ var ControlTable = function (_RenderTable) {
  */
 
 
-var Form = function (_Template4) {
-	_inherits(Form, _Template4);
+var Form = function (_Template6) {
+	_inherits(Form, _Template6);
 
 	/**
   * Constructor
@@ -2782,6 +3517,7 @@ var Form = function (_Template4) {
   * @param {function} [options.submitRequest=null] - if set, ignores submitUrl and uses this function to submit data
   * @param {number} [options.serializeMode=0] - the mode in which to serialize data
   * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
+  * @param {number} [options.formGroupManager=FormGroupManager] -
   * @param {string[]} [options.excluded=[':disabled']] - exluded fields via css pseudo selectors
   * @param {object} [options.validator] - validator setttings
   * @param {string} [options.validator.api] - the validator api to use
@@ -2797,7 +3533,7 @@ var Form = function (_Template4) {
   * @returns {Form}
   */
 	function Form(options) {
-		var _ret8;
+		var _ret12;
 
 		_classCallCheck(this, Form);
 
@@ -2809,6 +3545,7 @@ var Form = function (_Template4) {
 			serializeMode: FormSerializer.serializeMode.toString,
 			checkboxMode: FormSerializer.checkboxMode.number,
 			excluded: [':disabled'],
+			formGroupManager: FormGroupManager,
 			// css classes for each form component
 			struct: {
 				$wrapper: 'form',
@@ -2823,51 +3560,54 @@ var Form = function (_Template4) {
 			validator: null
 		};
 
-		var _this8 = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, $Util.opts(defaults, options, 'replace')));
+		var _this12 = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, $Util.opts(defaults, options, 'replace')));
 
-		var self = _this8;
+		var self = _this12;
 
 		// store serialized data
-		_this8._serializedData = {};
+		_this12._serializedData = {};
 
 		// alias
 		// this exists solely for Wizard !!
-		var $form = _this8.$wrapper.find('form');
-		_this8.$form = $form.length > 0 ? $form : _this8.$wrapper;
+		var $form = _this12.$wrapper.find('form');
+		_this12.$form = $form.length > 0 ? $form : _this12.$wrapper;
 
 		// components
-		_this8.formSerializer = new FormSerializer({
-			serializeMode: _this8.settings.serializeMode,
-			checkboxMode: _this8.settings.checkboxMode,
-			excluded: _this8.settings.excluded
+		_this12.formSerializer = new FormSerializer({
+			serializeMode: _this12.settings.serializeMode,
+			checkboxMode: _this12.settings.checkboxMode,
+			excluded: _this12.settings.excluded
 		});
-		_this8.validator = null;
-		_this8.feedback = null;
+		_this12.validator = null;
+		_this12.feedback = null;
+		_this12.formGoupManager = new _this12.settings.formGroupManager({
+			$wrapper: _this12.$body
+		});
 
 		// handlers
 		// default submit handler
-		_this8.$form.on('submit', function (e) {
+		_this12.$form.on('submit', function (e) {
 			e.preventDefault();
 			self.serializeForm()._submit();
 		});
 
 		// cancel
-		_this8.$cancel.click(function () {
+		_this12.$cancel.click(function () {
 			self.resetForm();
 		});
 
 		// reset
-		_this8.$reset.click(function () {
+		_this12.$reset.click(function () {
 			self.resetForm();
 		});
 
 		// set up validator
-		if (_this8.settings.validator) _this8._setupValidator();
+		if (_this12.settings.validator) _this12._setupValidator();
 
 		// set up feedback
-		if (_this8.settings.feedback) _this8._setupFeedback();
+		if (_this12.settings.feedback) _this12._setupFeedback();
 
-		return _ret8 = _this8, _possibleConstructorReturn(_this8, _ret8);
+		return _ret12 = _this12, _possibleConstructorReturn(_this12, _ret12);
 	}
 
 	// setup
@@ -2937,6 +3677,21 @@ var Form = function (_Template4) {
 			this.toggleForm(false);
 			this.feedback.show();
 			this.feedback.setFeedback('processing', 'Getting data...');
+			return this;
+		}
+
+		// form builder
+
+		/**
+   * Build inputs from cols
+   * @param {object} data - data for a form input
+   * @returns {Form}
+   */
+
+	}, {
+		key: "build",
+		value: function build(data) {
+			this.formGoupManager.build(data);
 			return this;
 		}
 
@@ -3289,338 +4044,6 @@ Form.validators = {
 	}
 };
 /*!
- * formSerializer
- * https://github.com/Voliware/Template
- * Licensed under the MIT license.
- */
-
-/**
- * Serializes a form
- */
-
-var FormSerializer = function () {
-
-	/**
-  * Construtor
-  * @param {object} [options]
-  * @param {number} [options.checkboxMode=0] - the mode in which to serialize checkboxes
-  * @param {number} [options.mode=0] - the mode in which to serialize data
-  * mode in which to serialize checkboxes
-  * @returns {FormSerializer}
-  */
-	function FormSerializer(options) {
-		_classCallCheck(this, FormSerializer);
-
-		var defaults = {
-			checkboxMode: FormSerializer.checkboxMode.number,
-			serializeMode: FormSerializer.serializeMode.toString,
-			excluded: [':disabled']
-		};
-		// use extendext to replace entirely the excluded settings
-		this.settings = $Util.opts(defaults, options, 'replace');
-
-		return this;
-	}
-
-	/**
-  * Get either the [name]
-  * or [data-name] attr of an element
-  * @param {jQuery} $el
-  * @returns {string}
-  * @private
-  */
-
-
-	_createClass(FormSerializer, [{
-		key: "_getElName",
-		value: function _getElName($el) {
-			if (typeof $el.attr('name') !== "undefined") return $el.attr('name');
-			if (typeof $el.data('name') !== "undefined") return $el.data('name');
-
-			console.error("FormSerializer._getElName: field has no name or data-name attribute");
-			return '';
-		}
-
-		/**
-   * Convert a checkbox
-   * @param {jQuery} $checkbox
-   * @param {number} mode
-   * @returns {boolean|number|string}
-   * @private
-   */
-
-	}, {
-		key: "_convertCheckbox",
-		value: function _convertCheckbox($checkbox, mode) {
-			var checked = $checkbox.is(':checked');
-			switch (mode) {
-				case FormSerializer.checkboxMode.boolean:
-					return checked;
-					break;
-				case FormSerializer.checkboxMode.number:
-					return checked ? 1 : 0;
-					break;
-				case FormSerializer.checkboxMode.string:
-					return checked ? '1' : '0';
-					break;
-				case FormSerializer.checkboxMode.onOff:
-					return checked ? 'on' : 'off';
-					break;
-			}
-		}
-
-		/**
-   * Serialize a form
-   * @param {jQuery} $form
-   * @returns {object|string}
-   */
-
-	}, {
-		key: "serialize",
-		value: function serialize($form) {
-			var self = this;
-			var formData = new FormSerializerData();
-			var data = {};
-
-			$form.find('input, select').each(function (i, e) {
-				var $el = $(e);
-				var name = "";
-				var order = -1;
-				var type = "";
-				var tag = "";
-				var val = "";
-
-				var excluded = self.settings.excluded;
-				for (var x = 0; x < excluded.length; x++) {
-					if ($el.is(excluded[x])) return true;
-				}
-
-				if ($el.data('serialize') === false) return true;
-
-				// get the tag (input or select)
-				tag = $el[0].nodeName.toLowerCase();
-
-				// find the name
-				name = self._getElName($el);
-				if (typeof name === 'undefined') return true;
-
-				// see if it needs to be serialized in some order
-				if (typeof $el.data('order') !== "undefined") order = $el.data('order');
-
-				// handle <input>s
-				if (tag === 'input') {
-					type = $el.attr('type');
-					if (typeof type === 'undefined') return console.error("FormSerializer.serialize: input" + name + " must have a type");
-
-					switch (type) {
-						case 'checkbox':
-							val = self._convertCheckbox($el, self.settings.checkboxMode);
-							break;
-						case 'radio':
-							if ($el.is(':checked')) val = $el.val();else return true;
-							break;
-						case 'file':
-							var files = $el.get(0).files;
-							if (files.length === 0) {
-								return true;
-							}
-							val = files[0];
-							break;
-						default:
-							val = $el.val();
-							break;
-					}
-				}
-				// handle <select>s
-				else if (tag === 'select') {
-						val = $el.val();
-					} else {
-						console.error('FormSerializer.serialize: only inputs and selects can be serialized');
-					}
-
-				data[name] = {
-					val: val,
-					order: order
-				};
-			});
-
-			formData.set(data);
-
-			switch (this.settings.serializeMode) {
-				default:
-				case FormSerializer.serializeMode.toString:
-					return formData.toString();
-					break;
-				case FormSerializer.serializeMode.toOrderedString:
-					return formData.toOrderedString();
-					break;
-				case FormSerializer.serializeMode.toObject:
-					return formData.toObject();
-					break;
-				case FormSerializer.serializeMode.toValue:
-					return formData.toValue();
-					break;
-			}
-		}
-	}]);
-
-	return FormSerializer;
-}();
-
-/**
- * Mode in which to convert checkboxes
- */
-
-
-FormSerializer.checkboxMode = {
-	boolean: 0,
-	number: 1,
-	string: 2,
-	onOff: 3
-};
-
-/**
- * Mode in which to serialize data
- */
-FormSerializer.serializeMode = {
-	toString: 0,
-	toOrderedString: 1,
-	toObject: 2,
-	toValue: 3
-};
-
-/*!
- * formSerializerData
- * https://github.com/Voliware/Template
- * Licensed under the MIT license.
- */
-
-/**
- * An object that holds form data
- * and can output it in different ways
- */
-
-var FormSerializerData = function () {
-
-	/**
-  * Constructor
-  * @param {object} [data={}]
-  * @returns {FormSerializerData}
-  */
-	function FormSerializerData(data) {
-		_classCallCheck(this, FormSerializerData);
-
-		this.data = data || {};
-		return this;
-	}
-
-	/**
-  * Set the data
-  * @param {object} data
-  * @returns {FormSerializerData}
-  */
-
-
-	_createClass(FormSerializerData, [{
-		key: "set",
-		value: function set(data) {
-			this.data = data;
-			return this;
-		}
-
-		/**
-   * Convert the data to a serialized string
-   * @returns {string}
-   */
-
-	}, {
-		key: "toString",
-		value: function toString() {
-			var data = "";
-			var c = 0;
-			var len = Object.keys(this.data).length;
-			Util.each(this.data, function (i, e) {
-				data += i + "=" + e.val;
-				if (c++ < len - 1) data += "&";
-			});
-			return data;
-		}
-
-		/**
-   * Convert the data to an
-   * ordered serialized string
-   * @returns {string}
-   */
-
-	}, {
-		key: "toOrderedString",
-		value: function toOrderedString() {
-			var data = "";
-			var ordered = [];
-			var unordered = [];
-			Util.each(this.data, function (i, e) {
-				var obj = {
-					name: i,
-					val: e.val
-				};
-				if (e.order > -1) ordered[e.order] = obj;else unordered.push(obj);
-			});
-
-			var len = ordered.length;
-			for (var i = 0; i < len; i++) {
-				data += ordered[i].name + '=' + ordered[i].val;
-				if (i < len) data += "&";
-			}
-
-			len = unordered.length;
-			for (i = 0; i < len; i++) {
-				data += unordered[i].name + '=' + unordered[i].val;
-				if (i < len - 1) data += "&";
-			}
-
-			return data;
-		}
-
-		/**
-   * Convert the data to an object
-   * @returns {object}
-   */
-
-	}, {
-		key: "toObject",
-		value: function toObject() {
-			var data = {};
-			Util.each(this.data, function (i, e) {
-				// convert string numbers to real numbers
-				data[i] = e.val !== "" && !isNaN(e.val) ? parseInt(e.val) : data[i] = e.val;
-			});
-			return data;
-		}
-
-		/**
-   * Convert the data into a single value.
-   * This is only useful if the form only has one input.
-   * @returns {*}
-   */
-
-	}, {
-		key: "toValue",
-		value: function toValue() {
-			var data = null;
-			// data will be the last iterated object value
-			// using this function though, the form is
-			// expected to only have one input anyway
-			Util.each(this.data, function (i, e) {
-				// convert string numbers to real numbers
-				data = isNaN(e.val) ? e.val : parseInt(e.val);
-			});
-			return data;
-		}
-	}]);
-
-	return FormSerializerData;
-}();
-/*!
  * wizard
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -3631,7 +4054,6 @@ var FormSerializerData = function () {
  * and controls a form wizard
  * @extends Form
  */
-
 
 var Wizard = function (_Form) {
 	_inherits(Wizard, _Form);
@@ -3650,7 +4072,7 @@ var Wizard = function (_Form) {
   * @returns {Wizard}
   */
 	function Wizard(options) {
-		var _ret9;
+		var _ret13;
 
 		_classCallCheck(this, Wizard);
 
@@ -3666,19 +4088,19 @@ var Wizard = function (_Form) {
 			}
 		};
 
-		var _this9 = _possibleConstructorReturn(this, (Wizard.__proto__ || Object.getPrototypeOf(Wizard)).call(this, $Util.opts(defaults, options)));
+		var _this13 = _possibleConstructorReturn(this, (Wizard.__proto__ || Object.getPrototypeOf(Wizard)).call(this, $Util.opts(defaults, options)));
 
-		_this9.stepCount = _this9.$tabs.length;
-		_this9.step = 0;
+		_this13.stepCount = _this13.$tabs.length;
+		_this13.step = 0;
 
 		// show or hide pagination and form buttons
-		_this9.toggleSubmitButton(_this9.stepCount === 1);
-		_this9.togglePreviousButton(false);
-		_this9.toggleNextButton(_this9.stepCount > 1);
+		_this13.toggleSubmitButton(_this13.stepCount === 1);
+		_this13.togglePreviousButton(false);
+		_this13.toggleNextButton(_this13.stepCount > 1);
 
-		_this9._setHandlers();
+		_this13._setHandlers();
 
-		return _ret9 = _this9, _possibleConstructorReturn(_this9, _ret9);
+		return _ret13 = _this13, _possibleConstructorReturn(_this13, _ret13);
 	}
 
 	/**

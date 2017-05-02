@@ -3,10 +3,10 @@
     <head>
         <meta charset="utf-8">
         <title>Bootstrap tests</title>
+		<link rel="stylesheet" media="all" href="../../../assets/formvalidation/dist/css/formValidation.min.css"/>
         <link rel="stylesheet" media="all" href="../../../assets/bootstrap/css/bootstrap.min.css"/>
-        <link rel="stylesheet" media="all" href="../../../assets/bootstrap-toggle/css/bootstrap-toggle.min.css"/>
-        <link rel="stylesheet" media="all" href="../../dist/feedback/css/feedback.css"/>
-        <link rel="stylesheet" media="all" href="../../dist/bootstrap/css/bootstrap.css"/>
+        <link rel="stylesheet" media="all" href="../../../assets/bootstrap-toggle/css/bootstrap2-toggle.min.css"/>
+        <link rel="stylesheet" media="all" href="../../dist/template-package-bootstrap/css/template-package-bootstrap.css"/>
     </head>
     <body>
         <input type="checkbox" name="toggleHtmlTest" data-toggle="toggle"/>
@@ -18,6 +18,7 @@
             <li><a href="#panel" data-toggle="tab">Panel</a> </li>
             <li><a href="#card" data-toggle="tab">Card (v4)</a> </li>
             <li><a href="#tabManager" data-toggle="tab">Nav/Tab Manager</a> </li>
+            <li><a href="#form" data-toggle="tab">Form Builder</a> </li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane fade in active" id="progress"></div>
@@ -26,16 +27,29 @@
             <div class="tab-pane fade" id="panel"></div>
             <div class="tab-pane fade" id="card"></div>
             <div class="tab-pane fade" id="tabManager"></div>
+			<div class="tab-pane fade" id="form">
+				<div class="well">
+					<span>Form built dynamically.</span>
+				</div>
+				<form id="buildForm">
+					<div class="form-body">
+					</div>
+					<div class="form-footer">
+						<div class="form-group">
+							<button type="button" class="form-submit btn btn-default form-reset">Reset</button>
+							<button type="submit" class="form-submit btn btn-default">Submit</button>
+						</div>
+					</div>
+				</form>
+			</div>
         </div>
 
         <script src="../../../assets/jquery/js/jquery-2.2.3.min.js"></script>
         <script src="../../../assets/bootstrap/js/bootstrap.min.js"></script>
-        <script src="../../../assets/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
-        <script src="../../dist/template/js/template.js"></script>
-        <script src="../../dist/feedback/js/feedback.js"></script>
-        <script src="../../dist/table/js/table.js"></script>
-        <script src="../../dist/form/js/form.js"></script>
-        <script src="../../dist/bootstrap/js/bootstrap.js"></script>
+		<script src="../../../assets/formvalidation/dist/js/formValidation.popular.min.js"></script>
+		<script src="../../../assets/formvalidation/dist/js/framework/bootstrap.min.js"></script>
+        <script src="../../../assets/bootstrap-toggle/js/bootstrap2-toggle.min.js"></script>
+        <script src="../../dist/template-package-bootstrap/js/template-package-bootstrap.js"></script>
         <script src="example.js"></script>
     </body>
 </html>
