@@ -1960,6 +1960,260 @@ var Feedback = function (_Template) {
 	return Feedback;
 }(Template);
 /*!
+ * col
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * A table column with inline editing support.
+ * Used to build complex rows.
+ * @extends Template
+ */
+
+
+var Col = function (_Template2) {
+	_inherits(Col, _Template2);
+
+	/**
+  * Constructor
+  * @param {object} options
+  * @returns {Col}
+  */
+	function Col(options) {
+		var _ret4;
+
+		_classCallCheck(this, Col);
+
+		var defaults = {
+			inlineEdit: true,
+			// options found in FormInput
+			fieldOptions: {
+				name: "input",
+				type: 'text',
+				tag: 'input'
+			},
+			struct: {
+				$wrapper: 'td'
+			}
+		};
+
+		var _this4 = _possibleConstructorReturn(this, (Col.__proto__ || Object.getPrototypeOf(Col)).call(this, $Util.opts(defaults, options)));
+
+		var self = _this4;
+
+		// properties
+		_this4.value = 0;
+
+		// states
+		_this4.isInEditMode = false;
+
+		// handlers
+		if (_this4.settings.inlineEdit && !self.isInEditMode) {
+			_this4.$wrapper.click(function () {
+				self.toggleInlineEdit(true);
+			});
+		}
+
+		return _ret4 = _this4, _possibleConstructorReturn(_this4, _ret4);
+	}
+
+	/**
+  * Default template
+  * @returns {Template}
+  * @private
+  */
+
+
+	_createClass(Col, [{
+		key: "_useDefaultTemplate",
+		value: function _useDefaultTemplate() {
+			var template = '<td><span data-name="' + this.settings.fieldOptions.name + '"></span></td>';
+			return this._useTemplate(template);
+		}
+
+		/**
+   * Set field options
+   * @param {object} options
+   * @param {string} options.name
+   * @param {string} [options.type]
+   * @param {string} [options.tag]
+   * @returns {Col}
+   */
+
+	}, {
+		key: "setFieldOptions",
+		value: function setFieldOptions(options) {
+			this.settings.fieldOptions.name = options.name;
+			if (isDefined(options.type)) {
+				this.settings.fieldOptions.type = options.type;
+			}
+			if (isDefined(options.tag)) {
+				this.settings.fieldOptions.tag = options.tag;
+			}
+
+			this._useDefaultTemplate();
+			return this;
+		}
+
+		/**
+   * Toggle inline editing state
+   * @param {boolean} state
+   * @returns {Col}
+   */
+
+	}, {
+		key: "toggleInlineEdit",
+		value: function toggleInlineEdit(state) {
+			this.isInEditMode = state;
+			if (state) {
+				this.$wrapper.children().wrap('<div class="childWrap" style="display:none;"></div>');
+				this.createInlineField();
+			} else {
+				this.$wrapper.find(this.settings.fieldOptions.tag).remove();
+				this.$wrapper.find('.childWrap').children().unwrap();
+			}
+			return this;
+		}
+
+		/**
+   * Create an input or select for inline editing
+   * @returns {Col}
+   */
+
+	}, {
+		key: "createInlineField",
+		value: function createInlineField() {
+			var self = this;
+			var field;
+			switch (this.settings.fieldOptions.tag) {
+				case 'select':
+					field = new FormSelect(this.settings.fieldOptions);
+					break;
+				case 'input':
+				default:
+					field = new FormInput(this.settings.fieldOptions);
+					break;
+			}
+			this.$wrapper.append(field.$wrapper);
+
+			field.focus();
+			field.val(this.value);
+			field.blur(function () {
+				if (self.isInEditMode) {
+					self.trigger('edit', $(this).val());
+					self.toggleInlineEdit(false);
+				}
+			});
+
+			return this;
+		}
+	}]);
+
+	return Col;
+}(Template);
+/*!
+ * row
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * A table row with inline editing support.
+ * Used to build complex rows.
+ * @extends Template
+ */
+
+
+var Row = function (_Template3) {
+	_inherits(Row, _Template3);
+
+	/**
+  * Constructor
+  * @param {object} options
+  * @returns {Row}
+  */
+	function Row(options) {
+		var _ret5;
+
+		_classCallCheck(this, Row);
+
+		var defaults = {
+			colIdentifier: 'name',
+			struct: {
+				$wrapper: 'tr'
+			}
+		};
+
+		var _this5 = _possibleConstructorReturn(this, (Row.__proto__ || Object.getPrototypeOf(Row)).call(this, $Util.opts(defaults, options)));
+
+		var self = _this5;
+
+		// components
+		_this5.colManager = new TemplateManager({
+			identifier: _this5.settings.colIdentifier,
+			useObjectNames: _this5.settings.useObjectNames,
+			$wrapper: _this5.$wrapper
+		}).on('add', function (row) {
+			row.on('update', function (e, data) {
+				self.trigger('update', data);
+			});
+		});
+
+		// save any template columns
+		_this5.$cols = [];
+		_this5.$wrapper.find('td').each(function (i, e) {
+			self.$cols.push($(e));
+		});
+
+		return _ret5 = _this5, _possibleConstructorReturn(_this5, _ret5);
+	}
+
+	/**
+  * Default template
+  * @returns {Row}
+  * @private
+  */
+
+
+	_createClass(Row, [{
+		key: "_useDefaultTemplate",
+		value: function _useDefaultTemplate() {
+			var template = '<tr></tr>';
+			return this._useTemplate(template);
+		}
+
+		/**
+   * Generate columns for the row
+   * @param cols
+   * @returns {Row}
+   */
+
+	}, {
+		key: "generateColumns",
+		value: function generateColumns(cols) {
+			for (var i = 0; i < cols.length; i++) {
+				var fieldOptions = {
+					fieldOptions: {
+						name: cols[i].name
+					}
+				};
+				var colData = $.extend(true, fieldOptions, cols[i]);
+				var col = new Col(colData);
+				this.colManager.addObject(col);
+				this.$wrapper.append(col.$wrapper);
+			}
+			for (i = 0; i < this.$cols.length; i++) {
+				this.$wrapper.append(this.$cols[i]);
+			}
+
+			return this;
+		}
+	}]);
+
+	return Row;
+}(Template);
+/*!
  * crudRow
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -1968,34 +2222,33 @@ var Feedback = function (_Template) {
 /**
  * CRUD row with read/update/delete buttons.
  * A virtual class to extend from.
- * @extends Template
+ * @extends Row
  */
 
 
-var CrudRow = function (_Template2) {
-	_inherits(CrudRow, _Template2);
+var CrudRow = function (_Row) {
+	_inherits(CrudRow, _Row);
 
 	/**
   * Constructor
   * @returns {CrudRow}
   */
 	function CrudRow(options) {
-		var _ret4;
+		var _ret6;
 
 		_classCallCheck(this, CrudRow);
 
 		var defaults = {
 			struct: {
-				$wrapper: 'tr',
 				$deleteButton: '[name="deleteButton"]',
 				$updateButton: '[name="updateButton"]',
 				$viewButton: '[name="viewButton"]'
 			}
 		};
 
-		var _this4 = _possibleConstructorReturn(this, (CrudRow.__proto__ || Object.getPrototypeOf(CrudRow)).call(this, $Util.opts(defaults, options)));
+		var _this6 = _possibleConstructorReturn(this, (CrudRow.__proto__ || Object.getPrototypeOf(CrudRow)).call(this, $Util.opts(defaults, options)));
 
-		return _ret4 = _this4, _possibleConstructorReturn(_this4, _ret4);
+		return _ret6 = _this6, _possibleConstructorReturn(_this6, _ret6);
 	}
 
 	// delete
@@ -2100,7 +2353,7 @@ var CrudRow = function (_Template2) {
 	}]);
 
 	return CrudRow;
-}(Template);
+}(Row);
 /*!
  * table
  * https://github.com/Voliware/Template
@@ -2113,8 +2366,8 @@ var CrudRow = function (_Template2) {
  */
 
 
-var Table = function (_Template3) {
-	_inherits(Table, _Template3);
+var Table = function (_Template4) {
+	_inherits(Table, _Template4);
 
 	/**
   * Constructor
@@ -2130,7 +2383,7 @@ var Table = function (_Template3) {
   * @returns {Table}
   */
 	function Table(options) {
-		var _ret5;
+		var _ret7;
 
 		_classCallCheck(this, Table);
 
@@ -2146,17 +2399,17 @@ var Table = function (_Template3) {
 		};
 
 		// properties
-		var _this5 = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
+		var _this7 = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
 
-		_this5.$rows = [];
+		_this7.$rows = [];
 
 		// states
-		_this5.isFirstBuild = true;
+		_this7.isFirstBuild = true;
 
 		// provide a default empty msg
-		_this5.$empty = $('<tr class="table-empty"><td>There is no data to display.</td></tr>');
+		_this7.$empty = $('<tr class="table-empty"><td>There is no data to display.</td></tr>');
 
-		return _ret5 = _this5, _possibleConstructorReturn(_this5, _ret5);
+		return _ret7 = _this7, _possibleConstructorReturn(_this7, _ret7);
 	}
 
 	/**
@@ -2242,9 +2495,9 @@ var Table = function (_Template3) {
 			if (isArray(data)) this._processedData = data;else this._processedData = $.extend(true, {}, data);
 
 			$.each(data, function (i, e) {
-				// add a private _id for objects
+				// add a private _rowId_ for objects
 				if (isObject(e)) {
-					self._processedData[i]._id = i;
+					self._processedData[i]._rowId_ = i;
 				}
 				self._processedData[i] = self._processRow(e);
 			});
@@ -2278,63 +2531,88 @@ var Table = function (_Template3) {
 		key: "_render",
 		value: function _render(data) {
 			var self = this;
-			var useTemplate = !isNull(this.settings.template);
-			var dataIsArray = Array.isArray(data);
 
 			// empty the <tbody>
 			this.wipe();
 
-			if (!$.isEmptyObject(data) || dataIsArray && data.length) this.toggleEmpty(false);else return this;
+			if (!$.isEmptyObject(data) || Array.isArray(data) && data.length) this.toggleEmpty(false);else return this;
 
 			// run through data and create rows
 			Util.each(data, function (i, e) {
-				var $row = createRow();
-
-				// if data is an object and a template is used
-				if (useTemplate && !Array.isArray(e)) $row.populateChildren(e);
-				// if data is an array
-				else populateRow($row, e);
-
-				addRow($row);
+				self.addRow(e);
 			});
 			return this;
+		}
 
-			// rows
+		// rows
 
-			/**
-    * Create a new row
-    * @returns {jQuery}
-    */
-			function createRow() {
-				return self.$tr.clone();
-			}
+		/**
+   * Create a new row
+   * @returns {jQuery}
+   */
 
-			/**
-    * Add the row to the <tobdy>
-    * @param {jQuery} $row
-    */
-			function addRow($row) {
-				$row.appendTo(self.$tbody);
-				self.$rows.push($row);
-			}
+	}, {
+		key: "createRow",
+		value: function createRow() {
+			return this.$tr.clone();
+		}
 
-			/**
-    * Populate a row with data
-    * The <td> elements will be populated
-    * @param {jQuery} $row - row to populate
-    * @param {object[]} data - array of data
-    */
-			function populateRow($row, data) {
-				var dataArr = [];
-				Util.each(data, function (i, e) {
-					dataArr.push(e);
-				});
+		/**
+   * Add the row to the <tobdy>
+   * @param {jQuery} $row
+   * @returns {Table}
+   */
 
-				var $tds = $row.find('td');
-				$.each($tds, function (i, e) {
-					$(e).html(dataArr[i]);
-				});
-			}
+	}, {
+		key: "appendRow",
+		value: function appendRow($row) {
+			$row.appendTo(this.$tbody);
+			this.$rows.push($row);
+			return this;
+		}
+
+		/**
+   * Populate a row with data
+   * The <td> elements will be populated
+   * @param {jQuery} $row - row to populate
+   * @param {object[]} data - array of data
+   * @returns {Table}
+   */
+
+	}, {
+		key: "populateRow",
+		value: function populateRow($row, data) {
+			var dataArr = [];
+			Util.each(data, function (i, e) {
+				dataArr.push(e);
+			});
+
+			var $tds = $row.find('td');
+			$.each($tds, function (i, e) {
+				$(e).html(dataArr[i]);
+			});
+			return this;
+		}
+
+		/**
+   * Add a new row and populate with data
+   * @param {object} data
+   * @returns {Table}
+   */
+
+	}, {
+		key: "addRow",
+		value: function addRow(data) {
+			var useTemplate = !isNull(this.settings.template);
+			var $row = this.createRow();
+
+			// if data is an object and a template is used
+			if (useTemplate && !Array.isArray(data)) $row.populateChildren(data);
+			// if data is an array
+			else this.populateRow($row, data);
+
+			this.appendRow($row);
+			return this;
 		}
 
 		/**
@@ -2462,7 +2740,7 @@ var RenderTable = function (_Table) {
   * @returns {RenderTable}
   */
 	function RenderTable(options) {
-		var _ret6;
+		var _ret8;
 
 		_classCallCheck(this, RenderTable);
 
@@ -2484,30 +2762,45 @@ var RenderTable = function (_Table) {
 		// components
 		// row manager to re-build rows instead
 		// of wiping the <tbody> each time
-		var _this6 = _possibleConstructorReturn(this, (RenderTable.__proto__ || Object.getPrototypeOf(RenderTable)).call(this, $Util.opts(defaults, options)));
+		var _this8 = _possibleConstructorReturn(this, (RenderTable.__proto__ || Object.getPrototypeOf(RenderTable)).call(this, $Util.opts(defaults, options)));
 
-		_this6.rowManager = new TemplateManager({
-			identifier: _this6.settings.identifier,
-			useObjectNames: _this6.settings.useObjectNames,
-			template: _this6.settings.rowTemplate || _this6.$tr,
-			$wrapper: _this6.$tbody
+		_this8.rowManager = new TemplateManager({
+			identifier: _this8.settings.identifier,
+			useObjectNames: _this8.settings.useObjectNames,
+			template: _this8.settings.rowTemplate || _this8.$tr,
+			$wrapper: _this8.$tbody
 		});
 
-		_this6.$wrapper.addClass('renderTable');
+		_this8.$wrapper.addClass('renderTable');
 
-		return _ret6 = _this6, _possibleConstructorReturn(_this6, _ret6);
+		return _ret8 = _this8, _possibleConstructorReturn(_this8, _ret8);
 	}
 
 	/**
-  * Render via TemplateManager.manage.
-  * Cannot use an array of non-object data
-  * @param {object|object[]} data
+  * Set the table and rowManager's identifier
+  * @param {string} identifier
   * @returns {RenderTable}
   * @private
   */
 
 
 	_createClass(RenderTable, [{
+		key: "setIdentifier",
+		value: function setIdentifier(identifier) {
+			this.settings.identifier = identifier;
+			this.rowManager.settings.identifier = identifier;
+			return this;
+		}
+
+		/**
+   * Render via TemplateManager.manage.
+   * Cannot use an array of non-object data
+   * @param {object|object[]} data
+   * @returns {RenderTable}
+   * @private
+   */
+
+	}, {
 		key: "_render",
 		value: function _render(data) {
 			var dataIsArray = Array.isArray(data);
@@ -2515,6 +2808,21 @@ var RenderTable = function (_Table) {
 			if ($.isEmptyObject(data) || !data || dataIsArray && !data.length) this.toggleEmpty(true);else if (dataIsArray && !isObject(data[0])) throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
 
 			this.rowManager.build(data);
+			return this;
+		}
+
+		/**
+   * Set the row template settings property
+   * as well as the row manager's row template.
+   * @param {Row|Template} template
+   * @returns {RenderTable}
+   */
+
+	}, {
+		key: "setRowTemplate",
+		value: function setRowTemplate(template) {
+			this.settings.rowTemplate = template;
+			this.rowManager.settings.rowTemplate = template;
 			return this;
 		}
 
@@ -2582,7 +2890,7 @@ var ControlTable = function (_RenderTable) {
   * @returns {ControlTable}
   */
 	function ControlTable(options) {
-		var _ret7;
+		var _ret9;
 
 		_classCallCheck(this, ControlTable);
 
@@ -2594,12 +2902,12 @@ var ControlTable = function (_RenderTable) {
 			}
 		};
 
-		var _this7 = _possibleConstructorReturn(this, (ControlTable.__proto__ || Object.getPrototypeOf(ControlTable)).call(this, $Util.opts(defaults, options)));
+		var _this9 = _possibleConstructorReturn(this, (ControlTable.__proto__ || Object.getPrototypeOf(ControlTable)).call(this, $Util.opts(defaults, options)));
 
-		_this7._setupButtons();
-		_this7.$wrapper.addClass('controlTable');
+		_this9._setupButtons();
+		_this9.$wrapper.addClass('controlTable');
 
-		return _ret7 = _this7, _possibleConstructorReturn(_this7, _ret7);
+		return _ret9 = _this9, _possibleConstructorReturn(_this9, _ret9);
 	}
 
 	// buttons
@@ -2773,16 +3081,17 @@ var ControlTable = function (_RenderTable) {
  */
 
 
-var FormInput = function (_Template4) {
-	_inherits(FormInput, _Template4);
+var FormInput = function (_Template5) {
+	_inherits(FormInput, _Template5);
 
 	/**
   * Constructor
+  * @param {object} data
   * @param {object} [options]
   * @returns {FormInput}
   */
-	function FormInput(options) {
-		var _ret8;
+	function FormInput(data, options) {
+		var _ret10;
 
 		_classCallCheck(this, FormInput);
 
@@ -2793,24 +3102,28 @@ var FormInput = function (_Template4) {
 		};
 
 		// properties
-		var _this8 = _possibleConstructorReturn(this, (FormInput.__proto__ || Object.getPrototypeOf(FormInput)).call(this, $Util.opts(defaults, options)));
+		var _this10 = _possibleConstructorReturn(this, (FormInput.__proto__ || Object.getPrototypeOf(FormInput)).call(this, $Util.opts(defaults, options)));
 
-		_this8.type = "text";
-		_this8.tag = "input";
-		_this8.disabled = false;
-		_this8.required = false;
-		_this8.name = "input";
-		_this8.maxlength = undefined;
-		_this8.max = undefined;
-		_this8.min = undefined;
-		_this8.step = undefined;
-		_this8.val = null;
+		_this10.type = "text";
+		_this10.tag = "input";
+		_this10.disabled = false;
+		_this10.required = false;
+		_this10.name = "input";
+		_this10.maxlength = undefined;
+		_this10.max = undefined;
+		_this10.min = undefined;
+		_this10.placeholder = null;
+		_this10.step = undefined;
+		_this10.value = null;
 
-		return _ret8 = _this8, _possibleConstructorReturn(_this8, _ret8);
+		_this10.set(data);
+
+		return _ret10 = _this10, _possibleConstructorReturn(_this10, _ret10);
 	}
 
 	/**
   * Set properties from data
+  * and rebuild the template.
   * @param {object} data
   * @returns {FormInput}
   */
@@ -2820,6 +3133,7 @@ var FormInput = function (_Template4) {
 		key: "set",
 		value: function set(data) {
 			Object.set(this, data);
+			this._useDefaultTemplate();
 			return this;
 		}
 
@@ -2847,7 +3161,7 @@ var FormInput = function (_Template4) {
 		key: "_useTemplate",
 		value: function _useTemplate($template) {
 			_get2(FormInput.prototype.__proto__ || Object.getPrototypeOf(FormInput.prototype), "_useTemplate", this).call(this, $template);
-			this._setAttrs()._setProps()._setVal();
+			this._setAttrs()._setProps()._setValue();
 			return this;
 		}
 
@@ -2865,6 +3179,7 @@ var FormInput = function (_Template4) {
 				max: this.max,
 				min: this.min,
 				name: this.name,
+				placeholder: this.placeholder,
 				step: this.step,
 				type: this.type
 			});
@@ -2892,10 +3207,10 @@ var FormInput = function (_Template4) {
    */
 
 	}, {
-		key: "_setVal",
-		value: function _setVal() {
-			if (this.val !== null) {
-				this.$wrapper.val(this.val);
+		key: "_setValue",
+		value: function _setValue() {
+			if (this.value !== null) {
+				this.$wrapper.populate(this.value);
 			}
 			return this;
 		}
@@ -2924,17 +3239,17 @@ var FormSelect = function (_FormInput) {
   * @returns {FormInput}
   */
 	function FormSelect(options) {
-		var _ret9;
+		var _ret11;
 
 		_classCallCheck(this, FormSelect);
 
 		// properties
-		var _this9 = _possibleConstructorReturn(this, (FormSelect.__proto__ || Object.getPrototypeOf(FormSelect)).call(this, options));
+		var _this11 = _possibleConstructorReturn(this, (FormSelect.__proto__ || Object.getPrototypeOf(FormSelect)).call(this, options));
 
-		_this9.tag = "select";
-		_this9.type = undefined;
+		_this11.tag = "select";
+		_this11.type = undefined;
 
-		return _ret9 = _this9, _possibleConstructorReturn(_this9, _ret9);
+		return _ret11 = _this11, _possibleConstructorReturn(_this11, _ret11);
 	}
 
 	/**
@@ -2973,13 +3288,19 @@ var FormSelect = function (_FormInput) {
 		/**
    * Select an option
    * @param {string} val
+   * @param {boolean} [trigger=true] - whether to fire change event
    * @returns {FormSelect}
    */
 
 	}, {
 		key: "selectOption",
 		value: function selectOption(val) {
+			var trigger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
 			this.$wrapper.val(val);
+			if (trigger) {
+				this.$wrapper.trigger('change');
+			}
 			return this;
 		}
 	}]);
@@ -2998,8 +3319,8 @@ var FormSelect = function (_FormInput) {
  */
 
 
-var FormGroup = function (_Template5) {
-	_inherits(FormGroup, _Template5);
+var FormGroup = function (_Template6) {
+	_inherits(FormGroup, _Template6);
 
 	/**
   * Constructor
@@ -3007,7 +3328,7 @@ var FormGroup = function (_Template5) {
   * @returns {FormGroup}
   */
 	function FormGroup(options) {
-		var _ret10;
+		var _ret12;
 
 		_classCallCheck(this, FormGroup);
 
@@ -3022,11 +3343,11 @@ var FormGroup = function (_Template5) {
 			}
 		};
 
-		var _this10 = _possibleConstructorReturn(this, (FormGroup.__proto__ || Object.getPrototypeOf(FormGroup)).call(this, $Util.opts(defaults, options)));
+		var _this12 = _possibleConstructorReturn(this, (FormGroup.__proto__ || Object.getPrototypeOf(FormGroup)).call(this, $Util.opts(defaults, options)));
 
-		_this10.input = null;
+		_this12.input = null;
 
-		return _ret10 = _this10, _possibleConstructorReturn(_this10, _ret10);
+		return _ret12 = _this12, _possibleConstructorReturn(_this12, _ret12);
 	}
 
 	/**
@@ -3068,9 +3389,8 @@ var FormGroup = function (_Template5) {
 	}, {
 		key: "setInput",
 		value: function setInput($input) {
-			$input = $input instanceof Template ? $input.$wrapper : $input;
-			this.$inputWrapper.html($input);
-			this.$input = $input;
+			this.$input = $input instanceof Template ? $input.$wrapper : $input;
+			this.$inputWrapper.html(this.$input);
 			return this;
 		}
 
@@ -3111,7 +3431,7 @@ var FormGroupManager = function (_TemplateManager) {
   * @returns {FormGroupManager}
   */
 	function FormGroupManager(options) {
-		var _ret11;
+		var _ret13;
 
 		_classCallCheck(this, FormGroupManager);
 
@@ -3120,38 +3440,21 @@ var FormGroupManager = function (_TemplateManager) {
 			template: FormGroup
 		};
 
-		var _this11 = _possibleConstructorReturn(this, (FormGroupManager.__proto__ || Object.getPrototypeOf(FormGroupManager)).call(this, $Util.opts(defaults, options)));
+		var _this13 = _possibleConstructorReturn(this, (FormGroupManager.__proto__ || Object.getPrototypeOf(FormGroupManager)).call(this, $Util.opts(defaults, options)));
 
-		return _ret11 = _this11, _possibleConstructorReturn(_this11, _ret11);
+		return _ret13 = _this13, _possibleConstructorReturn(_this13, _ret13);
 	}
 
 	/**
-  * Create a template object that this manager manages
-  * @param {string} id - id of the object to create and then manage
-  * @param {object} [data={}] - data to populate a jquery template with or construct a Template with
-  * @returns {*|null|Template}
+  * Populate the template
+  * @param {jQuery|Template} formGroup
+  * @param {*} data
+  * @returns {TemplateManager}
   * @private
   */
 
 
 	_createClass(FormGroupManager, [{
-		key: "_create",
-		value: function _create(id) {
-			var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-			var formGroup = new this.settings.template().createInput(data.input).setLabel(data.label);
-			return this._add(formGroup, id);
-		}
-
-		/**
-   * Populate the template
-   * @param {jQuery|Template} formGroup
-   * @param {*} data
-   * @returns {TemplateManager}
-   * @private
-   */
-
-	}, {
 		key: "_populateTemplate",
 		value: function _populateTemplate(formGroup, data) {
 			formGroup.createInput(data.input).setLabel(data.label);
@@ -3506,8 +3809,8 @@ var FormSerializerData = function () {
  */
 
 
-var Form = function (_Template6) {
-	_inherits(Form, _Template6);
+var Form = function (_Template7) {
+	_inherits(Form, _Template7);
 
 	/**
   * Constructor
@@ -3533,7 +3836,7 @@ var Form = function (_Template6) {
   * @returns {Form}
   */
 	function Form(options) {
-		var _ret12;
+		var _ret14;
 
 		_classCallCheck(this, Form);
 
@@ -3560,54 +3863,54 @@ var Form = function (_Template6) {
 			validator: null
 		};
 
-		var _this12 = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, $Util.opts(defaults, options, 'replace')));
+		var _this14 = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, $Util.opts(defaults, options, 'replace')));
 
-		var self = _this12;
+		var self = _this14;
 
 		// store serialized data
-		_this12._serializedData = {};
+		_this14._serializedData = {};
 
 		// alias
 		// this exists solely for Wizard !!
-		var $form = _this12.$wrapper.find('form');
-		_this12.$form = $form.length > 0 ? $form : _this12.$wrapper;
+		var $form = _this14.$wrapper.find('form');
+		_this14.$form = $form.length > 0 ? $form : _this14.$wrapper;
 
 		// components
-		_this12.formSerializer = new FormSerializer({
-			serializeMode: _this12.settings.serializeMode,
-			checkboxMode: _this12.settings.checkboxMode,
-			excluded: _this12.settings.excluded
+		_this14.formSerializer = new FormSerializer({
+			serializeMode: _this14.settings.serializeMode,
+			checkboxMode: _this14.settings.checkboxMode,
+			excluded: _this14.settings.excluded
 		});
-		_this12.validator = null;
-		_this12.feedback = null;
-		_this12.formGoupManager = new _this12.settings.formGroupManager({
-			$wrapper: _this12.$body
+		_this14.validator = null;
+		_this14.feedback = null;
+		_this14.formGoupManager = new _this14.settings.formGroupManager({
+			$wrapper: _this14.$body
 		});
 
 		// handlers
 		// default submit handler
-		_this12.$form.on('submit', function (e) {
+		_this14.$form.on('submit', function (e) {
 			e.preventDefault();
 			self.serializeForm()._submit();
 		});
 
 		// cancel
-		_this12.$cancel.click(function () {
+		_this14.$cancel.click(function () {
 			self.resetForm();
 		});
 
 		// reset
-		_this12.$reset.click(function () {
+		_this14.$reset.click(function () {
 			self.resetForm();
 		});
 
 		// set up validator
-		if (_this12.settings.validator) _this12._setupValidator();
+		if (_this14.settings.validator) _this14._setupValidator();
 
 		// set up feedback
-		if (_this12.settings.feedback) _this12._setupFeedback();
+		if (_this14.settings.feedback) _this14._setupFeedback();
 
-		return _ret12 = _this12, _possibleConstructorReturn(_this12, _ret12);
+		return _ret14 = _this14, _possibleConstructorReturn(_this14, _ret14);
 	}
 
 	// setup
@@ -3684,14 +3987,14 @@ var Form = function (_Template6) {
 
 		/**
    * Build inputs from cols
-   * @param {object} data - data for a form input
+   * @param {object|object[]} data - data for a form input
    * @returns {Form}
    */
 
 	}, {
 		key: "build",
 		value: function build(data) {
-			this.formGoupManager.build(data);
+			this.formGoupManager.empty().build(data);
 			return this;
 		}
 
@@ -3934,7 +4237,7 @@ var Form = function (_Template6) {
 	}, {
 		key: "resetForm",
 		value: function resetForm() {
-			if (!$.isEmptyObject(this._cachedData)) this.populateForm(this._cachedData);else this.$form[0].reset();
+			if (!$.isEmptyObject(this._processedData)) this.$form.populateChildren(this._processedData);else this.$form[0].reset();
 
 			if (this.feedback) this.feedback.slideUp();
 
@@ -4072,7 +4375,7 @@ var Wizard = function (_Form) {
   * @returns {Wizard}
   */
 	function Wizard(options) {
-		var _ret13;
+		var _ret15;
 
 		_classCallCheck(this, Wizard);
 
@@ -4088,19 +4391,19 @@ var Wizard = function (_Form) {
 			}
 		};
 
-		var _this13 = _possibleConstructorReturn(this, (Wizard.__proto__ || Object.getPrototypeOf(Wizard)).call(this, $Util.opts(defaults, options)));
+		var _this15 = _possibleConstructorReturn(this, (Wizard.__proto__ || Object.getPrototypeOf(Wizard)).call(this, $Util.opts(defaults, options)));
 
-		_this13.stepCount = _this13.$tabs.length;
-		_this13.step = 0;
+		_this15.stepCount = _this15.$tabs.length;
+		_this15.step = 0;
 
 		// show or hide pagination and form buttons
-		_this13.toggleSubmitButton(_this13.stepCount === 1);
-		_this13.togglePreviousButton(false);
-		_this13.toggleNextButton(_this13.stepCount > 1);
+		_this15.toggleSubmitButton(_this15.stepCount === 1);
+		_this15.togglePreviousButton(false);
+		_this15.toggleNextButton(_this15.stepCount > 1);
 
-		_this13._setHandlers();
+		_this15._setHandlers();
 
-		return _ret13 = _this13, _possibleConstructorReturn(_this13, _ret13);
+		return _ret15 = _this15, _possibleConstructorReturn(_this15, _ret15);
 	}
 
 	/**

@@ -182,11 +182,11 @@ class Form extends Template {
 
 	/**
 	 * Build inputs from cols
-	 * @param {object} data - data for a form input
+	 * @param {object|object[]} data - data for a form input
 	 * @returns {Form}
 	 */
 	build(data){
-		this.formGoupManager.build(data);
+		this.formGoupManager.empty().build(data);
 		return this;
 	}
 
@@ -237,12 +237,10 @@ class Form extends Template {
 	 * @private
 	 */
 	_doSubmit(){
-		var s = this.settings;
-
-		if(s.submitRequest)
-			return s.submitRequest(this._serializedData);
+		if(this.settings.submitRequest)
+			return this.settings.submitRequest(this._serializedData);
 		else
-			return $.post(s.submitUrl, this._serializedData);
+			return $.post(this.settings.submitUrl, this._serializedData);
 	}
 
 	// submit handlers
@@ -397,8 +395,8 @@ class Form extends Template {
 	 * @returns {Form}
 	 */
 	resetForm(){
-		if(!$.isEmptyObject(this._cachedData))
-			this.populateForm(this._cachedData);
+		if(!$.isEmptyObject(this._processedData))
+			this.$form.populateChildren(this._processedData);
 		else
 			this.$form[0].reset();
 

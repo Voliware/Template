@@ -11,6 +11,258 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /*!
+ * col
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * A table column with inline editing support.
+ * Used to build complex rows.
+ * @extends Template
+ */
+var Col = function (_Template) {
+	_inherits(Col, _Template);
+
+	/**
+  * Constructor
+  * @param {object} options
+  * @returns {Col}
+  */
+	function Col(options) {
+		var _ret;
+
+		_classCallCheck(this, Col);
+
+		var defaults = {
+			inlineEdit: true,
+			// options found in FormInput
+			fieldOptions: {
+				name: "input",
+				type: 'text',
+				tag: 'input'
+			},
+			struct: {
+				$wrapper: 'td'
+			}
+		};
+
+		var _this = _possibleConstructorReturn(this, (Col.__proto__ || Object.getPrototypeOf(Col)).call(this, $Util.opts(defaults, options)));
+
+		var self = _this;
+
+		// properties
+		_this.value = 0;
+
+		// states
+		_this.isInEditMode = false;
+
+		// handlers
+		if (_this.settings.inlineEdit && !self.isInEditMode) {
+			_this.$wrapper.click(function () {
+				self.toggleInlineEdit(true);
+			});
+		}
+
+		return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	}
+
+	/**
+  * Default template
+  * @returns {Template}
+  * @private
+  */
+
+
+	_createClass(Col, [{
+		key: '_useDefaultTemplate',
+		value: function _useDefaultTemplate() {
+			var template = '<td><span data-name="' + this.settings.fieldOptions.name + '"></span></td>';
+			return this._useTemplate(template);
+		}
+
+		/**
+   * Set field options
+   * @param {object} options
+   * @param {string} options.name
+   * @param {string} [options.type]
+   * @param {string} [options.tag]
+   * @returns {Col}
+   */
+
+	}, {
+		key: 'setFieldOptions',
+		value: function setFieldOptions(options) {
+			this.settings.fieldOptions.name = options.name;
+			if (isDefined(options.type)) {
+				this.settings.fieldOptions.type = options.type;
+			}
+			if (isDefined(options.tag)) {
+				this.settings.fieldOptions.tag = options.tag;
+			}
+
+			this._useDefaultTemplate();
+			return this;
+		}
+
+		/**
+   * Toggle inline editing state
+   * @param {boolean} state
+   * @returns {Col}
+   */
+
+	}, {
+		key: 'toggleInlineEdit',
+		value: function toggleInlineEdit(state) {
+			this.isInEditMode = state;
+			if (state) {
+				this.$wrapper.children().wrap('<div class="childWrap" style="display:none;"></div>');
+				this.createInlineField();
+			} else {
+				this.$wrapper.find(this.settings.fieldOptions.tag).remove();
+				this.$wrapper.find('.childWrap').children().unwrap();
+			}
+			return this;
+		}
+
+		/**
+   * Create an input or select for inline editing
+   * @returns {Col}
+   */
+
+	}, {
+		key: 'createInlineField',
+		value: function createInlineField() {
+			var self = this;
+			var field;
+			switch (this.settings.fieldOptions.tag) {
+				case 'select':
+					field = new FormSelect(this.settings.fieldOptions);
+					break;
+				case 'input':
+				default:
+					field = new FormInput(this.settings.fieldOptions);
+					break;
+			}
+			this.$wrapper.append(field.$wrapper);
+
+			field.focus();
+			field.val(this.value);
+			field.blur(function () {
+				if (self.isInEditMode) {
+					self.trigger('edit', $(this).val());
+					self.toggleInlineEdit(false);
+				}
+			});
+
+			return this;
+		}
+	}]);
+
+	return Col;
+}(Template);
+/*!
+ * row
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ */
+
+/**
+ * A table row with inline editing support.
+ * Used to build complex rows.
+ * @extends Template
+ */
+
+
+var Row = function (_Template2) {
+	_inherits(Row, _Template2);
+
+	/**
+  * Constructor
+  * @param {object} options
+  * @returns {Row}
+  */
+	function Row(options) {
+		var _ret2;
+
+		_classCallCheck(this, Row);
+
+		var defaults = {
+			colIdentifier: 'name',
+			struct: {
+				$wrapper: 'tr'
+			}
+		};
+
+		var _this2 = _possibleConstructorReturn(this, (Row.__proto__ || Object.getPrototypeOf(Row)).call(this, $Util.opts(defaults, options)));
+
+		var self = _this2;
+
+		// components
+		_this2.colManager = new TemplateManager({
+			identifier: _this2.settings.colIdentifier,
+			useObjectNames: _this2.settings.useObjectNames,
+			$wrapper: _this2.$wrapper
+		}).on('add', function (row) {
+			row.on('update', function (e, data) {
+				self.trigger('update', data);
+			});
+		});
+
+		// save any template columns
+		_this2.$cols = [];
+		_this2.$wrapper.find('td').each(function (i, e) {
+			self.$cols.push($(e));
+		});
+
+		return _ret2 = _this2, _possibleConstructorReturn(_this2, _ret2);
+	}
+
+	/**
+  * Default template
+  * @returns {Row}
+  * @private
+  */
+
+
+	_createClass(Row, [{
+		key: '_useDefaultTemplate',
+		value: function _useDefaultTemplate() {
+			var template = '<tr></tr>';
+			return this._useTemplate(template);
+		}
+
+		/**
+   * Generate columns for the row
+   * @param cols
+   * @returns {Row}
+   */
+
+	}, {
+		key: 'generateColumns',
+		value: function generateColumns(cols) {
+			for (var i = 0; i < cols.length; i++) {
+				var fieldOptions = {
+					fieldOptions: {
+						name: cols[i].name
+					}
+				};
+				var colData = $.extend(true, fieldOptions, cols[i]);
+				var col = new Col(colData);
+				this.colManager.addObject(col);
+				this.$wrapper.append(col.$wrapper);
+			}
+			for (i = 0; i < this.$cols.length; i++) {
+				this.$wrapper.append(this.$cols[i]);
+			}
+
+			return this;
+		}
+	}]);
+
+	return Row;
+}(Template);
+/*!
  * crudRow
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -19,32 +271,33 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /**
  * CRUD row with read/update/delete buttons.
  * A virtual class to extend from.
- * @extends Template
+ * @extends Row
  */
-var CrudRow = function (_Template) {
-	_inherits(CrudRow, _Template);
+
+
+var CrudRow = function (_Row) {
+	_inherits(CrudRow, _Row);
 
 	/**
   * Constructor
   * @returns {CrudRow}
   */
 	function CrudRow(options) {
-		var _ret;
+		var _ret3;
 
 		_classCallCheck(this, CrudRow);
 
 		var defaults = {
 			struct: {
-				$wrapper: 'tr',
 				$deleteButton: '[name="deleteButton"]',
 				$updateButton: '[name="updateButton"]',
 				$viewButton: '[name="viewButton"]'
 			}
 		};
 
-		var _this = _possibleConstructorReturn(this, (CrudRow.__proto__ || Object.getPrototypeOf(CrudRow)).call(this, $Util.opts(defaults, options)));
+		var _this3 = _possibleConstructorReturn(this, (CrudRow.__proto__ || Object.getPrototypeOf(CrudRow)).call(this, $Util.opts(defaults, options)));
 
-		return _ret = _this, _possibleConstructorReturn(_this, _ret);
+		return _ret3 = _this3, _possibleConstructorReturn(_this3, _ret3);
 	}
 
 	// delete
@@ -149,7 +402,7 @@ var CrudRow = function (_Template) {
 	}]);
 
 	return CrudRow;
-}(Template);
+}(Row);
 /*!
  * table
  * https://github.com/Voliware/Template
@@ -162,8 +415,8 @@ var CrudRow = function (_Template) {
  */
 
 
-var Table = function (_Template2) {
-	_inherits(Table, _Template2);
+var Table = function (_Template3) {
+	_inherits(Table, _Template3);
 
 	/**
   * Constructor
@@ -179,7 +432,7 @@ var Table = function (_Template2) {
   * @returns {Table}
   */
 	function Table(options) {
-		var _ret2;
+		var _ret4;
 
 		_classCallCheck(this, Table);
 
@@ -195,17 +448,17 @@ var Table = function (_Template2) {
 		};
 
 		// properties
-		var _this2 = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
+		var _this4 = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
 
-		_this2.$rows = [];
+		_this4.$rows = [];
 
 		// states
-		_this2.isFirstBuild = true;
+		_this4.isFirstBuild = true;
 
 		// provide a default empty msg
-		_this2.$empty = $('<tr class="table-empty"><td>There is no data to display.</td></tr>');
+		_this4.$empty = $('<tr class="table-empty"><td>There is no data to display.</td></tr>');
 
-		return _ret2 = _this2, _possibleConstructorReturn(_this2, _ret2);
+		return _ret4 = _this4, _possibleConstructorReturn(_this4, _ret4);
 	}
 
 	/**
@@ -291,9 +544,9 @@ var Table = function (_Template2) {
 			if (isArray(data)) this._processedData = data;else this._processedData = $.extend(true, {}, data);
 
 			$.each(data, function (i, e) {
-				// add a private _id for objects
+				// add a private _rowId_ for objects
 				if (isObject(e)) {
-					self._processedData[i]._id = i;
+					self._processedData[i]._rowId_ = i;
 				}
 				self._processedData[i] = self._processRow(e);
 			});
@@ -327,63 +580,88 @@ var Table = function (_Template2) {
 		key: '_render',
 		value: function _render(data) {
 			var self = this;
-			var useTemplate = !isNull(this.settings.template);
-			var dataIsArray = Array.isArray(data);
 
 			// empty the <tbody>
 			this.wipe();
 
-			if (!$.isEmptyObject(data) || dataIsArray && data.length) this.toggleEmpty(false);else return this;
+			if (!$.isEmptyObject(data) || Array.isArray(data) && data.length) this.toggleEmpty(false);else return this;
 
 			// run through data and create rows
 			Util.each(data, function (i, e) {
-				var $row = createRow();
-
-				// if data is an object and a template is used
-				if (useTemplate && !Array.isArray(e)) $row.populateChildren(e);
-				// if data is an array
-				else populateRow($row, e);
-
-				addRow($row);
+				self.addRow(e);
 			});
 			return this;
+		}
 
-			// rows
+		// rows
 
-			/**
-    * Create a new row
-    * @returns {jQuery}
-    */
-			function createRow() {
-				return self.$tr.clone();
-			}
+		/**
+   * Create a new row
+   * @returns {jQuery}
+   */
 
-			/**
-    * Add the row to the <tobdy>
-    * @param {jQuery} $row
-    */
-			function addRow($row) {
-				$row.appendTo(self.$tbody);
-				self.$rows.push($row);
-			}
+	}, {
+		key: 'createRow',
+		value: function createRow() {
+			return this.$tr.clone();
+		}
 
-			/**
-    * Populate a row with data
-    * The <td> elements will be populated
-    * @param {jQuery} $row - row to populate
-    * @param {object[]} data - array of data
-    */
-			function populateRow($row, data) {
-				var dataArr = [];
-				Util.each(data, function (i, e) {
-					dataArr.push(e);
-				});
+		/**
+   * Add the row to the <tobdy>
+   * @param {jQuery} $row
+   * @returns {Table}
+   */
 
-				var $tds = $row.find('td');
-				$.each($tds, function (i, e) {
-					$(e).html(dataArr[i]);
-				});
-			}
+	}, {
+		key: 'appendRow',
+		value: function appendRow($row) {
+			$row.appendTo(this.$tbody);
+			this.$rows.push($row);
+			return this;
+		}
+
+		/**
+   * Populate a row with data
+   * The <td> elements will be populated
+   * @param {jQuery} $row - row to populate
+   * @param {object[]} data - array of data
+   * @returns {Table}
+   */
+
+	}, {
+		key: 'populateRow',
+		value: function populateRow($row, data) {
+			var dataArr = [];
+			Util.each(data, function (i, e) {
+				dataArr.push(e);
+			});
+
+			var $tds = $row.find('td');
+			$.each($tds, function (i, e) {
+				$(e).html(dataArr[i]);
+			});
+			return this;
+		}
+
+		/**
+   * Add a new row and populate with data
+   * @param {object} data
+   * @returns {Table}
+   */
+
+	}, {
+		key: 'addRow',
+		value: function addRow(data) {
+			var useTemplate = !isNull(this.settings.template);
+			var $row = this.createRow();
+
+			// if data is an object and a template is used
+			if (useTemplate && !Array.isArray(data)) $row.populateChildren(data);
+			// if data is an array
+			else this.populateRow($row, data);
+
+			this.appendRow($row);
+			return this;
 		}
 
 		/**
@@ -511,7 +789,7 @@ var RenderTable = function (_Table) {
   * @returns {RenderTable}
   */
 	function RenderTable(options) {
-		var _ret3;
+		var _ret5;
 
 		_classCallCheck(this, RenderTable);
 
@@ -533,30 +811,45 @@ var RenderTable = function (_Table) {
 		// components
 		// row manager to re-build rows instead
 		// of wiping the <tbody> each time
-		var _this3 = _possibleConstructorReturn(this, (RenderTable.__proto__ || Object.getPrototypeOf(RenderTable)).call(this, $Util.opts(defaults, options)));
+		var _this5 = _possibleConstructorReturn(this, (RenderTable.__proto__ || Object.getPrototypeOf(RenderTable)).call(this, $Util.opts(defaults, options)));
 
-		_this3.rowManager = new TemplateManager({
-			identifier: _this3.settings.identifier,
-			useObjectNames: _this3.settings.useObjectNames,
-			template: _this3.settings.rowTemplate || _this3.$tr,
-			$wrapper: _this3.$tbody
+		_this5.rowManager = new TemplateManager({
+			identifier: _this5.settings.identifier,
+			useObjectNames: _this5.settings.useObjectNames,
+			template: _this5.settings.rowTemplate || _this5.$tr,
+			$wrapper: _this5.$tbody
 		});
 
-		_this3.$wrapper.addClass('renderTable');
+		_this5.$wrapper.addClass('renderTable');
 
-		return _ret3 = _this3, _possibleConstructorReturn(_this3, _ret3);
+		return _ret5 = _this5, _possibleConstructorReturn(_this5, _ret5);
 	}
 
 	/**
-  * Render via TemplateManager.manage.
-  * Cannot use an array of non-object data
-  * @param {object|object[]} data
+  * Set the table and rowManager's identifier
+  * @param {string} identifier
   * @returns {RenderTable}
   * @private
   */
 
 
 	_createClass(RenderTable, [{
+		key: 'setIdentifier',
+		value: function setIdentifier(identifier) {
+			this.settings.identifier = identifier;
+			this.rowManager.settings.identifier = identifier;
+			return this;
+		}
+
+		/**
+   * Render via TemplateManager.manage.
+   * Cannot use an array of non-object data
+   * @param {object|object[]} data
+   * @returns {RenderTable}
+   * @private
+   */
+
+	}, {
 		key: '_render',
 		value: function _render(data) {
 			var dataIsArray = Array.isArray(data);
@@ -564,6 +857,21 @@ var RenderTable = function (_Table) {
 			if ($.isEmptyObject(data) || !data || dataIsArray && !data.length) this.toggleEmpty(true);else if (dataIsArray && !isObject(data[0])) throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
 
 			this.rowManager.build(data);
+			return this;
+		}
+
+		/**
+   * Set the row template settings property
+   * as well as the row manager's row template.
+   * @param {Row|Template} template
+   * @returns {RenderTable}
+   */
+
+	}, {
+		key: 'setRowTemplate',
+		value: function setRowTemplate(template) {
+			this.settings.rowTemplate = template;
+			this.rowManager.settings.rowTemplate = template;
 			return this;
 		}
 
@@ -631,7 +939,7 @@ var ControlTable = function (_RenderTable) {
   * @returns {ControlTable}
   */
 	function ControlTable(options) {
-		var _ret4;
+		var _ret6;
 
 		_classCallCheck(this, ControlTable);
 
@@ -643,12 +951,12 @@ var ControlTable = function (_RenderTable) {
 			}
 		};
 
-		var _this4 = _possibleConstructorReturn(this, (ControlTable.__proto__ || Object.getPrototypeOf(ControlTable)).call(this, $Util.opts(defaults, options)));
+		var _this6 = _possibleConstructorReturn(this, (ControlTable.__proto__ || Object.getPrototypeOf(ControlTable)).call(this, $Util.opts(defaults, options)));
 
-		_this4._setupButtons();
-		_this4.$wrapper.addClass('controlTable');
+		_this6._setupButtons();
+		_this6.$wrapper.addClass('controlTable');
 
-		return _ret4 = _this4, _possibleConstructorReturn(_this4, _ret4);
+		return _ret6 = _this6, _possibleConstructorReturn(_this6, _ret6);
 	}
 
 	// buttons

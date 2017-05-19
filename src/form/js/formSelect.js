@@ -52,10 +52,14 @@ class FormSelect extends FormInput {
 	/**
 	 * Select an option
 	 * @param {string} val
+	 * @param {boolean} [trigger=true] - whether to fire change event
 	 * @returns {FormSelect}
 	 */
-	selectOption(val){
+	selectOption(val, trigger = true){
 		this.$wrapper.val(val);
+		if(trigger) {
+			this.$wrapper.trigger('change');
+		}
 		return this;
 	}
 }

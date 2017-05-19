@@ -69,9 +69,8 @@ class FormGroup extends Template {
 	 * @returns {FormGroup}
 	 */
 	setInput($input){
-		$input = $input instanceof Template ? $input.$wrapper : $input;
-		this.$inputWrapper.html($input);
-		this.$input = $input;
+		this.$input = $input instanceof Template ? $input.$wrapper : $input;
+		this.$inputWrapper.html(this.$input);
 		return this;
 	}
 

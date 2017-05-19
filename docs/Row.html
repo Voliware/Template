@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: BootstrapTab</title>
+    <title>JSDoc: Class: Row</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: BootstrapTab</h1>
+    <h1 class="page-title">Class: Row</h1>
 
     
 
@@ -28,9 +28,9 @@
 
 <header>
     
-        <h2>BootstrapTab</h2>
+        <h2>Row</h2>
         
-            <div class="class-description">Templates a bootstrap tab</div>
+            <div class="class-description">A table row with inline editing support.Used to build complex rows.</div>
         
     
 </header>
@@ -44,7 +44,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="BootstrapTab"><span class="type-signature"></span>new BootstrapTab<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Row"><span class="type-signature"></span>new Row<span class="signature">(options)</span><span class="type-signature"></span></h4>
 
     
 
@@ -75,8 +75,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -102,150 +100,10 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last">
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>struct</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>$wrapper</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    ".tab-pane"
-                
-                </td>
-            
-
-            <td class="description last">the tab class</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -286,7 +144,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="bootstrap_js_bootstrapTab.js.html">bootstrap/js/bootstrapTab.js</a>, <a href="bootstrap_js_bootstrapTab.js.html#line11">line 11</a>
+        <a href="table_js_row.js.html">table/js/row.js</a>, <a href="table_js_row.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -346,14 +204,14 @@
 
     
 
-    <h4 class="name" id="populateChildren"><span class="type-signature"></span>populateChildren<span class="signature">(data)</span><span class="type-signature"> &rarr; {<a href="BootstrapTab.html">BootstrapTab</a>}</span></h4>
+    <h4 class="name" id="generateColumns"><span class="type-signature"></span>generateColumns<span class="signature">(cols)</span><span class="type-signature"> &rarr; {<a href="Row.html">Row</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    Populate the id and html
+    Generate columns for the row
 </div>
 
 
@@ -389,121 +247,18 @@
 
         <tr>
             
-                <td class="name"><code>data</code></td>
+                <td class="name"><code>cols</code></td>
             
 
             <td class="type">
             
-                
-<span class="param-type">object</span>
-
-
-            
             </td>
 
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-|
-
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
             
 
             
 
             <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>html</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">jQuery</span>
-|
-
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
         </tr>
 
     
@@ -544,7 +299,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="bootstrap_js_bootstrapTab.js.html">bootstrap/js/bootstrapTab.js</a>, <a href="bootstrap_js_bootstrapTab.js.html#line47">line 47</a>
+        <a href="table_js_row.js.html">table/js/row.js</a>, <a href="table_js_row.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -578,7 +333,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BootstrapTab.html">BootstrapTab</a></span>
+<span class="param-type"><a href="Row.html">Row</a></span>
 
 
     </dd>
@@ -610,7 +365,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun May 14 2017 23:51:09 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun May 14 2017 23:51:10 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

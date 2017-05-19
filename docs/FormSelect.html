@@ -365,7 +365,7 @@
 
     
 
-    <h4 class="name" id="selectOption"><span class="type-signature"></span>selectOption<span class="signature">(val)</span><span class="type-signature"> &rarr; {<a href="FormSelect.html">FormSelect</a>}</span></h4>
+    <h4 class="name" id="selectOption"><span class="type-signature"></span>selectOption<span class="signature">(val, trigger<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="FormSelect.html">FormSelect</a>}</span></h4>
 
     
 
@@ -396,7 +396,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -421,10 +425,61 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>trigger</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">whether to fire change event</td>
         </tr>
 
     
@@ -465,7 +520,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_formSelect.js.html">form/js/formSelect.js</a>, <a href="form_js_formSelect.js.html#line57">line 57</a>
+        <a href="form_js_formSelect.js.html">form/js/formSelect.js</a>, <a href="form_js_formSelect.js.html#line58">line 58</a>
     </li></ul></dd>
     
 
@@ -521,7 +576,7 @@
 
 
 <div class="description">
-    Set properties from data
+    Set properties from dataand rebuild the template.
 </div>
 
 
@@ -619,7 +674,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_formInput.js.html">form/js/formInput.js</a>, <a href="form_js_formInput.js.html#line46">line 46</a>
+        <a href="form_js_formInput.js.html">form/js/formInput.js</a>, <a href="form_js_formInput.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -679,13 +734,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BootstrapCard.html">BootstrapCard</a></li><li><a href="BootstrapCardManager.html">BootstrapCardManager</a></li><li><a href="BootstrapControlTable.html">BootstrapControlTable</a></li><li><a href="BootstrapFeedback.html">BootstrapFeedback</a></li><li><a href="BootstrapForm.html">BootstrapForm</a></li><li><a href="BootstrapFormGroup.html">BootstrapFormGroup</a></li><li><a href="BootstrapFormGroupManager.html">BootstrapFormGroupManager</a></li><li><a href="BootstrapFormInput.html">BootstrapFormInput</a></li><li><a href="BootstrapFormSelect.html">BootstrapFormSelect</a></li><li><a href="BootstrapLoader.html">BootstrapLoader</a></li><li><a href="BootstrapModal.html">BootstrapModal</a></li><li><a href="BootstrapModalForm.html">BootstrapModalForm</a></li><li><a href="BootstrapNav.html">BootstrapNav</a></li><li><a href="BootstrapNavManager.html">BootstrapNavManager</a></li><li><a href="BootstrapPanel.html">BootstrapPanel</a></li><li><a href="BootstrapPanelManager.html">BootstrapPanelManager</a></li><li><a href="BootstrapProgress.html">BootstrapProgress</a></li><li><a href="BootstrapTab.html">BootstrapTab</a></li><li><a href="BootstrapTabManager.html">BootstrapTabManager</a></li><li><a href="BootstrapToggle.html">BootstrapToggle</a></li><li><a href="BootstrapWizard.html">BootstrapWizard</a></li><li><a href="ControlTable.html">ControlTable</a></li><li><a href="CrudRow.html">CrudRow</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Form.html">Form</a></li><li><a href="FormGroup.html">FormGroup</a></li><li><a href="FormGroupManager.html">FormGroupManager</a></li><li><a href="FormInput.html">FormInput</a></li><li><a href="FormSelect.html">FormSelect</a></li><li><a href="FormSerializer.html">FormSerializer</a></li><li><a href="FormSerializerData.html">FormSerializerData</a></li><li><a href="RenderTable.html">RenderTable</a></li><li><a href="Table.html">Table</a></li><li><a href="Wizard.html">Wizard</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BootstrapCard.html">BootstrapCard</a></li><li><a href="BootstrapCardManager.html">BootstrapCardManager</a></li><li><a href="BootstrapControlTable.html">BootstrapControlTable</a></li><li><a href="BootstrapFeedback.html">BootstrapFeedback</a></li><li><a href="BootstrapForm.html">BootstrapForm</a></li><li><a href="BootstrapFormGroup.html">BootstrapFormGroup</a></li><li><a href="BootstrapFormGroupManager.html">BootstrapFormGroupManager</a></li><li><a href="BootstrapFormInput.html">BootstrapFormInput</a></li><li><a href="BootstrapFormSelect.html">BootstrapFormSelect</a></li><li><a href="BootstrapLoader.html">BootstrapLoader</a></li><li><a href="BootstrapModal.html">BootstrapModal</a></li><li><a href="BootstrapModalForm.html">BootstrapModalForm</a></li><li><a href="BootstrapNav.html">BootstrapNav</a></li><li><a href="BootstrapNavManager.html">BootstrapNavManager</a></li><li><a href="BootstrapPanel.html">BootstrapPanel</a></li><li><a href="BootstrapPanelManager.html">BootstrapPanelManager</a></li><li><a href="BootstrapProgress.html">BootstrapProgress</a></li><li><a href="BootstrapTab.html">BootstrapTab</a></li><li><a href="BootstrapTabManager.html">BootstrapTabManager</a></li><li><a href="BootstrapToggle.html">BootstrapToggle</a></li><li><a href="BootstrapWizard.html">BootstrapWizard</a></li><li><a href="Col.html">Col</a></li><li><a href="ControlTable.html">ControlTable</a></li><li><a href="CrudRow.html">CrudRow</a></li><li><a href="Feedback.html">Feedback</a></li><li><a href="Form.html">Form</a></li><li><a href="FormGroup.html">FormGroup</a></li><li><a href="FormGroupManager.html">FormGroupManager</a></li><li><a href="FormInput.html">FormInput</a></li><li><a href="FormSelect.html">FormSelect</a></li><li><a href="FormSerializer.html">FormSerializer</a></li><li><a href="FormSerializerData.html">FormSerializerData</a></li><li><a href="RenderTable.html">RenderTable</a></li><li><a href="Row.html">Row</a></li><li><a href="Table.html">Table</a></li><li><a href="Wizard.html">Wizard</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon May 01 2017 23:58:56 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun May 14 2017 23:51:09 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

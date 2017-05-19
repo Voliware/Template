@@ -25,10 +25,11 @@ var FormInput = function (_Template) {
 
 	/**
   * Constructor
+  * @param {object} data
   * @param {object} [options]
   * @returns {FormInput}
   */
-	function FormInput(options) {
+	function FormInput(data, options) {
 		var _ret;
 
 		_classCallCheck(this, FormInput);
@@ -50,14 +51,18 @@ var FormInput = function (_Template) {
 		_this.maxlength = undefined;
 		_this.max = undefined;
 		_this.min = undefined;
+		_this.placeholder = null;
 		_this.step = undefined;
-		_this.val = null;
+		_this.value = null;
+
+		_this.set(data);
 
 		return _ret = _this, _possibleConstructorReturn(_this, _ret);
 	}
 
 	/**
   * Set properties from data
+  * and rebuild the template.
   * @param {object} data
   * @returns {FormInput}
   */
@@ -67,6 +72,7 @@ var FormInput = function (_Template) {
 		key: "set",
 		value: function set(data) {
 			Object.set(this, data);
+			this._useDefaultTemplate();
 			return this;
 		}
 
@@ -94,7 +100,7 @@ var FormInput = function (_Template) {
 		key: "_useTemplate",
 		value: function _useTemplate($template) {
 			_get(FormInput.prototype.__proto__ || Object.getPrototypeOf(FormInput.prototype), "_useTemplate", this).call(this, $template);
-			this._setAttrs()._setProps()._setVal();
+			this._setAttrs()._setProps()._setValue();
 			return this;
 		}
 
@@ -112,6 +118,7 @@ var FormInput = function (_Template) {
 				max: this.max,
 				min: this.min,
 				name: this.name,
+				placeholder: this.placeholder,
 				step: this.step,
 				type: this.type
 			});
@@ -139,10 +146,10 @@ var FormInput = function (_Template) {
    */
 
 	}, {
-		key: "_setVal",
-		value: function _setVal() {
-			if (this.val !== null) {
-				this.$wrapper.val(this.val);
+		key: "_setValue",
+		value: function _setValue() {
+			if (this.value !== null) {
+				this.$wrapper.populate(this.value);
 			}
 			return this;
 		}
@@ -220,13 +227,19 @@ var FormSelect = function (_FormInput) {
 		/**
    * Select an option
    * @param {string} val
+   * @param {boolean} [trigger=true] - whether to fire change event
    * @returns {FormSelect}
    */
 
 	}, {
 		key: "selectOption",
 		value: function selectOption(val) {
+			var trigger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
 			this.$wrapper.val(val);
+			if (trigger) {
+				this.$wrapper.trigger('change');
+			}
 			return this;
 		}
 	}]);
@@ -315,9 +328,8 @@ var FormGroup = function (_Template2) {
 	}, {
 		key: "setInput",
 		value: function setInput($input) {
-			$input = $input instanceof Template ? $input.$wrapper : $input;
-			this.$inputWrapper.html($input);
-			this.$input = $input;
+			this.$input = $input instanceof Template ? $input.$wrapper : $input;
+			this.$inputWrapper.html(this.$input);
 			return this;
 		}
 
@@ -373,32 +385,15 @@ var FormGroupManager = function (_TemplateManager) {
 	}
 
 	/**
-  * Create a template object that this manager manages
-  * @param {string} id - id of the object to create and then manage
-  * @param {object} [data={}] - data to populate a jquery template with or construct a Template with
-  * @returns {*|null|Template}
+  * Populate the template
+  * @param {jQuery|Template} formGroup
+  * @param {*} data
+  * @returns {TemplateManager}
   * @private
   */
 
 
 	_createClass(FormGroupManager, [{
-		key: "_create",
-		value: function _create(id) {
-			var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-			var formGroup = new this.settings.template().createInput(data.input).setLabel(data.label);
-			return this._add(formGroup, id);
-		}
-
-		/**
-   * Populate the template
-   * @param {jQuery|Template} formGroup
-   * @param {*} data
-   * @returns {TemplateManager}
-   * @private
-   */
-
-	}, {
 		key: "_populateTemplate",
 		value: function _populateTemplate(formGroup, data) {
 			formGroup.createInput(data.input).setLabel(data.label);
@@ -931,14 +926,14 @@ var Form = function (_Template3) {
 
 		/**
    * Build inputs from cols
-   * @param {object} data - data for a form input
+   * @param {object|object[]} data - data for a form input
    * @returns {Form}
    */
 
 	}, {
 		key: "build",
 		value: function build(data) {
-			this.formGoupManager.build(data);
+			this.formGoupManager.empty().build(data);
 			return this;
 		}
 
@@ -1181,7 +1176,7 @@ var Form = function (_Template3) {
 	}, {
 		key: "resetForm",
 		value: function resetForm() {
-			if (!$.isEmptyObject(this._cachedData)) this.populateForm(this._cachedData);else this.$form[0].reset();
+			if (!$.isEmptyObject(this._processedData)) this.$form.populateChildren(this._processedData);else this.$form[0].reset();
 
 			if (this.feedback) this.feedback.slideUp();
 

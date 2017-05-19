@@ -12,10 +12,11 @@ class FormInput extends Template {
 
 	/**
 	 * Constructor
+	 * @param {object} data
 	 * @param {object} [options]
 	 * @returns {FormInput}
 	 */
-	constructor(options){
+	constructor(data, options){
 		var defaults = {
 			struct : {
 				$wrapper : '.form-input'
@@ -32,19 +33,24 @@ class FormInput extends Template {
 		this.maxlength = undefined;
 		this.max = undefined;
 		this.min = undefined;
+		this.placeholder = null;
 		this.step = undefined;
-		this.val = null;
+		this.value = null;
+		
+		this.set(data);
 
 		return this;
 	}
 
 	/**
 	 * Set properties from data
+	 * and rebuild the template.
 	 * @param {object} data
 	 * @returns {FormInput}
 	 */
 	set(data){
 		Object.set(this, data);
+		this._useDefaultTemplate();
 		return this;
 	}
 
@@ -68,7 +74,7 @@ class FormInput extends Template {
 		super._useTemplate($template);
 		this._setAttrs()
 			._setProps()
-			._setVal();
+			._setValue();
 		return this;
 	}
 
@@ -83,6 +89,7 @@ class FormInput extends Template {
 			max : this.max,
 			min : this.min,
 			name : this.name,
+			placeholder : this.placeholder,
 			step : this.step,
 			type : this.type
 		});
@@ -105,9 +112,9 @@ class FormInput extends Template {
 	 * @returns {FormInput}
 	 * @private
 	 */
-	_setVal(){
-		if(this.val !== null){
-			this.$wrapper.val(this.val);
+	_setValue(){
+		if(this.value !== null){
+			this.$wrapper.populate(this.value);
 		}
 		return this;
 	}

@@ -129,9 +129,9 @@ class Table extends Template {
 			this._processedData = $.extend(true, {}, data);
 
 		$.each(data, function(i, e){
-			// add a private _id for objects
+			// add a private _rowId_ for objects
 			if(isObject(e)){
-				self._processedData[i]._id = i;
+				self._processedData[i]._rowId_ = i;
 			}
 			self._processedData[i] = self._processRow(e);
 		});
@@ -159,69 +159,82 @@ class Table extends Template {
 	 */
     _render(data){
 		var self = this;
-		var useTemplate = !isNull(this.settings.template);
-		var dataIsArray = Array.isArray(data);
 
 		// empty the <tbody>
         this.wipe();
 
-		if(!$.isEmptyObject(data) || (dataIsArray && data.length))
+		if(!$.isEmptyObject(data) || (Array.isArray(data) && data.length))
 			this.toggleEmpty(false);
 		else
 			return this;
 
 		// run through data and create rows
 		Util.each(data, function(i, e){
-			var $row = createRow();
-
-			// if data is an object and a template is used
-			if(useTemplate && !Array.isArray(e))
-				$row.populateChildren(e);
-			// if data is an array
-			else
-				populateRow($row, e);
-
-			addRow($row);
+			self.addRow(e);
 		});
         return this;
-
-		// rows
-
-		/**
-		 * Create a new row
-		 * @returns {jQuery}
-		 */
-		function createRow(){
-			return self.$tr.clone();
-		}
-
-		/**
-		 * Add the row to the <tobdy>
-		 * @param {jQuery} $row
-		 */
-		function addRow($row){
-			$row.appendTo(self.$tbody);
-			self.$rows.push($row);
-		}
-
-		/**
-		 * Populate a row with data
-		 * The <td> elements will be populated
-		 * @param {jQuery} $row - row to populate
-		 * @param {object[]} data - array of data
-		 */
-		function populateRow($row, data){
-			var dataArr = [];
-			Util.each(data, function(i, e){
-				dataArr.push(e);
-			});
-
-			var $tds = $row.find('td');
-			$.each($tds, function(i, e){
-				$(e).html(dataArr[i]);
-			});
-		}
     }
+
+	// rows
+
+	/**
+	 * Create a new row
+	 * @returns {jQuery}
+	 */
+	createRow(){
+		return this.$tr.clone();
+	}
+
+	/**
+	 * Add the row to the <tobdy>
+	 * @param {jQuery} $row
+	 * @returns {Table}
+	 */
+	appendRow($row){
+		$row.appendTo(this.$tbody);
+		this.$rows.push($row);
+		return this;
+	}
+
+	/**
+	 * Populate a row with data
+	 * The <td> elements will be populated
+	 * @param {jQuery} $row - row to populate
+	 * @param {object[]} data - array of data
+	 * @returns {Table}
+	 */
+	populateRow($row, data){
+		var dataArr = [];
+		Util.each(data, function(i, e){
+			dataArr.push(e);
+		});
+
+		var $tds = $row.find('td');
+		$.each($tds, function(i, e){
+			$(e).html(dataArr[i]);
+		});
+		return this;
+	}
+
+	/**
+	 * Add a new row and populate with data
+	 * @param {object} data
+	 * @returns {Table}
+	 */
+	addRow(data){
+		var useTemplate = !isNull(this.settings.template);
+		var $row = this.createRow();
+
+		// if data is an object and a template is used
+		if(useTemplate && !Array.isArray(data))
+			$row.populateChildren(data);
+		// if data is an array
+		else
+			this.populateRow($row, data);
+
+		this.appendRow($row);
+		return this;
+	}
 
 	/**
 	 * Check if the table is empty based

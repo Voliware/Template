@@ -705,7 +705,7 @@ var BootstrapModalForm = function (_BootstrapModal) {
 	}, {
 		key: 'initialize',
 		value: function initialize() {
-			return this._createForm();
+			return this._createForm()._onCreateForm();
 		}
 	}]);
 

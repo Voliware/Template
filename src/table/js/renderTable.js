@@ -50,6 +50,18 @@ class RenderTable extends Table {
 	}
 
 	/**
+	 * Set the table and rowManager's identifier
+	 * @param {string} identifier
+	 * @returns {RenderTable}
+	 * @private
+	 */
+	setIdentifier(identifier){
+		this.settings.identifier = identifier;
+		this.rowManager.settings.identifier = identifier;
+		return this;
+	}
+
+	/**
 	 * Render via TemplateManager.manage.
 	 * Cannot use an array of non-object data
 	 * @param {object|object[]} data
@@ -65,6 +77,18 @@ class RenderTable extends Table {
 			throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");
 
 		this.rowManager.build(data);
+		return this;
+	}
+
+	/**
+	 * Set the row template settings property
+	 * as well as the row manager's row template.
+	 * @param {Row|Template} template
+	 * @returns {RenderTable}
+	 */
+	setRowTemplate(template){
+		this.settings.rowTemplate = template;
+		this.rowManager.settings.rowTemplate = template;
 		return this;
 	}
 

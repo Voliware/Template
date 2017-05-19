@@ -7,9 +7,9 @@
 /**
  * CRUD row with read/update/delete buttons.
  * A virtual class to extend from.
- * @extends Template
+ * @extends Row
  */
-class CrudRow extends Template {
+class CrudRow extends Row {
 
 	/**
 	 * Constructor
@@ -18,7 +18,6 @@ class CrudRow extends Template {
 	constructor(options){
 		var defaults = {
 			struct : {
-				$wrapper : 'tr',
 				$deleteButton : '[name="deleteButton"]',
 				$updateButton : '[name="updateButton"]',
 				$viewButton : '[name="viewButton"]'

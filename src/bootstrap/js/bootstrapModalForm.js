@@ -71,6 +71,6 @@ class BootstrapModalForm extends BootstrapModal {
 	 * @returns {*}
 	 */
 	initialize(){
-		return this._createForm();
+		return this._createForm()._onCreateForm();
 	}
 }

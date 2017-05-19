@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: FormSerializerData</title>
+    <title>JSDoc: Class: Col</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: FormSerializerData</h1>
+    <h1 class="page-title">Class: Col</h1>
 
     
 
@@ -28,9 +28,9 @@
 
 <header>
     
-        <h2>FormSerializerData</h2>
+        <h2>Col</h2>
         
-            <div class="class-description">An object that holds form dataand can output it in different ways</div>
+            <div class="class-description">A table column with inline editing support.Used to build complex rows.</div>
         
     
 </header>
@@ -44,7 +44,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="FormSerializerData"><span class="type-signature"></span>new FormSerializerData<span class="signature">(data<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Col"><span class="type-signature"></span>new Col<span class="signature">(options)</span><span class="type-signature"></span></h4>
 
     
 
@@ -75,11 +75,7 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
-        
-        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -91,7 +87,7 @@
 
         <tr>
             
-                <td class="name"><code>data</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
@@ -104,23 +100,7 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
 
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    {}
-                
-                </td>
             
 
             <td class="description last"></td>
@@ -164,7 +144,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_formSerializerData.js.html">form/js/formSerializerData.js</a>, <a href="form_js_formSerializerData.js.html#line11">line 11</a>
+        <a href="table_js_col.js.html">table/js/col.js</a>, <a href="table_js_col.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -194,6 +174,17 @@
     </div>
 
     
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>Template</li>
+    </ul>
+
+
+    
 
     
 
@@ -213,14 +204,114 @@
 
     
 
-    <h4 class="name" id="set"><span class="type-signature"></span>set<span class="signature">(data)</span><span class="type-signature"> &rarr; {<a href="FormSerializerData.html">FormSerializerData</a>}</span></h4>
+    <h4 class="name" id="createInlineField"><span class="type-signature"></span>createInlineField<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Col.html">Col</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    Set the data
+    Create an input or select for inline editing
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="table_js_col.js.html">table/js/col.js</a>, <a href="table_js_col.js.html#line104">line 104</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Col.html">Col</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setFieldOptions"><span class="type-signature"></span>setFieldOptions<span class="signature">(options)</span><span class="type-signature"> &rarr; {<a href="Col.html">Col</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Set field options
 </div>
 
 
@@ -256,13 +347,287 @@
 
         <tr>
             
-                <td class="name"><code>data</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tag</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="table_js_col.js.html">table/js/col.js</a>, <a href="table_js_col.js.html#line69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Col.html">Col</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toggleInlineEdit"><span class="type-signature"></span>toggleInlineEdit<span class="signature">(state)</span><span class="type-signature"> &rarr; {<a href="Col.html">Col</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Toggle inline editing state
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
 
 
             
@@ -313,7 +678,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_formSerializerData.js.html">form/js/formSerializerData.js</a>, <a href="form_js_formSerializerData.js.html#line28">line 28</a>
+        <a href="table_js_col.js.html">table/js/col.js</a>, <a href="table_js_col.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -347,407 +712,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="FormSerializerData.html">FormSerializerData</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="toObject"><span class="type-signature"></span>toObject<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Convert the data to an object
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_formSerializerData.js.html">form/js/formSerializerData.js</a>, <a href="form_js_formSerializerData.js.html#line90">line 90</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="toOrderedString"><span class="type-signature"></span>toOrderedString<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Convert the data to anordered serialized string
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_formSerializerData.js.html">form/js/formSerializerData.js</a>, <a href="form_js_formSerializerData.js.html#line54">line 54</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Convert the data to a serialized string
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_formSerializerData.js.html">form/js/formSerializerData.js</a>, <a href="form_js_formSerializerData.js.html#line37">line 37</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="toValue"><span class="type-signature"></span>toValue<span class="signature">()</span><span class="type-signature"> &rarr; {*}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Convert the data into a single value.This is only useful if the form only has one input.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="form_js_formSerializerData.js.html">form/js/formSerializerData.js</a>, <a href="form_js_formSerializerData.js.html#line106">line 106</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
+<span class="param-type"><a href="Col.html">Col</a></span>
 
 
     </dd>
@@ -779,7 +744,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun May 14 2017 23:51:10 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun May 14 2017 23:51:09 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

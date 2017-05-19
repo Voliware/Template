@@ -554,17 +554,73 @@ for(i=0;i<diff.length;i++){this._delete(diff[i]);}return this;}/**
 	 * @param {jQuery|string} [icon] - icon to show
 	 * @returns {Feedback}
 	 */},{key:"setFeedback",value:function setFeedback(cls,text,icon){if(this.is(':hidden')){this._setClass(cls);this.$text.html(text);if(icon){this.$icon.html(icon);}this.slideDown();}else{this._animateFeedback(cls,text,icon);}return this;}}]);return Feedback;}(Template);/*!
+ * col
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ *//**
+ * A table column with inline editing support.
+ * Used to build complex rows.
+ * @extends Template
+ */var Col=function(_Template2){_inherits(Col,_Template2);/**
+	 * Constructor
+	 * @param {object} options
+	 * @returns {Col}
+	 */function Col(options){var _ret4;_classCallCheck(this,Col);var defaults={inlineEdit:true,// options found in FormInput
+fieldOptions:{name:"input",type:'text',tag:'input'},struct:{$wrapper:'td'}};var _this4=_possibleConstructorReturn(this,(Col.__proto__||Object.getPrototypeOf(Col)).call(this,$Util.opts(defaults,options)));var self=_this4;// properties
+_this4.value=0;// states
+_this4.isInEditMode=false;// handlers
+if(_this4.settings.inlineEdit&&!self.isInEditMode){_this4.$wrapper.click(function(){self.toggleInlineEdit(true);});}return _ret4=_this4,_possibleConstructorReturn(_this4,_ret4);}/**
+	 * Default template
+	 * @returns {Template}
+	 * @private
+	 */_createClass(Col,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var template='<td><span data-name="'+this.settings.fieldOptions.name+'"></span></td>';return this._useTemplate(template);}/**
+	 * Set field options
+	 * @param {object} options
+	 * @param {string} options.name
+	 * @param {string} [options.type]
+	 * @param {string} [options.tag]
+	 * @returns {Col}
+	 */},{key:"setFieldOptions",value:function setFieldOptions(options){this.settings.fieldOptions.name=options.name;if(isDefined(options.type)){this.settings.fieldOptions.type=options.type;}if(isDefined(options.tag)){this.settings.fieldOptions.tag=options.tag;}this._useDefaultTemplate();return this;}/**
+	 * Toggle inline editing state
+	 * @param {boolean} state
+	 * @returns {Col}
+	 */},{key:"toggleInlineEdit",value:function toggleInlineEdit(state){this.isInEditMode=state;if(state){this.$wrapper.children().wrap('<div class="childWrap" style="display:none;"></div>');this.createInlineField();}else{this.$wrapper.find(this.settings.fieldOptions.tag).remove();this.$wrapper.find('.childWrap').children().unwrap();}return this;}/**
+	 * Create an input or select for inline editing
+	 * @returns {Col}
+	 */},{key:"createInlineField",value:function createInlineField(){var self=this;var field;switch(this.settings.fieldOptions.tag){case'select':field=new FormSelect(this.settings.fieldOptions);break;case'input':default:field=new FormInput(this.settings.fieldOptions);break;}this.$wrapper.append(field.$wrapper);field.focus();field.val(this.value);field.blur(function(){if(self.isInEditMode){self.trigger('edit',$(this).val());self.toggleInlineEdit(false);}});return this;}}]);return Col;}(Template);/*!
+ * row
+ * https://github.com/Voliware/Template
+ * Licensed under the MIT license.
+ *//**
+ * A table row with inline editing support.
+ * Used to build complex rows.
+ * @extends Template
+ */var Row=function(_Template3){_inherits(Row,_Template3);/**
+	 * Constructor
+	 * @param {object} options
+	 * @returns {Row}
+	 */function Row(options){var _ret5;_classCallCheck(this,Row);var defaults={colIdentifier:'name',struct:{$wrapper:'tr'}};var _this5=_possibleConstructorReturn(this,(Row.__proto__||Object.getPrototypeOf(Row)).call(this,$Util.opts(defaults,options)));var self=_this5;// components
+_this5.colManager=new TemplateManager({identifier:_this5.settings.colIdentifier,useObjectNames:_this5.settings.useObjectNames,$wrapper:_this5.$wrapper}).on('add',function(row){row.on('update',function(e,data){self.trigger('update',data);});});// save any template columns
+_this5.$cols=[];_this5.$wrapper.find('td').each(function(i,e){self.$cols.push($(e));});return _ret5=_this5,_possibleConstructorReturn(_this5,_ret5);}/**
+	 * Default template
+	 * @returns {Row}
+	 * @private
+	 */_createClass(Row,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var template='<tr></tr>';return this._useTemplate(template);}/**
+	 * Generate columns for the row
+	 * @param cols
+	 * @returns {Row}
+	 */},{key:"generateColumns",value:function generateColumns(cols){for(var i=0;i<cols.length;i++){var fieldOptions={fieldOptions:{name:cols[i].name}};var colData=$.extend(true,fieldOptions,cols[i]);var col=new Col(colData);this.colManager.addObject(col);this.$wrapper.append(col.$wrapper);}for(i=0;i<this.$cols.length;i++){this.$wrapper.append(this.$cols[i]);}return this;}}]);return Row;}(Template);/*!
  * crudRow
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  *//**
  * CRUD row with read/update/delete buttons.
  * A virtual class to extend from.
- * @extends Template
- */var CrudRow=function(_Template2){_inherits(CrudRow,_Template2);/**
+ * @extends Row
+ */var CrudRow=function(_Row){_inherits(CrudRow,_Row);/**
 	 * Constructor
 	 * @returns {CrudRow}
-	 */function CrudRow(options){var _ret4;_classCallCheck(this,CrudRow);var defaults={struct:{$wrapper:'tr',$deleteButton:'[name="deleteButton"]',$updateButton:'[name="updateButton"]',$viewButton:'[name="viewButton"]'}};var _this4=_possibleConstructorReturn(this,(CrudRow.__proto__||Object.getPrototypeOf(CrudRow)).call(this,$Util.opts(defaults,options)));return _ret4=_this4,_possibleConstructorReturn(_this4,_ret4);}// delete
+	 */function CrudRow(options){var _ret6;_classCallCheck(this,CrudRow);var defaults={struct:{$deleteButton:'[name="deleteButton"]',$updateButton:'[name="updateButton"]',$viewButton:'[name="viewButton"]'}};var _this6=_possibleConstructorReturn(this,(CrudRow.__proto__||Object.getPrototypeOf(CrudRow)).call(this,$Util.opts(defaults,options)));return _ret6=_this6,_possibleConstructorReturn(_this6,_ret6);}// delete
 /**
 	 * Attach delete button handlers
 	 * @returns {CrudRow}
@@ -591,14 +647,14 @@ for(i=0;i<diff.length;i++){this._delete(diff[i]);}return this;}/**
 	 */},{key:"_viewButtonAction",value:function _viewButtonAction(){throw new Error("CrudRow._viewButtonAction: must be implemented in child class");}/**
 	 * Initialize the row
 	 * @returns {CrudRow}
-	 */},{key:"initialize",value:function initialize(){this._attachDeleteButtonHandlers()._attachUpdateButtonHandlers()._attachViewButtonHandlers();return this;}}]);return CrudRow;}(Template);/*!
+	 */},{key:"initialize",value:function initialize(){this._attachDeleteButtonHandlers()._attachUpdateButtonHandlers()._attachViewButtonHandlers();return this;}}]);return CrudRow;}(Row);/*!
  * table
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  *//**
  * Templates and creates tables
  * @extends Template
- */var Table=function(_Template3){_inherits(Table,_Template3);/**
+ */var Table=function(_Template4){_inherits(Table,_Template4);/**
 	 * Constructor
 	 * @param {object} options
 	 * @param {string[]} options.rowHeaders - if using the default table
@@ -610,10 +666,10 @@ for(i=0;i<diff.length;i++){this._delete(diff[i]);}return this;}/**
 	 * @param {string} options.struct.$tfoot - css class of the footer
 	 * @param {string} options.struct.$tr - css class of the row
 	 * @returns {Table}
-	 */function Table(options){var _ret5;_classCallCheck(this,Table);var defaults={struct:{$wrapper:'table',$thead:'thead',$tbody:'tbody',$tfoot:'tfoot',$tr:'tbody > tr'},rowHeaders:[]};// properties
-var _this5=_possibleConstructorReturn(this,(Table.__proto__||Object.getPrototypeOf(Table)).call(this,$Util.opts(defaults,options)));_this5.$rows=[];// states
-_this5.isFirstBuild=true;// provide a default empty msg
-_this5.$empty=$('<tr class="table-empty"><td>There is no data to display.</td></tr>');return _ret5=_this5,_possibleConstructorReturn(_this5,_ret5);}/**
+	 */function Table(options){var _ret7;_classCallCheck(this,Table);var defaults={struct:{$wrapper:'table',$thead:'thead',$tbody:'tbody',$tfoot:'tfoot',$tr:'tbody > tr'},rowHeaders:[]};// properties
+var _this7=_possibleConstructorReturn(this,(Table.__proto__||Object.getPrototypeOf(Table)).call(this,$Util.opts(defaults,options)));_this7.$rows=[];// states
+_this7.isFirstBuild=true;// provide a default empty msg
+_this7.$empty=$('<tr class="table-empty"><td>There is no data to display.</td></tr>');return _ret7=_this7,_possibleConstructorReturn(_this7,_ret7);}/**
 	 * Use the provided template and remove
 	 * the remplate row from the <tbody>
 	 * @param {jQuery|string} [$template=null] - a string or jquery object to use as the template.
@@ -638,8 +694,8 @@ var rh=this.settings.rowHeaders;var $theadRow=$('<tr></tr>');for(var i=0;i<rh.le
 	 * @param {number[]|object|object[]|string[]} data
 	 * @returns {Table}
 	 * @private
-	 */},{key:"_processData",value:function _processData(data){var self=this;if(isArray(data))this._processedData=data;else this._processedData=$.extend(true,{},data);$.each(data,function(i,e){// add a private _id for objects
-if(isObject(e)){self._processedData[i]._id=i;}self._processedData[i]=self._processRow(e);});return this;}/**
+	 */},{key:"_processData",value:function _processData(data){var self=this;if(isArray(data))this._processedData=data;else this._processedData=$.extend(true,{},data);$.each(data,function(i,e){// add a private _rowId_ for objects
+if(isObject(e)){self._processedData[i]._rowId_=i;}self._processedData[i]=self._processRow(e);});return this;}/**
 	 * Optionally process row
 	 * @param {*} data
 	 * @returns {*}
@@ -651,23 +707,29 @@ if(isObject(e)){self._processedData[i]._id=i;}self._processedData[i]=self._proce
 	 * @param {object} data
 	 * @returns {Table}
 	 * @private
-	 */},{key:"_render",value:function _render(data){var self=this;var useTemplate=!isNull(this.settings.template);var dataIsArray=Array.isArray(data);// empty the <tbody>
-this.wipe();if(!$.isEmptyObject(data)||dataIsArray&&data.length)this.toggleEmpty(false);else return this;// run through data and create rows
-Util.each(data,function(i,e){var $row=createRow();// if data is an object and a template is used
-if(useTemplate&&!Array.isArray(e))$row.populateChildren(e);// if data is an array
-else populateRow($row,e);addRow($row);});return this;// rows
+	 */},{key:"_render",value:function _render(data){var self=this;// empty the <tbody>
+this.wipe();if(!$.isEmptyObject(data)||Array.isArray(data)&&data.length)this.toggleEmpty(false);else return this;// run through data and create rows
+Util.each(data,function(i,e){self.addRow(e);});return this;}// rows
 /**
-		 * Create a new row
-		 * @returns {jQuery}
-		 */function createRow(){return self.$tr.clone();}/**
-		 * Add the row to the <tobdy>
-		 * @param {jQuery} $row
-		 */function addRow($row){$row.appendTo(self.$tbody);self.$rows.push($row);}/**
-		 * Populate a row with data
-		 * The <td> elements will be populated
-		 * @param {jQuery} $row - row to populate
-		 * @param {object[]} data - array of data
-		 */function populateRow($row,data){var dataArr=[];Util.each(data,function(i,e){dataArr.push(e);});var $tds=$row.find('td');$.each($tds,function(i,e){$(e).html(dataArr[i]);});}}/**
+	 * Create a new row
+	 * @returns {jQuery}
+	 */},{key:"createRow",value:function createRow(){return this.$tr.clone();}/**
+	 * Add the row to the <tobdy>
+	 * @param {jQuery} $row
+	 * @returns {Table}
+	 */},{key:"appendRow",value:function appendRow($row){$row.appendTo(this.$tbody);this.$rows.push($row);return this;}/**
+	 * Populate a row with data
+	 * The <td> elements will be populated
+	 * @param {jQuery} $row - row to populate
+	 * @param {object[]} data - array of data
+	 * @returns {Table}
+	 */},{key:"populateRow",value:function populateRow($row,data){var dataArr=[];Util.each(data,function(i,e){dataArr.push(e);});var $tds=$row.find('td');$.each($tds,function(i,e){$(e).html(dataArr[i]);});return this;}/**
+	 * Add a new row and populate with data
+	 * @param {object} data
+	 * @returns {Table}
+	 */},{key:"addRow",value:function addRow(data){var useTemplate=!isNull(this.settings.template);var $row=this.createRow();// if data is an object and a template is used
+if(useTemplate&&!Array.isArray(data))$row.populateChildren(data);// if data is an array
+else this.populateRow($row,data);this.appendRow($row);return this;}/**
 	 * Check if the table is empty based
 	 * on the number of trs in the tbody.
 	 * This may be useful if rows were
@@ -712,7 +774,7 @@ if(this._isEmptyTable()){this.toggleEmpty();}return this;}/**
 	 * @param {string} [options.identifier='id'] - required for TemplateManager
 	 * @param {boolean} [options.useObjectNames=false] - required for TemplateManager
 	 * @returns {RenderTable}
-	 */function RenderTable(options){var _ret6;_classCallCheck(this,RenderTable);var defaults={// to manage objects, they must have
+	 */function RenderTable(options){var _ret8;_classCallCheck(this,RenderTable);var defaults={// to manage objects, they must have
 // a unique id before they get to Manager.
 // this is their id property name
 identifier:'id',// OR instead of using an identifier,
@@ -724,13 +786,23 @@ useObjectNames:false,// instead of using a jquery object
 rowTemplate:null};// components
 // row manager to re-build rows instead
 // of wiping the <tbody> each time
-var _this6=_possibleConstructorReturn(this,(RenderTable.__proto__||Object.getPrototypeOf(RenderTable)).call(this,$Util.opts(defaults,options)));_this6.rowManager=new TemplateManager({identifier:_this6.settings.identifier,useObjectNames:_this6.settings.useObjectNames,template:_this6.settings.rowTemplate||_this6.$tr,$wrapper:_this6.$tbody});_this6.$wrapper.addClass('renderTable');return _ret6=_this6,_possibleConstructorReturn(_this6,_ret6);}/**
+var _this8=_possibleConstructorReturn(this,(RenderTable.__proto__||Object.getPrototypeOf(RenderTable)).call(this,$Util.opts(defaults,options)));_this8.rowManager=new TemplateManager({identifier:_this8.settings.identifier,useObjectNames:_this8.settings.useObjectNames,template:_this8.settings.rowTemplate||_this8.$tr,$wrapper:_this8.$tbody});_this8.$wrapper.addClass('renderTable');return _ret8=_this8,_possibleConstructorReturn(_this8,_ret8);}/**
+	 * Set the table and rowManager's identifier
+	 * @param {string} identifier
+	 * @returns {RenderTable}
+	 * @private
+	 */_createClass(RenderTable,[{key:"setIdentifier",value:function setIdentifier(identifier){this.settings.identifier=identifier;this.rowManager.settings.identifier=identifier;return this;}/**
 	 * Render via TemplateManager.manage.
 	 * Cannot use an array of non-object data
 	 * @param {object|object[]} data
 	 * @returns {RenderTable}
 	 * @private
-	 */_createClass(RenderTable,[{key:"_render",value:function _render(data){var dataIsArray=Array.isArray(data);if($.isEmptyObject(data)||!data||dataIsArray&&!data.length)this.toggleEmpty(true);else if(dataIsArray&&!isObject(data[0]))throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");this.rowManager.build(data);return this;}/**
+	 */},{key:"_render",value:function _render(data){var dataIsArray=Array.isArray(data);if($.isEmptyObject(data)||!data||dataIsArray&&!data.length)this.toggleEmpty(true);else if(dataIsArray&&!isObject(data[0]))throw new ReferenceError("RenderTable._render: data must be an object, or an array of objects");this.rowManager.build(data);return this;}/**
+	 * Set the row template settings property
+	 * as well as the row manager's row template.
+	 * @param {Row|Template} template
+	 * @returns {RenderTable}
+	 */},{key:"setRowTemplate",value:function setRowTemplate(template){this.settings.rowTemplate=template;this.rowManager.settings.rowTemplate=template;return this;}/**
 	 * Empty the tbody and clear cached data
 	 * @returns {RenderTable}
 	 */},{key:"wipe",value:function wipe(){_get2(RenderTable.prototype.__proto__||Object.getPrototypeOf(RenderTable.prototype),"wipe",this).call(this);this.rowManager.deleteObjects();return this;}/**
@@ -757,7 +829,7 @@ if(this._isEmptyTable()){this.toggleEmpty();}return this;}}]);return RenderTable
 	 * @param {boolean} [options.buttons.updateButton=true]
 	 * @param {boolean} [options.buttons.viewButton=true]
 	 * @returns {ControlTable}
-	 */function ControlTable(options){var _ret7;_classCallCheck(this,ControlTable);var defaults={buttons:{deleteButton:true,viewButton:true,updateButton:true}};var _this7=_possibleConstructorReturn(this,(ControlTable.__proto__||Object.getPrototypeOf(ControlTable)).call(this,$Util.opts(defaults,options)));_this7._setupButtons();_this7.$wrapper.addClass('controlTable');return _ret7=_this7,_possibleConstructorReturn(_this7,_ret7);}// buttons
+	 */function ControlTable(options){var _ret9;_classCallCheck(this,ControlTable);var defaults={buttons:{deleteButton:true,viewButton:true,updateButton:true}};var _this9=_possibleConstructorReturn(this,(ControlTable.__proto__||Object.getPrototypeOf(ControlTable)).call(this,$Util.opts(defaults,options)));_this9._setupButtons();_this9.$wrapper.addClass('controlTable');return _ret9=_this9,_possibleConstructorReturn(_this9,_ret9);}// buttons
 /**
 	 * Add headers and tds for
 	 * each button that is enabled
@@ -816,16 +888,18 @@ if(this._isEmptyTable()){this.toggleEmpty();}return this;}}]);return RenderTable
  *//**
  * Form input
  * @extends Template
- */var FormInput=function(_Template4){_inherits(FormInput,_Template4);/**
+ */var FormInput=function(_Template5){_inherits(FormInput,_Template5);/**
 	 * Constructor
+	 * @param {object} data
 	 * @param {object} [options]
 	 * @returns {FormInput}
-	 */function FormInput(options){var _ret8;_classCallCheck(this,FormInput);var defaults={struct:{$wrapper:'.form-input'}};// properties
-var _this8=_possibleConstructorReturn(this,(FormInput.__proto__||Object.getPrototypeOf(FormInput)).call(this,$Util.opts(defaults,options)));_this8.type="text";_this8.tag="input";_this8.disabled=false;_this8.required=false;_this8.name="input";_this8.maxlength=undefined;_this8.max=undefined;_this8.min=undefined;_this8.step=undefined;_this8.val=null;return _ret8=_this8,_possibleConstructorReturn(_this8,_ret8);}/**
+	 */function FormInput(data,options){var _ret10;_classCallCheck(this,FormInput);var defaults={struct:{$wrapper:'.form-input'}};// properties
+var _this10=_possibleConstructorReturn(this,(FormInput.__proto__||Object.getPrototypeOf(FormInput)).call(this,$Util.opts(defaults,options)));_this10.type="text";_this10.tag="input";_this10.disabled=false;_this10.required=false;_this10.name="input";_this10.maxlength=undefined;_this10.max=undefined;_this10.min=undefined;_this10.placeholder=null;_this10.step=undefined;_this10.value=null;_this10.set(data);return _ret10=_this10,_possibleConstructorReturn(_this10,_ret10);}/**
 	 * Set properties from data
+	 * and rebuild the template.
 	 * @param {object} data
 	 * @returns {FormInput}
-	 */_createClass(FormInput,[{key:"set",value:function set(data){Object.set(this,data);return this;}/**
+	 */_createClass(FormInput,[{key:"set",value:function set(data){Object.set(this,data);this._useDefaultTemplate();return this;}/**
 	 * Default template
 	 * @private
 	 */},{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var $template=$('<input class="form-input"/>');this._useTemplate($template);return this;}/**
@@ -833,11 +907,11 @@ var _this8=_possibleConstructorReturn(this,(FormInput.__proto__||Object.getProto
 	 * @param {jQuery} $template
 	 * @returns {FormInput}
 	 * @private
-	 */},{key:"_useTemplate",value:function _useTemplate($template){_get2(FormInput.prototype.__proto__||Object.getPrototypeOf(FormInput.prototype),"_useTemplate",this).call(this,$template);this._setAttrs()._setProps()._setVal();return this;}/**
+	 */},{key:"_useTemplate",value:function _useTemplate($template){_get2(FormInput.prototype.__proto__||Object.getPrototypeOf(FormInput.prototype),"_useTemplate",this).call(this,$template);this._setAttrs()._setProps()._setValue();return this;}/**
 	 * Set attributes
 	 * @returns {FormInput}
 	 * @private
-	 */},{key:"_setAttrs",value:function _setAttrs(){this.$wrapper.attr({maxlength:this.maxlength,max:this.max,min:this.min,name:this.name,step:this.step,type:this.type});return this;}/**
+	 */},{key:"_setAttrs",value:function _setAttrs(){this.$wrapper.attr({maxlength:this.maxlength,max:this.max,min:this.min,name:this.name,placeholder:this.placeholder,step:this.step,type:this.type});return this;}/**
 	 * Set props
 	 * @returns {FormInput}
 	 * @private
@@ -845,7 +919,7 @@ var _this8=_possibleConstructorReturn(this,(FormInput.__proto__||Object.getProto
 	 * Set the value
 	 * @returns {FormInput}
 	 * @private
-	 */},{key:"_setVal",value:function _setVal(){if(this.val!==null){this.$wrapper.val(this.val);}return this;}}]);return FormInput;}(Template);/*!
+	 */},{key:"_setValue",value:function _setValue(){if(this.value!==null){this.$wrapper.populate(this.value);}return this;}}]);return FormInput;}(Template);/*!
  * formSelect
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -856,8 +930,8 @@ var _this8=_possibleConstructorReturn(this,(FormInput.__proto__||Object.getProto
 	 * Constructor
 	 * @param {object} [options]
 	 * @returns {FormInput}
-	 */function FormSelect(options){var _ret9;_classCallCheck(this,FormSelect);// properties
-var _this9=_possibleConstructorReturn(this,(FormSelect.__proto__||Object.getPrototypeOf(FormSelect)).call(this,options));_this9.tag="select";_this9.type=undefined;return _ret9=_this9,_possibleConstructorReturn(_this9,_ret9);}/**
+	 */function FormSelect(options){var _ret11;_classCallCheck(this,FormSelect);// properties
+var _this11=_possibleConstructorReturn(this,(FormSelect.__proto__||Object.getPrototypeOf(FormSelect)).call(this,options));_this11.tag="select";_this11.type=undefined;return _ret11=_this11,_possibleConstructorReturn(_this11,_ret11);}/**
 	 * Set attributes
 	 * @returns {FormInput}
 	 * @private
@@ -870,19 +944,20 @@ var _this9=_possibleConstructorReturn(this,(FormSelect.__proto__||Object.getProt
 	 */},{key:"addToSelect",value:function addToSelect(){var _$wrapper;(_$wrapper=this.$wrapper).addToSelect.apply(_$wrapper,arguments);return this;}/**
 	 * Select an option
 	 * @param {string} val
+	 * @param {boolean} [trigger=true] - whether to fire change event
 	 * @returns {FormSelect}
-	 */},{key:"selectOption",value:function selectOption(val){this.$wrapper.val(val);return this;}}]);return FormSelect;}(FormInput);/*!
+	 */},{key:"selectOption",value:function selectOption(val){var trigger=arguments.length>1&&arguments[1]!==undefined?arguments[1]:true;this.$wrapper.val(val);if(trigger){this.$wrapper.trigger('change');}return this;}}]);return FormSelect;}(FormInput);/*!
  * formGroup
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  *//**
  * Form group
  * @extends Template
- */var FormGroup=function(_Template5){_inherits(FormGroup,_Template5);/**
+ */var FormGroup=function(_Template6){_inherits(FormGroup,_Template6);/**
 	 * Constructor
 	 * @param {object} [options]
 	 * @returns {FormGroup}
-	 */function FormGroup(options){var _ret10;_classCallCheck(this,FormGroup);var defaults={formInput:FormInput,formSelect:FormSelect,struct:{$wrapper:'.form-group',$label:'label',$inputWrapper:'.form-input-wrapper',$input:'input'}};var _this10=_possibleConstructorReturn(this,(FormGroup.__proto__||Object.getPrototypeOf(FormGroup)).call(this,$Util.opts(defaults,options)));_this10.input=null;return _ret10=_this10,_possibleConstructorReturn(_this10,_ret10);}/**
+	 */function FormGroup(options){var _ret12;_classCallCheck(this,FormGroup);var defaults={formInput:FormInput,formSelect:FormSelect,struct:{$wrapper:'.form-group',$label:'label',$inputWrapper:'.form-input-wrapper',$input:'input'}};var _this12=_possibleConstructorReturn(this,(FormGroup.__proto__||Object.getPrototypeOf(FormGroup)).call(this,$Util.opts(defaults,options)));_this12.input=null;return _ret12=_this12,_possibleConstructorReturn(_this12,_ret12);}/**
 	 * Default template
 	 * @private
 	 */_createClass(FormGroup,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var template='<div class="form-group">'+'<label></label>'+'<div class="form-input-wrapper">'+'</div>'+'</div>';this._useTemplate(template);return this;}/**
@@ -893,7 +968,7 @@ var _this9=_possibleConstructorReturn(this,(FormSelect.__proto__||Object.getProt
 	 * Set the input into the input wrapper
 	 * @param {FormInput|FormSelect|jQuery} $input
 	 * @returns {FormGroup}
-	 */},{key:"setInput",value:function setInput($input){$input=$input instanceof Template?$input.$wrapper:$input;this.$inputWrapper.html($input);this.$input=$input;return this;}/**
+	 */},{key:"setInput",value:function setInput($input){this.$input=$input instanceof Template?$input.$wrapper:$input;this.$inputWrapper.html(this.$input);return this;}/**
 	 * Set the label
 	 * @param {jQuery|string} label
 	 * @returns {FormGroup}
@@ -908,19 +983,13 @@ var _this9=_possibleConstructorReturn(this,(FormSelect.__proto__||Object.getProt
 	 * Constructor
 	 * @param {object} [options]
 	 * @returns {FormGroupManager}
-	 */function FormGroupManager(options){var _ret11;_classCallCheck(this,FormGroupManager);var defaults={identifier:'label',template:FormGroup};var _this11=_possibleConstructorReturn(this,(FormGroupManager.__proto__||Object.getPrototypeOf(FormGroupManager)).call(this,$Util.opts(defaults,options)));return _ret11=_this11,_possibleConstructorReturn(_this11,_ret11);}/**
-	 * Create a template object that this manager manages
-	 * @param {string} id - id of the object to create and then manage
-	 * @param {object} [data={}] - data to populate a jquery template with or construct a Template with
-	 * @returns {*|null|Template}
-	 * @private
-	 */_createClass(FormGroupManager,[{key:"_create",value:function _create(id){var data=arguments.length>1&&arguments[1]!==undefined?arguments[1]:{};var formGroup=new this.settings.template().createInput(data.input).setLabel(data.label);return this._add(formGroup,id);}/**
+	 */function FormGroupManager(options){var _ret13;_classCallCheck(this,FormGroupManager);var defaults={identifier:'label',template:FormGroup};var _this13=_possibleConstructorReturn(this,(FormGroupManager.__proto__||Object.getPrototypeOf(FormGroupManager)).call(this,$Util.opts(defaults,options)));return _ret13=_this13,_possibleConstructorReturn(_this13,_ret13);}/**
 	 * Populate the template
 	 * @param {jQuery|Template} formGroup
 	 * @param {*} data
 	 * @returns {TemplateManager}
 	 * @private
-	 */},{key:"_populateTemplate",value:function _populateTemplate(formGroup,data){formGroup.createInput(data.input).setLabel(data.label);return this;}}]);return FormGroupManager;}(TemplateManager);/*!
+	 */_createClass(FormGroupManager,[{key:"_populateTemplate",value:function _populateTemplate(formGroup,data){formGroup.createInput(data.input).setLabel(data.label);return this;}}]);return FormGroupManager;}(TemplateManager);/*!
  * formSerializer
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -1000,7 +1069,7 @@ data=isNaN(e.val)?e.val:parseInt(e.val);});return data;}}]);return FormSerialize
  *//**
  * Templates, serializes, and submits forms
  * @extends Template
- */var Form=function(_Template6){_inherits(Form,_Template6);/**
+ */var Form=function(_Template7){_inherits(Form,_Template7);/**
 	 * Constructor
 	 * @param {object} [options]
 	 * @param {boolean} [options.feedback=true] - whether to show feedback during submissions
@@ -1022,18 +1091,18 @@ data=isNaN(e.val)?e.val:parseInt(e.val);});return data;}}]);return FormSerialize
 	 * @param {string} [options.struct.$reset='.form-reset'] - the reset button selector
 	 * @param {string} [options.struct.$submit='button[type="submit"]'] - the submit button selector
 	 * @returns {Form}
-	 */function Form(options){var _ret12;_classCallCheck(this,Form);var defaults={feedback:true,useTemplate:true,submitUrl:"",submitRequest:null,serializeMode:FormSerializer.serializeMode.toString,checkboxMode:FormSerializer.checkboxMode.number,excluded:[':disabled'],formGroupManager:FormGroupManager,// css classes for each form component
-struct:{$wrapper:'form',$feedback:'.form-feedback',$header:'.form-header',$body:'.form-body',$footer:'.form-footer',$cancel:'.form-cancel',$reset:'.form-reset',$submit:'button[type="submit"]'},validator:null};var _this12=_possibleConstructorReturn(this,(Form.__proto__||Object.getPrototypeOf(Form)).call(this,$Util.opts(defaults,options,'replace')));var self=_this12;// store serialized data
-_this12._serializedData={};// alias
+	 */function Form(options){var _ret14;_classCallCheck(this,Form);var defaults={feedback:true,useTemplate:true,submitUrl:"",submitRequest:null,serializeMode:FormSerializer.serializeMode.toString,checkboxMode:FormSerializer.checkboxMode.number,excluded:[':disabled'],formGroupManager:FormGroupManager,// css classes for each form component
+struct:{$wrapper:'form',$feedback:'.form-feedback',$header:'.form-header',$body:'.form-body',$footer:'.form-footer',$cancel:'.form-cancel',$reset:'.form-reset',$submit:'button[type="submit"]'},validator:null};var _this14=_possibleConstructorReturn(this,(Form.__proto__||Object.getPrototypeOf(Form)).call(this,$Util.opts(defaults,options,'replace')));var self=_this14;// store serialized data
+_this14._serializedData={};// alias
 // this exists solely for Wizard !!
-var $form=_this12.$wrapper.find('form');_this12.$form=$form.length>0?$form:_this12.$wrapper;// components
-_this12.formSerializer=new FormSerializer({serializeMode:_this12.settings.serializeMode,checkboxMode:_this12.settings.checkboxMode,excluded:_this12.settings.excluded});_this12.validator=null;_this12.feedback=null;_this12.formGoupManager=new _this12.settings.formGroupManager({$wrapper:_this12.$body});// handlers
+var $form=_this14.$wrapper.find('form');_this14.$form=$form.length>0?$form:_this14.$wrapper;// components
+_this14.formSerializer=new FormSerializer({serializeMode:_this14.settings.serializeMode,checkboxMode:_this14.settings.checkboxMode,excluded:_this14.settings.excluded});_this14.validator=null;_this14.feedback=null;_this14.formGoupManager=new _this14.settings.formGroupManager({$wrapper:_this14.$body});// handlers
 // default submit handler
-_this12.$form.on('submit',function(e){e.preventDefault();self.serializeForm()._submit();});// cancel
-_this12.$cancel.click(function(){self.resetForm();});// reset
-_this12.$reset.click(function(){self.resetForm();});// set up validator
-if(_this12.settings.validator)_this12._setupValidator();// set up feedback
-if(_this12.settings.feedback)_this12._setupFeedback();return _ret12=_this12,_possibleConstructorReturn(_this12,_ret12);}// setup
+_this14.$form.on('submit',function(e){e.preventDefault();self.serializeForm()._submit();});// cancel
+_this14.$cancel.click(function(){self.resetForm();});// reset
+_this14.$reset.click(function(){self.resetForm();});// set up validator
+if(_this14.settings.validator)_this14._setupValidator();// set up feedback
+if(_this14.settings.feedback)_this14._setupFeedback();return _ret14=_this14,_possibleConstructorReturn(_this14,_ret14);}// setup
 /**
 	 * Default form template
 	 * @returns {Form}
@@ -1053,9 +1122,9 @@ if(_this12.settings.feedback)_this12._setupFeedback();return _ret12=_this12,_pos
 	 */},{key:"_prepare",value:function _prepare(){this.toggleForm(false);this.feedback.show();this.feedback.setFeedback('processing','Getting data...');return this;}// form builder
 /**
 	 * Build inputs from cols
-	 * @param {object} data - data for a form input
+	 * @param {object|object[]} data - data for a form input
 	 * @returns {Form}
-	 */},{key:"build",value:function build(data){this.formGoupManager.build(data);return this;}// ready
+	 */},{key:"build",value:function build(data){this.formGoupManager.empty().build(data);return this;}// ready
 /**
 	 * Set the form to ready by hiding
 	 * feedback and showing the form components
@@ -1123,7 +1192,7 @@ time=time||1;var _html=html+" | "+time;self.$submit.html(_html);c+=1000;}}}/**
 	 * Reset the form, using populated data
 	 * or setting to default values
 	 * @returns {Form}
-	 */},{key:"resetForm",value:function resetForm(){if(!$.isEmptyObject(this._cachedData))this.populateForm(this._cachedData);else this.$form[0].reset();if(this.feedback)this.feedback.slideUp();this.toggleButtons(true);// todo: implement for alternative validators
+	 */},{key:"resetForm",value:function resetForm(){if(!$.isEmptyObject(this._processedData))this.$form.populateChildren(this._processedData);else this.$form[0].reset();if(this.feedback)this.feedback.slideUp();this.toggleButtons(true);// todo: implement for alternative validators
 if(this.validator){switch(this.settings.validator.api){case'formValidation':this.validator.resetForm();break;}}return this;}/**
 	 * Validate the form
 	 * @returns {boolean}
@@ -1164,8 +1233,8 @@ if($form.data('formValidation'))$form.data('formValidation').destroy();$form.for
 	 * @param  {string} [options.struct.$pager='ul.pager'] - pager container
 	 * @param  {string} [options.struct.$previous='li.previous'] - previous button
 	 * @returns {Wizard}
-	 */function Wizard(options){var _ret13;_classCallCheck(this,Wizard);var defaults={struct:{$wrapper:'.wizard',$nav:'ul.nav',$navs:'ul.nav > li',$tabs:'.tab-pane',$next:'li.next',$pager:'ul.pager',$previous:'li.previous'}};var _this13=_possibleConstructorReturn(this,(Wizard.__proto__||Object.getPrototypeOf(Wizard)).call(this,$Util.opts(defaults,options)));_this13.stepCount=_this13.$tabs.length;_this13.step=0;// show or hide pagination and form buttons
-_this13.toggleSubmitButton(_this13.stepCount===1);_this13.togglePreviousButton(false);_this13.toggleNextButton(_this13.stepCount>1);_this13._setHandlers();return _ret13=_this13,_possibleConstructorReturn(_this13,_ret13);}/**
+	 */function Wizard(options){var _ret15;_classCallCheck(this,Wizard);var defaults={struct:{$wrapper:'.wizard',$nav:'ul.nav',$navs:'ul.nav > li',$tabs:'.tab-pane',$next:'li.next',$pager:'ul.pager',$previous:'li.previous'}};var _this15=_possibleConstructorReturn(this,(Wizard.__proto__||Object.getPrototypeOf(Wizard)).call(this,$Util.opts(defaults,options)));_this15.stepCount=_this15.$tabs.length;_this15.step=0;// show or hide pagination and form buttons
+_this15.toggleSubmitButton(_this15.stepCount===1);_this15.togglePreviousButton(false);_this15.toggleNextButton(_this15.stepCount>1);_this15._setHandlers();return _ret15=_this15,_possibleConstructorReturn(_this15,_ret15);}/**
 	 * Clear all handlers. Useful if
 	 * the wizard DOM is being re-used.
 	 * @private
@@ -1328,7 +1397,7 @@ if(!validTab){valid=false;}});return valid;}// buttons
 	 * Constructor
 	 * @param {object} [options]
 	 * @returns {BootstrapControlTable}
-	 */function BootstrapControlTable(options){var _ret14;_classCallCheck(this,BootstrapControlTable);var _this14=_possibleConstructorReturn(this,(BootstrapControlTable.__proto__||Object.getPrototypeOf(BootstrapControlTable)).call(this,options));return _ret14=_this14,_possibleConstructorReturn(_this14,_ret14);}/**
+	 */function BootstrapControlTable(options){var _ret16;_classCallCheck(this,BootstrapControlTable);var _this16=_possibleConstructorReturn(this,(BootstrapControlTable.__proto__||Object.getPrototypeOf(BootstrapControlTable)).call(this,options));return _ret16=_this16,_possibleConstructorReturn(_this16,_ret16);}/**
 	 * Create a delete button
 	 * @param {object} data
 	 * @returns {jQuery}
@@ -1354,7 +1423,7 @@ if(!validTab){valid=false;}});return valid;}// buttons
 	 * Constructor
 	 * @param {object} [options]
 	 * @returns {BootstrapFeedback}
-	 */function BootstrapFeedback(options){var _ret15;_classCallCheck(this,BootstrapFeedback);var _this15=_possibleConstructorReturn(this,(BootstrapFeedback.__proto__||Object.getPrototypeOf(BootstrapFeedback)).call(this,options));var self=_this15;if(_this15.settings.closeButton){_this15.$close.click(function(){self.slideUp();});}return _ret15=_this15,_possibleConstructorReturn(_this15,_ret15);}/**
+	 */function BootstrapFeedback(options){var _ret17;_classCallCheck(this,BootstrapFeedback);var _this17=_possibleConstructorReturn(this,(BootstrapFeedback.__proto__||Object.getPrototypeOf(BootstrapFeedback)).call(this,options));var self=_this17;if(_this17.settings.closeButton){_this17.$close.click(function(){self.slideUp();});}return _ret17=_this17,_possibleConstructorReturn(_this17,_ret17);}/**
 	 * Use the default template and
 	 * add an alert class to the feedback
 	 * @returns {BootstrapFeedback}
@@ -1399,7 +1468,7 @@ if(!validTab){valid=false;}});return valid;}// buttons
 	 * Constructor
 	 * @param {object} options
 	 * @returns {FormGroup}
-	 */function BootstrapFormGroup(options){var _ret16;_classCallCheck(this,BootstrapFormGroup);var defaults={formInput:BootstrapFormInput,formSelect:BootstrapFormSelect};var _this16=_possibleConstructorReturn(this,(BootstrapFormGroup.__proto__||Object.getPrototypeOf(BootstrapFormGroup)).call(this,$Util.opts(defaults,options)));return _ret16=_this16,_possibleConstructorReturn(_this16,_ret16);}/**
+	 */function BootstrapFormGroup(options){var _ret18;_classCallCheck(this,BootstrapFormGroup);var defaults={formInput:BootstrapFormInput,formSelect:BootstrapFormSelect};var _this18=_possibleConstructorReturn(this,(BootstrapFormGroup.__proto__||Object.getPrototypeOf(BootstrapFormGroup)).call(this,$Util.opts(defaults,options)));return _ret18=_this18,_possibleConstructorReturn(_this18,_ret18);}/**
 	 * Default template
 	 * @private
 	 */_createClass(BootstrapFormGroup,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var template='<div class="form-group row">'+'<label class="col-sm-4 control-label"></label>'+'<div class="col-sm-8 form-input-wrapper">'+'</div>'+'</div>';this._useTemplate(template);}}]);return BootstrapFormGroup;}(FormGroup);/*!
@@ -1413,7 +1482,7 @@ if(!validTab){valid=false;}});return valid;}// buttons
 	 * Constructor
 	 * @param {object} [options]
 	 * @returns {BootstrapFormGroupManager}
-	 */function BootstrapFormGroupManager(options){var _ret17;_classCallCheck(this,BootstrapFormGroupManager);var defaults={template:BootstrapFormGroup};var _this17=_possibleConstructorReturn(this,(BootstrapFormGroupManager.__proto__||Object.getPrototypeOf(BootstrapFormGroupManager)).call(this,$Util.opts(defaults,options)));return _ret17=_this17,_possibleConstructorReturn(_this17,_ret17);}return BootstrapFormGroupManager;}(FormGroupManager);/*!
+	 */function BootstrapFormGroupManager(options){var _ret19;_classCallCheck(this,BootstrapFormGroupManager);var defaults={template:BootstrapFormGroup};var _this19=_possibleConstructorReturn(this,(BootstrapFormGroupManager.__proto__||Object.getPrototypeOf(BootstrapFormGroupManager)).call(this,$Util.opts(defaults,options)));return _ret19=_this19,_possibleConstructorReturn(_this19,_ret19);}return BootstrapFormGroupManager;}(FormGroupManager);/*!
  * bootstrapFormInput
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -1424,7 +1493,7 @@ if(!validTab){valid=false;}});return valid;}// buttons
 	 * Constructor
 	 * @param {object} [options]
 	 * @returns {BootstrapFormInput}
-	 */function BootstrapFormInput(options){var _ret18;_classCallCheck(this,BootstrapFormInput);var _this18=_possibleConstructorReturn(this,(BootstrapFormInput.__proto__||Object.getPrototypeOf(BootstrapFormInput)).call(this,options));return _ret18=_this18,_possibleConstructorReturn(_this18,_ret18);}/**
+	 */function BootstrapFormInput(options){var _ret20;_classCallCheck(this,BootstrapFormInput);var _this20=_possibleConstructorReturn(this,(BootstrapFormInput.__proto__||Object.getPrototypeOf(BootstrapFormInput)).call(this,options));return _ret20=_this20,_possibleConstructorReturn(_this20,_ret20);}/**
 	 * Default template
 	 * @private
 	 */_createClass(BootstrapFormInput,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var $template=$('<input class="form-input form-control"/>');this._useTemplate($template);return this;}}]);return BootstrapFormInput;}(FormInput);/*!
@@ -1438,7 +1507,7 @@ if(!validTab){valid=false;}});return valid;}// buttons
 	 * Constructor
 	 * @param {object} [options]
 	 * @returns {BootstrapFormSelect}
-	 */function BootstrapFormSelect(options){var _ret19;_classCallCheck(this,BootstrapFormSelect);var _this19=_possibleConstructorReturn(this,(BootstrapFormSelect.__proto__||Object.getPrototypeOf(BootstrapFormSelect)).call(this,options));return _ret19=_this19,_possibleConstructorReturn(_this19,_ret19);}/**
+	 */function BootstrapFormSelect(options){var _ret21;_classCallCheck(this,BootstrapFormSelect);var _this21=_possibleConstructorReturn(this,(BootstrapFormSelect.__proto__||Object.getPrototypeOf(BootstrapFormSelect)).call(this,options));return _ret21=_this21,_possibleConstructorReturn(_this21,_ret21);}/**
 	 * Default template
 	 * @private
 	 */_createClass(BootstrapFormSelect,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var $template=$('<select class="form-input form-control"></select>');this._useTemplate($template);return this;}}]);return BootstrapFormSelect;}(FormSelect);/*!
@@ -1452,7 +1521,7 @@ if(!validTab){valid=false;}});return valid;}// buttons
 	 * Constructor
 	 * @param {object} options
 	 * @returns {BootstrapForm}
-	 */function BootstrapForm(options){var _ret20;_classCallCheck(this,BootstrapForm);var defaults={formGroupManager:BootstrapFormGroupManager};var _this20=_possibleConstructorReturn(this,(BootstrapForm.__proto__||Object.getPrototypeOf(BootstrapForm)).call(this,$Util.opts(defaults,options,'replace')));return _ret20=_this20,_possibleConstructorReturn(_this20,_ret20);}/**
+	 */function BootstrapForm(options){var _ret22;_classCallCheck(this,BootstrapForm);var defaults={formGroupManager:BootstrapFormGroupManager};var _this22=_possibleConstructorReturn(this,(BootstrapForm.__proto__||Object.getPrototypeOf(BootstrapForm)).call(this,$Util.opts(defaults,options,'replace')));return _ret22=_this22,_possibleConstructorReturn(_this22,_ret22);}/**
 	 * Setup the feedback
 	 * @returns {Form}
 	 * @private
@@ -1463,7 +1532,7 @@ if(!validTab){valid=false;}});return valid;}// buttons
  *//**
  * Template for a bootstrap modal
  * @extends Template
- */var BootstrapModal=function(_Template7){_inherits(BootstrapModal,_Template7);/**
+ */var BootstrapModal=function(_Template8){_inherits(BootstrapModal,_Template8);/**
 	 * Constructor
 	 * @param {object} [options]
 	 * @param {object} [options.struct]
@@ -1476,7 +1545,7 @@ if(!validTab){valid=false;}});return valid;}// buttons
 	 * @param {string} [options.struct.$footer='.modal-footer'] - the footer selector
 	 * @param {string} [options.struct.$close='button.close'] - the close button selector
 	 * @returns {BootstrapModal}
-	 */function BootstrapModal(options){var _ret21;_classCallCheck(this,BootstrapModal);var defaults={struct:{$wrapper:'.modal',$dialog:'.modal-dialog',$content:'.modal-content',$header:'.modal-header',$title:'.modal-title',$body:'.modal-body',$footer:'.modal-footer',$close:'button.close'}};var _this21=_possibleConstructorReturn(this,(BootstrapModal.__proto__||Object.getPrototypeOf(BootstrapModal)).call(this,$Util.opts(defaults,options)));return _ret21=_this21,_possibleConstructorReturn(_this21,_ret21);}/**
+	 */function BootstrapModal(options){var _ret23;_classCallCheck(this,BootstrapModal);var defaults={struct:{$wrapper:'.modal',$dialog:'.modal-dialog',$content:'.modal-content',$header:'.modal-header',$title:'.modal-title',$body:'.modal-body',$footer:'.modal-footer',$close:'button.close'}};var _this23=_possibleConstructorReturn(this,(BootstrapModal.__proto__||Object.getPrototypeOf(BootstrapModal)).call(this,$Util.opts(defaults,options)));return _ret23=_this23,_possibleConstructorReturn(_this23,_ret23);}/**
 	 * Create a default template
 	 * @returns {BootstrapModal}
 	 * @private
@@ -1491,8 +1560,8 @@ if(!validTab){valid=false;}});return valid;}// buttons
 	 * Constructor
 	 * @param {object} [options]
 	 * @returns {BootstrapModalForm}
-	 */function BootstrapModalForm(options){var _ret22;_classCallCheck(this,BootstrapModalForm);// properties
-var _this22=_possibleConstructorReturn(this,(BootstrapModalForm.__proto__||Object.getPrototypeOf(BootstrapModalForm)).call(this,options));_this22.form=null;return _ret22=_this22,_possibleConstructorReturn(_this22,_ret22);}/**
+	 */function BootstrapModalForm(options){var _ret24;_classCallCheck(this,BootstrapModalForm);// properties
+var _this24=_possibleConstructorReturn(this,(BootstrapModalForm.__proto__||Object.getPrototypeOf(BootstrapModalForm)).call(this,options));_this24.form=null;return _ret24=_this24,_possibleConstructorReturn(_this24,_ret24);}/**
 	 * Create and initialize the form
 	 * @private
 	 */_createClass(BootstrapModalForm,[{key:"_createForm",value:function _createForm(){throw new Error("BootstrapModalForm._createForm: must be implemented in child class");}/**
@@ -1506,21 +1575,21 @@ var _this22=_possibleConstructorReturn(this,(BootstrapModalForm.__proto__||Objec
 	 */},{key:"_onCreateForm",value:function _onCreateForm(){this._attachFormHandlers().modal('show');return this;}/**
 	 * Initialize
 	 * @returns {*}
-	 */},{key:"initialize",value:function initialize(){return this._createForm();}}]);return BootstrapModalForm;}(BootstrapModal);/*!
+	 */},{key:"initialize",value:function initialize(){return this._createForm()._onCreateForm();}}]);return BootstrapModalForm;}(BootstrapModal);/*!
  * bootstrapNav
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  *//**
  * Templates a bootstrap nav
  * @extends Template
- */var BootstrapNav=function(_Template8){_inherits(BootstrapNav,_Template8);/**
+ */var BootstrapNav=function(_Template9){_inherits(BootstrapNav,_Template9);/**
 	 * Constructor
 	 * @param {object} [options]
 	 * @param {object} [options.struct]
 	 * @param {string} [options.struct.$wrapper=".tab-pane"]
 	 * @param {string} [options.struct.$link="a"]
 	 * @returns {BootstrapNav}
-	 */function BootstrapNav(options){var _ret23;_classCallCheck(this,BootstrapNav);var defaults={struct:{$wrapper:'li',$link:'a'}};var _this23=_possibleConstructorReturn(this,(BootstrapNav.__proto__||Object.getPrototypeOf(BootstrapNav)).call(this,$Util.opts(defaults,options)));return _ret23=_this23,_possibleConstructorReturn(_this23,_ret23);}/**
+	 */function BootstrapNav(options){var _ret25;_classCallCheck(this,BootstrapNav);var defaults={struct:{$wrapper:'li',$link:'a'}};var _this25=_possibleConstructorReturn(this,(BootstrapNav.__proto__||Object.getPrototypeOf(BootstrapNav)).call(this,$Util.opts(defaults,options)));return _ret25=_this25,_possibleConstructorReturn(_this25,_ret25);}/**
 	 * Build default BootstrapNav
 	 * @returns {BootstrapNav}
 	 * @private
@@ -1547,8 +1616,8 @@ var _this22=_possibleConstructorReturn(this,(BootstrapModalForm.__proto__||Objec
 	 * @param {object} [options.template=BootstrapNav]
 	 * @param {jQuery} [options.$wrapper=$('<div class="nav nav-tabs"></div>')] - manager wrapper
 	 * @returns {BootstrapNavManager}
-	 */function BootstrapNavManager(options){var _ret24;_classCallCheck(this,BootstrapNavManager);var defaults={$wrapper:$('<ul class="nav nav-tabs"></ul>'),template:BootstrapNav};// alias
-var _this24=_possibleConstructorReturn(this,(BootstrapNavManager.__proto__||Object.getPrototypeOf(BootstrapNavManager)).call(this,$Util.opts(defaults,options)));_this24.navs=_this24.objects;return _ret24=_this24,_possibleConstructorReturn(_this24,_ret24);}/**
+	 */function BootstrapNavManager(options){var _ret26;_classCallCheck(this,BootstrapNavManager);var defaults={$wrapper:$('<ul class="nav nav-tabs"></ul>'),template:BootstrapNav};// alias
+var _this26=_possibleConstructorReturn(this,(BootstrapNavManager.__proto__||Object.getPrototypeOf(BootstrapNavManager)).call(this,$Util.opts(defaults,options)));_this26.navs=_this26.objects;return _ret26=_this26,_possibleConstructorReturn(_this26,_ret26);}/**
 	 * Create and add a new Nav
 	 * @param {string} id - id of the object to create and then manage
 	 * @param {object} data
@@ -1566,7 +1635,7 @@ var _this24=_possibleConstructorReturn(this,(BootstrapNavManager.__proto__||Obje
  *//**
  * Template for bootstrap panels
  * @extends Template
- */var BootstrapPanel=function(_Template9){_inherits(BootstrapPanel,_Template9);/**
+ */var BootstrapPanel=function(_Template10){_inherits(BootstrapPanel,_Template10);/**
 	 * Constructor
 	 * @param {object} [options]
 	 * @param {boolean} [options.closeable=false] - whether to attach a close button to the panel
@@ -1580,8 +1649,8 @@ var _this24=_possibleConstructorReturn(this,(BootstrapNavManager.__proto__||Obje
 	 * @param {string} [options.struct.$body='.panel-body'] - the panel body selector
 	 * @param {string} [options.struct.$footer='.panel-footer'] - the panel footer selector
 	 * @returns {BootstrapPanel}
-	 */function BootstrapPanel(options){var _ret25;_classCallCheck(this,BootstrapPanel);var defaults={closeable:false,collapsible:false,struct:{$wrapper:'.panel',$header:'.panel-heading',$title:'.panel-title',$collapse:'.panel-collapse',$close:'.panel-close',$body:'.panel-body',$content:'.panel-content',$footer:'.panel-footer'}};var _this25=_possibleConstructorReturn(this,(BootstrapPanel.__proto__||Object.getPrototypeOf(BootstrapPanel)).call(this,$Util.opts(defaults,options)));var self=_this25;// properties
-_this25.isCollapsed=false;_this25.isClosed=false;_this25._attachHandlers();return _ret25=_this25,_possibleConstructorReturn(_this25,_ret25);}/**
+	 */function BootstrapPanel(options){var _ret27;_classCallCheck(this,BootstrapPanel);var defaults={closeable:false,collapsible:false,struct:{$wrapper:'.panel',$header:'.panel-heading',$title:'.panel-title',$collapse:'.panel-collapse',$close:'.panel-close',$body:'.panel-body',$content:'.panel-content',$footer:'.panel-footer'}};var _this27=_possibleConstructorReturn(this,(BootstrapPanel.__proto__||Object.getPrototypeOf(BootstrapPanel)).call(this,$Util.opts(defaults,options)));var self=_this27;// properties
+_this27.isCollapsed=false;_this27.isClosed=false;_this27._attachHandlers();return _ret27=_this27,_possibleConstructorReturn(_this27,_ret27);}/**
 	 * Creates a default template
 	 * @returns {BootstrapPanel}
 	 * @private
@@ -1610,8 +1679,8 @@ _this25.isCollapsed=false;_this25.isClosed=false;_this25._attachHandlers();retur
 	 * @param {object} [options.template=Panel]
 	 * @param {jQuery} [options.$wrapper='$(<div class="panel-group"></div>}'] - manager wrapper
 	 * @returns {BootstrapPanelManager}
-	 */function BootstrapPanelManager(options){var _ret26;_classCallCheck(this,BootstrapPanelManager);var defaults={$wrapper:$('<div class="panel-group"></div>'),template:BootstrapPanel};// alias
-var _this26=_possibleConstructorReturn(this,(BootstrapPanelManager.__proto__||Object.getPrototypeOf(BootstrapPanelManager)).call(this,$Util.opts(defaults,options)));_this26.panels=_this26.objects;return _ret26=_this26,_possibleConstructorReturn(_this26,_ret26);}return BootstrapPanelManager;}(TemplateManager);/*!
+	 */function BootstrapPanelManager(options){var _ret28;_classCallCheck(this,BootstrapPanelManager);var defaults={$wrapper:$('<div class="panel-group"></div>'),template:BootstrapPanel};// alias
+var _this28=_possibleConstructorReturn(this,(BootstrapPanelManager.__proto__||Object.getPrototypeOf(BootstrapPanelManager)).call(this,$Util.opts(defaults,options)));_this28.panels=_this28.objects;return _ret28=_this28,_possibleConstructorReturn(_this28,_ret28);}return BootstrapPanelManager;}(TemplateManager);/*!
  * bootstrapCard
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -1635,7 +1704,7 @@ var _this26=_possibleConstructorReturn(this,(BootstrapPanelManager.__proto__||Ob
 	 * @param {string} [options.struct.$text='.card-text'] - the card text selector
 	 * @param {string} [options.struct.$footer='.card-footer'] - the card footer selector
 	 * @returns {BootstrapCard}
-	 */function BootstrapCard(options){var _ret27;_classCallCheck(this,BootstrapCard);var defaults={struct:{$wrapper:'.card',$header:'.card-header',$headerText:'.card-header-text',$close:'.card-close',$collapse:'.card-collapse',$content:'.card-content',$block:'.card-block',$title:'.card-title',$text:'.card-text',$footer:'.card-footer'}};var _this27=_possibleConstructorReturn(this,(BootstrapCard.__proto__||Object.getPrototypeOf(BootstrapCard)).call(this,$Util.opts(defaults,options)));return _ret27=_this27,_possibleConstructorReturn(_this27,_ret27);}/**
+	 */function BootstrapCard(options){var _ret29;_classCallCheck(this,BootstrapCard);var defaults={struct:{$wrapper:'.card',$header:'.card-header',$headerText:'.card-header-text',$close:'.card-close',$collapse:'.card-collapse',$content:'.card-content',$block:'.card-block',$title:'.card-title',$text:'.card-text',$footer:'.card-footer'}};var _this29=_possibleConstructorReturn(this,(BootstrapCard.__proto__||Object.getPrototypeOf(BootstrapCard)).call(this,$Util.opts(defaults,options)));return _ret29=_this29,_possibleConstructorReturn(_this29,_ret29);}/**
 	 * Creates a default template
 	 * @returns {BootstrapCard}
 	 * @private
@@ -1657,15 +1726,15 @@ return this;}}]);return BootstrapCard;}(BootstrapPanel);/*!
 	 * @param {object} [options.template=card]
 	 * @param {jQuery} [options.$wrapper='$(<div class="card-group"></div>}'] - manager wrapper
 	 * @returns {BootstrapCardManager}
-	 */function BootstrapCardManager(options){var _ret28;_classCallCheck(this,BootstrapCardManager);var defaults={$wrapper:$('<div class="card-group"></div>'),template:BootstrapCard};// alias
-var _this28=_possibleConstructorReturn(this,(BootstrapCardManager.__proto__||Object.getPrototypeOf(BootstrapCardManager)).call(this,$Util.opts(defaults,options)));_this28.cards=_this28.objects;return _ret28=_this28,_possibleConstructorReturn(_this28,_ret28);}return BootstrapCardManager;}(TemplateManager);/*!
+	 */function BootstrapCardManager(options){var _ret30;_classCallCheck(this,BootstrapCardManager);var defaults={$wrapper:$('<div class="card-group"></div>'),template:BootstrapCard};// alias
+var _this30=_possibleConstructorReturn(this,(BootstrapCardManager.__proto__||Object.getPrototypeOf(BootstrapCardManager)).call(this,$Util.opts(defaults,options)));_this30.cards=_this30.objects;return _ret30=_this30,_possibleConstructorReturn(_this30,_ret30);}return BootstrapCardManager;}(TemplateManager);/*!
  * bootstrapProgress
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
  *//**
  * Template for bootstrap progress bar
  * @extends Template
- */var BootstrapProgress=function(_Template10){_inherits(BootstrapProgress,_Template10);/**
+ */var BootstrapProgress=function(_Template11){_inherits(BootstrapProgress,_Template11);/**
 	 * Constructor
 	 * @param {object} [options]
 	 * @param {boolean} [options.showPercent=true] - whether to show percent value
@@ -1675,7 +1744,7 @@ var _this28=_possibleConstructorReturn(this,(BootstrapCardManager.__proto__||Obj
 	 * @param {string} [options.struct.$bar='.progress-bar'] - the bootstrap progress bar
 	 * @param {string} [options.struct.$percent='.progress-percent'] - the progress bar percent
 	 * @returns {BootstrapProgress}
-	 */function BootstrapProgress(options){var _ret29;_classCallCheck(this,BootstrapProgress);var defaults={struct:{$wrapper:'.progress-wrapper',$progress:'.progress',$bar:'.progress-bar',$percent:'.progress-percent'},showPercent:true};var _this29=_possibleConstructorReturn(this,(BootstrapProgress.__proto__||Object.getPrototypeOf(BootstrapProgress)).call(this,$Util.opts(defaults,options)));_this29.percent=0;return _ret29=_this29,_possibleConstructorReturn(_this29,_ret29);}/**
+	 */function BootstrapProgress(options){var _ret31;_classCallCheck(this,BootstrapProgress);var defaults={struct:{$wrapper:'.progress-wrapper',$progress:'.progress',$bar:'.progress-bar',$percent:'.progress-percent'},showPercent:true};var _this31=_possibleConstructorReturn(this,(BootstrapProgress.__proto__||Object.getPrototypeOf(BootstrapProgress)).call(this,$Util.opts(defaults,options)));_this31.percent=0;return _ret31=_this31,_possibleConstructorReturn(_this31,_ret31);}/**
 	 * Create a default template
 	 * @returns {BootstrapProgress}
 	 * @private
@@ -1712,8 +1781,8 @@ var w=this.$percent.width()||20;this.$percent.css('margin-left',w/2*-1+"px");ret
 	 * @param {string} [options.struct.$container='.loader-container'] - the progress bar container
 	 * @param {string} [options.struct.$text='.loader-text'] - the loader text
 	 * @returns {BootstrapLoader}
-	 */function BootstrapLoader(options){var _ret30;_classCallCheck(this,BootstrapLoader);var defaults={struct:{$wrapper:'.loader',$container:'.loader-container',$text:'.loader-text'},steps:[]};// properties
-var _this30=_possibleConstructorReturn(this,(BootstrapLoader.__proto__||Object.getPrototypeOf(BootstrapLoader)).call(this,$Util.opts(defaults,options)));_this30.stepCount=_this30.settings.steps.length;_this30.step=0;return _ret30=_this30,_possibleConstructorReturn(_this30,_ret30);}/**
+	 */function BootstrapLoader(options){var _ret32;_classCallCheck(this,BootstrapLoader);var defaults={struct:{$wrapper:'.loader',$container:'.loader-container',$text:'.loader-text'},steps:[]};// properties
+var _this32=_possibleConstructorReturn(this,(BootstrapLoader.__proto__||Object.getPrototypeOf(BootstrapLoader)).call(this,$Util.opts(defaults,options)));_this32.stepCount=_this32.settings.steps.length;_this32.step=0;return _ret32=_this32,_possibleConstructorReturn(_this32,_ret32);}/**
 	 * Create a default template
 	 * @returns {BootstrapLoader}
 	 * @private
@@ -1770,13 +1839,13 @@ if(isNull(arg)){step=this._getStep(this.step);this.setText(step.err);}this.$text
  *//**
  * Templates a bootstrap tab
  * @extends Template
- */var BootstrapTab=function(_Template11){_inherits(BootstrapTab,_Template11);/**
+ */var BootstrapTab=function(_Template12){_inherits(BootstrapTab,_Template12);/**
 	 * Constructor
 	 * @param {object} [options]
 	 * @param {object} [options.struct]
 	 * @param {string} [options.struct.$wrapper=".tab-pane"] - the tab class
 	 * @returns {BootstrapTab}
-	 */function BootstrapTab(options){var _ret31;_classCallCheck(this,BootstrapTab);var defaults={struct:{$wrapper:'.tab-pane'}};var _this31=_possibleConstructorReturn(this,(BootstrapTab.__proto__||Object.getPrototypeOf(BootstrapTab)).call(this,$Util.opts(defaults,options)));return _ret31=_this31,_possibleConstructorReturn(_this31,_ret31);}/**
+	 */function BootstrapTab(options){var _ret33;_classCallCheck(this,BootstrapTab);var defaults={struct:{$wrapper:'.tab-pane'}};var _this33=_possibleConstructorReturn(this,(BootstrapTab.__proto__||Object.getPrototypeOf(BootstrapTab)).call(this,$Util.opts(defaults,options)));return _ret33=_this33,_possibleConstructorReturn(_this33,_ret33);}/**
 	 * Default template
 	 * @returns {BootstrapTab}
 	 * @private
@@ -1799,8 +1868,8 @@ if(isNull(arg)){step=this._getStep(this.step);this.setText(step.err);}this.$text
 	 * @param {object} [options.template=BootstrapTab]
 	 * @param {jQuery} [options.$wrapper=$('<div class="tab-content"></div>')] - manager wrapper
 	 * @returns {BootstrapTabManager}
-	 */function BootstrapTabManager(options){var _ret32;_classCallCheck(this,BootstrapTabManager);var defaults={$wrapper:$('<div class="tab-content"></div>'),template:BootstrapTab};// alias
-var _this32=_possibleConstructorReturn(this,(BootstrapTabManager.__proto__||Object.getPrototypeOf(BootstrapTabManager)).call(this,$Util.opts(defaults,options)));_this32.tabs=_this32.objects;return _ret32=_this32,_possibleConstructorReturn(_this32,_ret32);}/**
+	 */function BootstrapTabManager(options){var _ret34;_classCallCheck(this,BootstrapTabManager);var defaults={$wrapper:$('<div class="tab-content"></div>'),template:BootstrapTab};// alias
+var _this34=_possibleConstructorReturn(this,(BootstrapTabManager.__proto__||Object.getPrototypeOf(BootstrapTabManager)).call(this,$Util.opts(defaults,options)));_this34.tabs=_this34.objects;return _ret34=_this34,_possibleConstructorReturn(_this34,_ret34);}/**
 	 * Create and add a new Tab
 	 * @param {string} id - id of the object to create and then manage
 	 * @param {object} data
@@ -1818,7 +1887,7 @@ var _this32=_possibleConstructorReturn(this,(BootstrapTabManager.__proto__||Obje
  *//**
  * Templates a bootstrap toggle
  * @extends Template
- */var BootstrapToggle=function(_Template12){_inherits(BootstrapToggle,_Template12);/**
+ */var BootstrapToggle=function(_Template13){_inherits(BootstrapToggle,_Template13);/**
 	 * Constructor.
 	 * The input has to be put inside a container element
 	 * for it to be able to move around after initialization
@@ -1829,8 +1898,8 @@ var _this32=_possibleConstructorReturn(this,(BootstrapTabManager.__proto__||Obje
 	 * @param {object} [options.toggleOptions] - bootstrapToggle options
 	 * @param {string} [options.name] - name of the <input>
 	 * @returns {BootstrapToggle}
-	 */function BootstrapToggle(options){var _ret33;_classCallCheck(this,BootstrapToggle);if(!isDefined($.fn.bootstrapToggle))throw new Error("BootstrapToggle.constructor: the bootstrap toggle file must be included before bootstrap.");var defaults={struct:{$container:'.toggle',$wrapper:'input'},toggleOptions:{},name:''};// redirect jquery dom events to container
-var _this33=_possibleConstructorReturn(this,(BootstrapToggle.__proto__||Object.getPrototypeOf(BootstrapToggle)).call(this,$Util.opts(defaults,options)));_this33.after=_this33._after;_this33.append=_this33._append;_this33.appendTo=_this33._appendTo;_this33.before=_this33._before;_this33.prepend=_this33._prepend;_this33.prependTo=_this33._prependTo;return _ret33=_this33,_possibleConstructorReturn(_this33,_ret33);}/**
+	 */function BootstrapToggle(options){var _ret35;_classCallCheck(this,BootstrapToggle);if(!isDefined($.fn.bootstrapToggle))throw new Error("BootstrapToggle.constructor: the bootstrap toggle file must be included before bootstrap.");var defaults={struct:{$container:'.toggle',$wrapper:'input'},toggleOptions:{},name:''};// redirect jquery dom events to container
+var _this35=_possibleConstructorReturn(this,(BootstrapToggle.__proto__||Object.getPrototypeOf(BootstrapToggle)).call(this,$Util.opts(defaults,options)));_this35.after=_this35._after;_this35.append=_this35._append;_this35.appendTo=_this35._appendTo;_this35.before=_this35._before;_this35.prepend=_this35._prepend;_this35.prependTo=_this35._prependTo;return _ret35=_this35,_possibleConstructorReturn(_this35,_ret35);}/**
 	 * Build a bootstrap toggle
 	 * @returns {BootstrapToggle}
 	 * @private
@@ -1848,7 +1917,7 @@ this.$container=this.$wrapper.parent();return this;}// jquery redirects
 	 * Constructor
 	 * @param {object} options
 	 * @returns {BootstrapWizard}
-	 */function BootstrapWizard(options){var _ret34;_classCallCheck(this,BootstrapWizard);var _this34=_possibleConstructorReturn(this,(BootstrapWizard.__proto__||Object.getPrototypeOf(BootstrapWizard)).call(this,options));return _ret34=_this34,_possibleConstructorReturn(_this34,_ret34);}/**
+	 */function BootstrapWizard(options){var _ret36;_classCallCheck(this,BootstrapWizard);var _this36=_possibleConstructorReturn(this,(BootstrapWizard.__proto__||Object.getPrototypeOf(BootstrapWizard)).call(this,options));return _ret36=_this36,_possibleConstructorReturn(_this36,_ret36);}/**
 	 * Setup the feedback
 	 * @returns {Form}
 	 * @private
