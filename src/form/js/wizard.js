@@ -16,24 +16,24 @@ class Wizard extends Form {
 	 * @param  {object} [options]
 	 * @param  {object} [options.struct]
 	 * @param  {string} [options.struct.$wrapper='.wizard'] - wizard wrapper
-	 * @param  {string} [options.struct.$nav='ul.nav'] - navigation list
-	 * @param  {string} [options.struct.$navs='ul.nav > li'] - navigation links
+	 * @param  {string} [options.struct.$nav='.nav'] - navigation list
+	 * @param  {string} [options.struct.$navs='.nav > li'] - navigation links
 	 * @param  {string} [options.struct.$tabs='.tab-pane'] - tab container
-	 * @param  {string} [options.struct.$next='li.next'] - next button
-	 * @param  {string} [options.struct.$pager='ul.pager'] - pager container
-	 * @param  {string} [options.struct.$previous='li.previous'] - previous button
+	 * @param  {string} [options.struct.$next='.pager .next'] - next button
+	 * @param  {string} [options.struct.$pager='.pager'] - pager container
+	 * @param  {string} [options.struct.$previous='.pager .previous'] - previous button
 	 * @returns {Wizard}
 	 */
 	constructor(options){
 		var defaults = {
 			struct : {
 				$wrapper : '.wizard',
-				$nav : 'ul.nav',
-				$navs : 'ul.nav > li',
+				$nav : '.nav',
+				$navs : '.nav > li',
 				$tabs : '.tab-pane',
-				$next : 'li.next',
-				$pager : 'ul.pager',
-				$previous : 'li.previous'
+				$next : '.pager .next',
+				$pager : '.pager',
+				$previous : '.pager .previous'
 			}
 		};
 		super($Util.opts(defaults, options));

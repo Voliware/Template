@@ -828,7 +828,7 @@ var Form = function (_Template3) {
 
 		// handlers
 		// default submit handler
-		_this5.$form.on('submit', function (e) {
+		_this5.$form.off('submit').on('submit', function (e) {
 			e.preventDefault();
 			self.serializeForm()._submit();
 		});
@@ -884,6 +884,9 @@ var Form = function (_Template3) {
 			switch (v.api) {
 				case 'formValidation':
 					Form.validators.formValidation.setup(this, this.$form, v.options);
+					break;
+				case 'formValidationBootstrap4':
+					Form.validators.formValidationBootstrap4.setup(this, this.$form, v.options);
 					break;
 			}
 			return this;
@@ -989,9 +992,7 @@ var Form = function (_Template3) {
 	}, {
 		key: "_doSubmit",
 		value: function _doSubmit() {
-			var s = this.settings;
-
-			if (s.submitRequest) return s.submitRequest(this._serializedData);else return $.post(s.submitUrl, this._serializedData);
+			if (this.settings.submitRequest) return this.settings.submitRequest(this._serializedData);else return $.post(this.settings.submitUrl, this._serializedData);
 		}
 
 		// submit handlers
@@ -1285,6 +1286,23 @@ Form.validators = {
 		}
 	}
 };
+
+/**
+ * formValidation api bootstrap 4
+ */
+Form.validators.formValidationBootstrap4 = {
+	api: 'formValidation',
+	options: {
+		framework: 'bootstrap4',
+		excluded: [':disabled', ':hidden', ':not(:visible)'],
+		icon: {
+			valid: 'fa fa-check',
+			invalid: 'fa fa-times',
+			validating: 'fa fa-refresh'
+		}
+	},
+	setup: Form.validators.formValidation
+};
 /*!
  * wizard
  * https://github.com/Voliware/Template
@@ -1305,12 +1323,12 @@ var Wizard = function (_Form) {
   * @param  {object} [options]
   * @param  {object} [options.struct]
   * @param  {string} [options.struct.$wrapper='.wizard'] - wizard wrapper
-  * @param  {string} [options.struct.$nav='ul.nav'] - navigation list
-  * @param  {string} [options.struct.$navs='ul.nav > li'] - navigation links
+  * @param  {string} [options.struct.$nav='.nav'] - navigation list
+  * @param  {string} [options.struct.$navs='.nav > li'] - navigation links
   * @param  {string} [options.struct.$tabs='.tab-pane'] - tab container
-  * @param  {string} [options.struct.$next='li.next'] - next button
-  * @param  {string} [options.struct.$pager='ul.pager'] - pager container
-  * @param  {string} [options.struct.$previous='li.previous'] - previous button
+  * @param  {string} [options.struct.$next='.pager .next'] - next button
+  * @param  {string} [options.struct.$pager='.pager'] - pager container
+  * @param  {string} [options.struct.$previous='.pager .previous'] - previous button
   * @returns {Wizard}
   */
 	function Wizard(options) {
@@ -1321,12 +1339,12 @@ var Wizard = function (_Form) {
 		var defaults = {
 			struct: {
 				$wrapper: '.wizard',
-				$nav: 'ul.nav',
-				$navs: 'ul.nav > li',
+				$nav: '.nav',
+				$navs: '.nav > li',
 				$tabs: '.tab-pane',
-				$next: 'li.next',
-				$pager: 'ul.pager',
-				$previous: 'li.previous'
+				$next: '.pager .next',
+				$pager: '.pager',
+				$previous: '.pager .previous'
 			}
 		};
 

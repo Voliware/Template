@@ -40,15 +40,16 @@ class BootstrapModalForm extends BootstrapModal {
 	_attachFormHandlers(){
 		var self = this;
 		this.form
-			.on('beforeSubmit', function(){
+			.off('beforeSubmit.template done.template fail.template')
+			.on('beforeSubmit.template', function(){
 				self.form.slideToggleForm(false);
 			})
-			.on('done', function(){
+			.on('done.template', function(){
 				setTimeout(function(){
 					self.modal('hide');
 				}, 1500)
 			})
-			.on('fail', function(){
+			.on('fail.template', function(){
 				self.form.slideToggleForm(true);
 				self.form.toggleButtons(true);
 			});

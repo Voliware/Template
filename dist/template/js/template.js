@@ -205,7 +205,7 @@ if (typeof isNumber === 'undefined') {
 }
 if (typeof isObject === 'undefined') {
 	window.isObject = function (x) {
-		return x !== null && (typeof x === "undefined" ? "undefined" : _typeof(x)) === 'object';
+		return x !== null && !isArray(x) && (typeof x === "undefined" ? "undefined" : _typeof(x)) === 'object';
 	};
 }
 if (typeof isArray === 'undefined') {
@@ -542,24 +542,110 @@ if (typeof isJquery === 'undefined') {
 	/**
   * Append option(s) to a select
   * @param {*} arguments - Either an object of key/value pairs, where the key is the
-  * option value and the value is the string within the tags,
-  * or a key and value as two parameters to add one option
+  * option value and the value is the string within the tags, and a third key is
+  * an optional disabled state,
+  * or a key and value as two parameters to add one option, with an optional bool
+  * for option state
+  * @example addToSelect(0, 'Male', true)
+  * @example addToSelect(1, 'Female')
+  * @example addToSelect({0 : 'Male'}, {1 : 'Female'})
+  * @example addToSelect({value : 0, text : 'Male', disabled : true})
+  * @example addToSelect({value : 0, text : 'Male', disabled : true}, {value : 1, text : 'Female'})
+  * @example addToSelect([{value : 0, text : 'Male'}])
+  * @example addToSelect({ female : {value : 1, text : 'Female'}})
   * @returns {jQuery}
   */
 	$.fn.addToSelect = function () {
-		var data = {};
-
-		if (arguments.length > 1) data[arguments[0]] = arguments[1];else data = arguments[0];
-
 		var $this = $(this);
-		if ($this.is('select')) {
-			Util.each(data, function (i, e) {
-				var opt = '<option value="' + i + '">' + e + '</option>';
-				$this.append(opt);
-			});
+		if (!$this.is('select')) {
+			return this;
+		}
+
+		// options always end up in an array
+		var options = [];
+
+		// case: multiple arguments
+		if (arguments.length > 1) {
+
+			// case: arguments of strings/numbers, single option
+			if (isString(arguments[0]) || isNumber(arguments[0])) {
+				var disabled = isDefined(arguments[2]) ? arguments[2] : false;
+				var option = {
+					value: arguments[0],
+					text: arguments[1],
+					disabled: disabled
+				};
+				options = [option];
+			}
+			// case: arguments of multiple objects (comma seperated)
+			else {
+					if (isObject(arguments[0])) {
+						options = arguments;
+					}
+				}
+		}
+		// case: single object argument
+		else if (isObject(arguments[0])) {
+				// case: well formed single object
+				if (arguments[0].hasOwnProperty('value')) {
+					options = [arguments[0]];
+				}
+				// case: object of objects
+				else if (Object.keys(arguments[0]).length > 1) {
+						$.each(arguments[0], function (i, e) {
+							// case: objects are named
+							if (isObject(e)) {
+								options.push(e);
+							}
+							// case: objects are simple key/values
+							else {
+									options.push({
+										value: i,
+										text: e
+									});
+								}
+						});
+					}
+					// case: single object
+					else {
+							options = [arguments[0]];
+						}
+			}
+			// case: array of objects
+			else if (Array.isArray(arguments[0])) {
+					options = arguments[0];
+				}
+
+		// add options
+		for (var i = 0; i < options.length; i++) {
+			var _option = processOption(options[i]);
+			var $opt = '<option value="' + _option.value + '"';
+			if (_option.disabled) {
+				$opt += ' disabled';
+			}
+			$opt += '>' + _option.text + '</option>';
+			$this.append($opt);
 		}
 
 		return this;
+
+		/**
+   * Process an option ensuring it is formatted correctly
+   * @param {object} option
+   * @returns {object}
+   */
+		function processOption(option) {
+			if (option.hasOwnProperty('value') === false) {
+				var value = Object.keys(option)[0];
+				var text = option[value];
+				return {
+					value: value,
+					text: text
+				};
+			} else {
+				return option;
+			}
+		}
 	};
 
 	/**

@@ -32,7 +32,7 @@ return target;};})(jQuery);/*!
 	 * @param {object} data - data to loop through
 	 * @param {function} cb - callback
 	 */value:function each(data,cb){for(var i in data){var e=data[i];cb(i,e);}}}]);return Util;}();// helpers
-if(typeof isDefined==='undefined'){window.isDefined=function(x){return typeof x!=='undefined';};}if(typeof isNull==='undefined'){window.isNull=function(x){return x===null;};}if(typeof isNullOrUndefined==='undefined'){window.isNullOrUndefined=function(x){return x===null||x==='undefined';};}if(typeof isFunction==='undefined'){window.isFunction=function(x){return typeof x==='function';};}if(typeof isString==='undefined'){window.isString=function(x){return typeof x==='string';};}if(typeof isNumber==='undefined'){window.isNumber=function(x){return typeof x==='number';};}if(typeof isObject==='undefined'){window.isObject=function(x){return x!==null&&(typeof x==="undefined"?"undefined":_typeof(x))==='object';};}if(typeof isArray==='undefined'){window.isArray=function(x){return x!==null&&Array.isArray(x);};}if(typeof getType==='undefined'){//http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
+if(typeof isDefined==='undefined'){window.isDefined=function(x){return typeof x!=='undefined';};}if(typeof isNull==='undefined'){window.isNull=function(x){return x===null;};}if(typeof isNullOrUndefined==='undefined'){window.isNullOrUndefined=function(x){return x===null||x==='undefined';};}if(typeof isFunction==='undefined'){window.isFunction=function(x){return typeof x==='function';};}if(typeof isString==='undefined'){window.isString=function(x){return typeof x==='string';};}if(typeof isNumber==='undefined'){window.isNumber=function(x){return typeof x==='number';};}if(typeof isObject==='undefined'){window.isObject=function(x){return x!==null&&!isArray(x)&&(typeof x==="undefined"?"undefined":_typeof(x))==='object';};}if(typeof isArray==='undefined'){window.isArray=function(x){return x!==null&&Array.isArray(x);};}if(typeof getType==='undefined'){//http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
 window.getType=function(x){if(x===null)return"[object Null]";return Object.prototype.toString.call(x);};}if(typeof createGuid==='undefined'){window.createGuid=function createGuid(){function s4(){return Math.floor((1+Math.random())*0x10000).toString(16).substring(1);}return s4()+s4()+'-'+s4()+'-'+s4()+'-'+s4()+'-'+s4()+s4()+s4();};}// array
 if(typeof Array.diff==='undefined'){Array.diff=function(a,b){return a.filter(function(i){return b.indexOf(i)<0;});};}if(typeof Array.min==='undefined'){Array.min=function(array){return Math.min.apply(Math,array);};}if(typeof Array.max==='undefined'){Array.max=function(array){return Math.max.apply(Math,array);};}if(typeof Object.set==='undefined'){Object.set=function(obj,data){for(var key in data){if(obj.hasOwnProperty(key)){obj[key]=data[key];}}};}//https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 if(typeof Object.assign!='function'){Object.assign=function(target){'use strict';if(target==null){throw new TypeError('Cannot convert undefined or null to object');}target=Object(target);for(var index=1;index<arguments.length;index++){var source=arguments[index];if(source!=null){for(var key in source){if(Object.prototype.hasOwnProperty.call(source,key)){target[key]=source[key];}}}}return target;};}/**
@@ -112,10 +112,35 @@ if(trigger)$this.trigger('change').trigger('input');return this;/**
 	 */$.fn.slideToggleState=function(state){var options=arguments.length>1&&arguments[1]!==undefined?arguments[1]:'';var cb=arguments.length>2&&arguments[2]!==undefined?arguments[2]:null;if(state)$(this).slideDown(options,cb);else $(this).slideUp(options,cb);return this;};/**
 	 * Append option(s) to a select
 	 * @param {*} arguments - Either an object of key/value pairs, where the key is the
-	 * option value and the value is the string within the tags,
-	 * or a key and value as two parameters to add one option
+	 * option value and the value is the string within the tags, and a third key is
+	 * an optional disabled state,
+	 * or a key and value as two parameters to add one option, with an optional bool
+	 * for option state
+	 * @example addToSelect(0, 'Male', true)
+	 * @example addToSelect(1, 'Female')
+	 * @example addToSelect({0 : 'Male'}, {1 : 'Female'})
+	 * @example addToSelect({value : 0, text : 'Male', disabled : true})
+	 * @example addToSelect({value : 0, text : 'Male', disabled : true}, {value : 1, text : 'Female'})
+	 * @example addToSelect([{value : 0, text : 'Male'}])
+	 * @example addToSelect({ female : {value : 1, text : 'Female'}})
 	 * @returns {jQuery}
-	 */$.fn.addToSelect=function(){var data={};if(arguments.length>1)data[arguments[0]]=arguments[1];else data=arguments[0];var $this=$(this);if($this.is('select')){Util.each(data,function(i,e){var opt='<option value="'+i+'">'+e+'</option>';$this.append(opt);});}return this;};/**
+	 */$.fn.addToSelect=function(){var $this=$(this);if(!$this.is('select')){return this;}// options always end up in an array
+var options=[];// case: multiple arguments
+if(arguments.length>1){// case: arguments of strings/numbers, single option
+if(isString(arguments[0])||isNumber(arguments[0])){var disabled=isDefined(arguments[2])?arguments[2]:false;var option={value:arguments[0],text:arguments[1],disabled:disabled};options=[option];}// case: arguments of multiple objects (comma seperated)
+else{if(isObject(arguments[0])){options=arguments;}}}// case: single object argument
+else if(isObject(arguments[0])){// case: well formed single object
+if(arguments[0].hasOwnProperty('value')){options=[arguments[0]];}// case: object of objects
+else if(Object.keys(arguments[0]).length>1){$.each(arguments[0],function(i,e){// case: objects are named
+if(isObject(e)){options.push(e);}// case: objects are simple key/values
+else{options.push({value:i,text:e});}});}// case: single object
+else{options=[arguments[0]];}}// case: array of objects
+else if(Array.isArray(arguments[0])){options=arguments[0];}// add options
+for(var i=0;i<options.length;i++){var _option=processOption(options[i]);var $opt='<option value="'+_option.value+'"';if(_option.disabled){$opt+=' disabled';}$opt+='>'+_option.text+'</option>';$this.append($opt);}return this;/**
+		 * Process an option ensuring it is formatted correctly
+		 * @param {object} option
+		 * @returns {object}
+		 */function processOption(option){if(option.hasOwnProperty('value')===false){var value=Object.keys(option)[0];var text=option[value];return{value:value,text:text};}else{return option;}}};/**
 	 * Disable/enable an option/set of options based on value attribute
 	 * @param {*} [arguments] - Pass a boolean to toggle all options,
 	 * pass an array and boolean to toggle some options,
@@ -1098,7 +1123,7 @@ _this14._serializedData={};// alias
 var $form=_this14.$wrapper.find('form');_this14.$form=$form.length>0?$form:_this14.$wrapper;// components
 _this14.formSerializer=new FormSerializer({serializeMode:_this14.settings.serializeMode,checkboxMode:_this14.settings.checkboxMode,excluded:_this14.settings.excluded});_this14.validator=null;_this14.feedback=null;_this14.formGoupManager=new _this14.settings.formGroupManager({$wrapper:_this14.$body});// handlers
 // default submit handler
-_this14.$form.on('submit',function(e){e.preventDefault();self.serializeForm()._submit();});// cancel
+_this14.$form.off('submit').on('submit',function(e){e.preventDefault();self.serializeForm()._submit();});// cancel
 _this14.$cancel.click(function(){self.resetForm();});// reset
 _this14.$reset.click(function(){self.resetForm();});// set up validator
 if(_this14.settings.validator)_this14._setupValidator();// set up feedback
@@ -1111,7 +1136,7 @@ if(_this14.settings.feedback)_this14._setupFeedback();return _ret14=_this14,_pos
 	 * Attaches a validator to the form
 	 * @returns {Form}
 	 * @private
-	 */},{key:"_setupValidator",value:function _setupValidator(){var v=this.settings.validator;switch(v.api){case'formValidation':Form.validators.formValidation.setup(this,this.$form,v.options);break;}return this;}/**
+	 */},{key:"_setupValidator",value:function _setupValidator(){var v=this.settings.validator;switch(v.api){case'formValidation':Form.validators.formValidation.setup(this,this.$form,v.options);break;case'formValidationBootstrap4':Form.validators.formValidationBootstrap4.setup(this,this.$form,v.options);break;}return this;}/**
 	 * Setup the feedback
 	 * @returns {Form}
 	 * @private
@@ -1139,7 +1164,7 @@ if(_this14.settings.feedback)_this14._setupFeedback();return _ret14=_this14,_pos
 	 * Actual submit function
 	 * @returns {jQuery}
 	 * @private
-	 */},{key:"_doSubmit",value:function _doSubmit(){var s=this.settings;if(s.submitRequest)return s.submitRequest(this._serializedData);else return $.post(s.submitUrl,this._serializedData);}// submit handlers
+	 */},{key:"_doSubmit",value:function _doSubmit(){if(this.settings.submitRequest)return this.settings.submitRequest(this._serializedData);else return $.post(this.settings.submitUrl,this._serializedData);}// submit handlers
 /**
 	 * Form submission success handler
 	 * @param {object} data
@@ -1213,7 +1238,9 @@ switch(this.settings.validator.api){case'formValidation':this.validator.resetFor
 		 * @param {jQuery} $form
 		 * @param {object} options
 		 */setup:function setup(form,$form,options){$form.off('submit');// allows re-creation of the Form
-if($form.data('formValidation'))$form.data('formValidation').destroy();$form.formValidation(options).on('success.form.fv',function(e){e.preventDefault();form.toggleButtons(false);form.serializeForm()._submit();});form.validator=$form.data('formValidation');}}};/*!
+if($form.data('formValidation'))$form.data('formValidation').destroy();$form.formValidation(options).on('success.form.fv',function(e){e.preventDefault();form.toggleButtons(false);form.serializeForm()._submit();});form.validator=$form.data('formValidation');}}};/**
+ * formValidation api bootstrap 4
+ */Form.validators.formValidationBootstrap4={api:'formValidation',options:{framework:'bootstrap4',excluded:[':disabled',':hidden',':not(:visible)'],icon:{valid:'fa fa-check',invalid:'fa fa-times',validating:'fa fa-refresh'}},setup:Form.validators.formValidation};/*!
  * wizard
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -1226,14 +1253,14 @@ if($form.data('formValidation'))$form.data('formValidation').destroy();$form.for
 	 * @param  {object} [options]
 	 * @param  {object} [options.struct]
 	 * @param  {string} [options.struct.$wrapper='.wizard'] - wizard wrapper
-	 * @param  {string} [options.struct.$nav='ul.nav'] - navigation list
-	 * @param  {string} [options.struct.$navs='ul.nav > li'] - navigation links
+	 * @param  {string} [options.struct.$nav='.nav'] - navigation list
+	 * @param  {string} [options.struct.$navs='.nav > li'] - navigation links
 	 * @param  {string} [options.struct.$tabs='.tab-pane'] - tab container
-	 * @param  {string} [options.struct.$next='li.next'] - next button
-	 * @param  {string} [options.struct.$pager='ul.pager'] - pager container
-	 * @param  {string} [options.struct.$previous='li.previous'] - previous button
+	 * @param  {string} [options.struct.$next='.pager .next'] - next button
+	 * @param  {string} [options.struct.$pager='.pager'] - pager container
+	 * @param  {string} [options.struct.$previous='.pager .previous'] - previous button
 	 * @returns {Wizard}
-	 */function Wizard(options){var _ret15;_classCallCheck(this,Wizard);var defaults={struct:{$wrapper:'.wizard',$nav:'ul.nav',$navs:'ul.nav > li',$tabs:'.tab-pane',$next:'li.next',$pager:'ul.pager',$previous:'li.previous'}};var _this15=_possibleConstructorReturn(this,(Wizard.__proto__||Object.getPrototypeOf(Wizard)).call(this,$Util.opts(defaults,options)));_this15.stepCount=_this15.$tabs.length;_this15.step=0;// show or hide pagination and form buttons
+	 */function Wizard(options){var _ret15;_classCallCheck(this,Wizard);var defaults={struct:{$wrapper:'.wizard',$nav:'.nav',$navs:'.nav > li',$tabs:'.tab-pane',$next:'.pager .next',$pager:'.pager',$previous:'.pager .previous'}};var _this15=_possibleConstructorReturn(this,(Wizard.__proto__||Object.getPrototypeOf(Wizard)).call(this,$Util.opts(defaults,options)));_this15.stepCount=_this15.$tabs.length;_this15.step=0;// show or hide pagination and form buttons
 _this15.toggleSubmitButton(_this15.stepCount===1);_this15.togglePreviousButton(false);_this15.toggleNextButton(_this15.stepCount>1);_this15._setHandlers();return _ret15=_this15,_possibleConstructorReturn(_this15,_ret15);}/**
 	 * Clear all handlers. Useful if
 	 * the wizard DOM is being re-used.
@@ -1568,7 +1595,7 @@ var _this24=_possibleConstructorReturn(this,(BootstrapModalForm.__proto__||Objec
 	 * Attach handlers to the form
 	 * @returns {BootstrapModalForm}
 	 * @private
-	 */},{key:"_attachFormHandlers",value:function _attachFormHandlers(){var self=this;this.form.on('beforeSubmit',function(){self.form.slideToggleForm(false);}).on('done',function(){setTimeout(function(){self.modal('hide');},1500);}).on('fail',function(){self.form.slideToggleForm(true);self.form.toggleButtons(true);});return this;}/**
+	 */},{key:"_attachFormHandlers",value:function _attachFormHandlers(){var self=this;this.form.off('beforeSubmit.template done.template fail.template').on('beforeSubmit.template',function(){self.form.slideToggleForm(false);}).on('done.template',function(){setTimeout(function(){self.modal('hide');},1500);}).on('fail.template',function(){self.form.slideToggleForm(true);self.form.toggleButtons(true);});return this;}/**
 	 * A function to call after the form is created
 	 * @returns {BootstrapModalForm}
 	 * @private

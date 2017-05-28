@@ -84,7 +84,9 @@ class Form extends Template {
 
 		// handlers
 		// default submit handler
-		this.$form.on('submit', function(e){
+		this.$form
+			.off('submit')
+			.on('submit', function(e){
 			e.preventDefault();
 			self.serializeForm()
 				._submit();
@@ -146,6 +148,9 @@ class Form extends Template {
 		switch(v.api){
 			case 'formValidation':
 				Form.validators.formValidation.setup(this, this.$form, v.options);
+				break;
+			case 'formValidationBootstrap4':
+				Form.validators.formValidationBootstrap4.setup(this, this.$form, v.options);
 				break;
 		}
 		return this;
@@ -498,4 +503,22 @@ Form.validators = {
 			form.validator = $form.data('formValidation');
 		}
 	}
+};
+
+
+/**
+ * formValidation api bootstrap 4
+ */
+Form.validators.formValidationBootstrap4 = {
+	api : 'formValidation',
+		options : {
+		framework: 'bootstrap4',
+			excluded: [':disabled', ':hidden', ':not(:visible)'],
+			icon: {
+			valid: 'fa fa-check',
+				invalid: 'fa fa-times',
+				validating: 'fa fa-refresh'
+		}
+	},
+	setup : Form.validators.formValidation
 };
