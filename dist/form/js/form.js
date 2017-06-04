@@ -498,7 +498,7 @@ var FormSerializer = function () {
 			var formData = new FormSerializerData();
 			var data = {};
 
-			$form.find('input, select').each(function (i, e) {
+			$form.find('input, select, textarea').each(function (i, e) {
 				var $el = $(e);
 				var name = "";
 				var order = -1;
@@ -548,10 +548,10 @@ var FormSerializer = function () {
 					}
 				}
 				// handle <select>s
-				else if (tag === 'select') {
+				else if (tag === 'select' || tag === 'textarea') {
 						val = $el.val();
 					} else {
-						console.error('FormSerializer.serialize: only inputs and selects can be serialized');
+						console.error('FormSerializer.serialize: only inputs, textareas, and selects can be serialized');
 					}
 
 				data[name] = {
@@ -1165,6 +1165,23 @@ var Form = function (_Template3) {
 		key: "serializeForm",
 		value: function serializeForm() {
 			this._serializedData = this.formSerializer.serialize(this.$form);
+			return this;
+		}
+
+		/**
+   * Append serialized data
+   * @param {...} an object of data or k/v pair of data
+   * @returns {Form}
+   */
+
+	}, {
+		key: "appendSerializedData",
+		value: function appendSerializedData() {
+			if (arguments.length > 1) {
+				this._serializedData[arguments[0]] = arguments[1];
+			} else {
+				$.extend(true, this._serializedData, arguments[0]);
+			}
 			return this;
 		}
 

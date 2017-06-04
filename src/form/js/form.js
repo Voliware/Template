@@ -395,6 +395,21 @@ class Form extends Template {
 	}
 
 	/**
+	 * Append serialized data
+	 * @param {...} an object of data or k/v pair of data
+	 * @returns {Form}
+	 */
+	appendSerializedData(){
+		if(arguments.length > 1){
+			this._serializedData[arguments[0]] = arguments[1];
+		}
+		else {
+			$.extend(true, this._serializedData, arguments[0]);
+		}
+		return this;
+	}
+
+	/**
 	 * Reset the form, using populated data
 	 * or setting to default values
 	 * @returns {Form}
