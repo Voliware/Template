@@ -81,7 +81,7 @@ class FormSerializer {
 		var formData = new FormSerializerData();
 		var data = {};
 
-		$form.find('input, select').each(function(i, e){
+		$form.find('input, select, textarea').each(function(i, e){
 			var $el = $(e);
 			var name = "";
 			var order = -1;
@@ -139,11 +139,11 @@ class FormSerializer {
 				}
 			}
 			// handle <select>s
-			else if (tag === 'select'){
+			else if (tag === 'select' || tag === 'textarea'){
 				val = $el.val();
 			}
 			else{
-				console.error('FormSerializer.serialize: only inputs and selects can be serialized');
+				console.error('FormSerializer.serialize: only inputs, textareas, and selects can be serialized');
 			}
 
 			data[name] = {
