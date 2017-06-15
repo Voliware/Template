@@ -127,16 +127,19 @@ div.input-help {
         border-bottom: 1px solid #ddd;
     }
 }
-.responsive-tabs.nav-tabs span.glyphicon {
+.responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-top,
+.responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-bottom {
     position: absolute;
     top: 14px;
     right: 22px;
 }
-.responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-top {
+.responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-top,
+.responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-bottom {
     display: none;
 }
 @media (min-width: 768px) {
-    .responsive-tabs.nav-tabs span.glyphicon {
+    .responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-top,
+    .responsive-tabs.nav-tabs span.glyphicon.glyphicon-triangle-bottom {
         display: none;
     }
 }
