@@ -16,6 +16,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Licensed under the MIT license.
  */
 
+// get bs version
+var BOOTSTRAP_VERSION = Number($.fn.tooltip.Constructor.VERSION.split('.')[0]);
+
 (function ($) {
 
 	/**
@@ -189,10 +192,24 @@ var BootstrapFeedback = function (_Feedback) {
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
 			var template = '';
-			if (this.settings.closeButton) {
-				template = '<div class="feedback alert clearfix">' + '<div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10">' + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>' + '</div>' + '<div class="col-xs-1 col-sm-1">' + '<button type="button" name="close" class="close">&times;</button>' + '</div>' + '</div>';
+			var feedbackContainer = '';
+			var closeContainer = '';
+			var noCloseContainer = '';
+
+			if (BOOTSTRAP_VERSION === 4) {
+				feedbackContainer = '<div class="offset-1 col-10">';
+				closeContainer = '<div class="col-1">';
+				noCloseContainer = '<div class="col-12">';
 			} else {
-				template = '<div class="feedback alert clearfix">' + '<div class="col-12">' + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>' + '</div>' + '</div>';
+				feedbackContainer = '<div class="col-xs-offset-1 col-xs-10">';
+				closeContainer = '<div class="col-xs-1">';
+				noCloseContainer = '<div class="col-xs-12">';
+			}
+
+			if (this.settings.closeButton) {
+				template = '<div class="feedback alert clearfix">' + feedbackContainer + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>' + '</div>' + closeContainer + '<button type="button" name="close" class="close">&times;</button>' + '</div>' + '</div>';
+			} else {
+				template = '<div class="feedback alert clearfix">' + noCloseContainer + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>' + '</div>' + '</div>';
 			}
 
 			this._useTemplate($(template));
@@ -530,7 +547,9 @@ var BootstrapForm = function (_Form) {
 	_createClass(BootstrapForm, [{
 		key: '_setupFeedback',
 		value: function _setupFeedback() {
-			this.feedback = new BootstrapFeedback();
+			this.feedback = new BootstrapFeedback({
+				closeButton: this.settings.feedbackCloseable
+			});
 			if (!this.$feedback.length) {
 				this.$feedback = $('<div class="form-feedback"></div>');
 				this.$form.prepend(this.$feedback);

@@ -29,7 +29,9 @@ class BootstrapForm extends Form {
 	 * @private
 	 */
 	_setupFeedback(){
-		this.feedback = new BootstrapFeedback();
+		this.feedback = new BootstrapFeedback({
+			closeButton : this.settings.feedbackCloseable
+		});
 		if(!this.$feedback.length){
 			this.$feedback = $('<div class="form-feedback"></div>');
 			this.$form.prepend(this.$feedback);

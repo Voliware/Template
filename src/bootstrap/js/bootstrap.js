@@ -4,6 +4,9 @@
  * Licensed under the MIT license.
  */
 
+// get bs version
+const BOOTSTRAP_VERSION = Number($.fn.tooltip.Constructor.VERSION.split('.')[0]);
+
 (function($) {
 
 	/**

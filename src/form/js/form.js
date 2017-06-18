@@ -35,7 +35,6 @@ class Form extends Template {
 	 */
 	constructor(options){
 		var defaults = {
-			feedback: true,
 			useTemplate : true,
 			submitUrl: "",
 			submitRequest : null,
@@ -43,6 +42,11 @@ class Form extends Template {
 			checkboxMode : FormSerializer.checkboxMode.number,
 			excluded : [':disabled'],
 			formGroupManager : FormGroupManager,
+			// feedback
+			feedback: true,
+			feedbackCloseable : true,
+			feedbackSuccess : 'Submission successful',
+			feedbackFail : 'Submission failed',
 			// css classes for each form component
 			struct: {
 				$wrapper: 'form',
@@ -162,7 +166,9 @@ class Form extends Template {
 	 * @private
 	 */
 	_setupFeedback(){
-		this.feedback = new Feedback();
+		this.feedback = new Feedback({
+			closeButton : this.settings.feedbackCloseable
+		});
 		if(!this.$feedback.length){
 			this.$feedback = $('<div class="form-feedback"></div>');
 			this.$form.prepend(this.$feedback);
@@ -258,7 +264,7 @@ class Form extends Template {
 	 */
 	_done(data){
 		if(this.feedback)
-			this.feedback.setFeedback('success', ' Operation was successful');
+			this.feedback.setFeedback('success', this.settings.feedbackSuccess);
 		this.trigger('done', data);
 		return this;
 	}
@@ -271,7 +277,7 @@ class Form extends Template {
 	 */
 	_fail(err){
 		if(this.feedback)
-			this.feedback.setFeedback('danger', 'Operation has failed');
+			this.feedback.setFeedback('danger', this.settings.feedbackFail);
 		this.trigger('fail', err);
 		return this;
 	}

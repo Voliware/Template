@@ -780,7 +780,6 @@ var Form = function (_Template3) {
 		_classCallCheck(this, Form);
 
 		var defaults = {
-			feedback: true,
 			useTemplate: true,
 			submitUrl: "",
 			submitRequest: null,
@@ -788,6 +787,11 @@ var Form = function (_Template3) {
 			checkboxMode: FormSerializer.checkboxMode.number,
 			excluded: [':disabled'],
 			formGroupManager: FormGroupManager,
+			// feedback
+			feedback: true,
+			feedbackCloseable: true,
+			feedbackSuccess: 'Submission successful',
+			feedbackFail: 'Submission failed',
 			// css classes for each form component
 			struct: {
 				$wrapper: 'form',
@@ -901,7 +905,9 @@ var Form = function (_Template3) {
 	}, {
 		key: "_setupFeedback",
 		value: function _setupFeedback() {
-			this.feedback = new Feedback();
+			this.feedback = new Feedback({
+				closeButton: this.settings.feedbackCloseable
+			});
 			if (!this.$feedback.length) {
 				this.$feedback = $('<div class="form-feedback"></div>');
 				this.$form.prepend(this.$feedback);
@@ -1007,7 +1013,7 @@ var Form = function (_Template3) {
 	}, {
 		key: "_done",
 		value: function _done(data) {
-			if (this.feedback) this.feedback.setFeedback('success', ' Operation was successful');
+			if (this.feedback) this.feedback.setFeedback('success', this.settings.feedbackSuccess);
 			this.trigger('done', data);
 			return this;
 		}
@@ -1022,7 +1028,7 @@ var Form = function (_Template3) {
 	}, {
 		key: "_fail",
 		value: function _fail(err) {
-			if (this.feedback) this.feedback.setFeedback('danger', 'Operation has failed');
+			if (this.feedback) this.feedback.setFeedback('danger', this.settings.feedbackFail);
 			this.trigger('fail', err);
 			return this;
 		}
