@@ -36,16 +36,19 @@ class BootstrapFeedback extends Feedback {
 	 */
 	_useDefaultTemplate(){
 		var template = '';
+		var feedbackWrapper = '';
 		var feedbackContainer = '';
 		var closeContainer = '';
 		var noCloseContainer = '';
 
 		if(BOOTSTRAP_VERSION === 4){
+			feedbackWrapper = '<div class="feedback alert row v4">';
 			feedbackContainer = '<div class="offset-1 col-10">';
 			closeContainer = '<div class="col-1">';
 			noCloseContainer = '<div class="col-12">';
 		}
 		else {
+			feedbackWrapper = '<div class="feedback alert clearfix">';
 			feedbackContainer = '<div class="col-xs-offset-1 col-xs-10">';
 			closeContainer = '<div class="col-xs-1">';
 			noCloseContainer = '<div class="col-xs-12">';
@@ -53,7 +56,7 @@ class BootstrapFeedback extends Feedback {
 		
 		if(this.settings.closeButton){
 			template =
-				'<div class="feedback alert clearfix">' +
+				feedbackWrapper +
 					feedbackContainer +
 						'<span class="feedback-icon"></span>' +
 						'<span class="feedback-text"></span>' +

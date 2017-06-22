@@ -45,6 +45,12 @@ div.input-help {
     background-color: #d9edf7;
     border-color: #bce8f1;
 }
+
+/* v4 fixes */
+.feedback.alert.row.v4 {
+    margin-right: 0;
+    margin-left: 0;
+}
 /*!
  * bootstrapLoader
  * https://github.com/Voliware/Template
