@@ -69,7 +69,7 @@ var Feedback = function (_Template) {
 	_createClass(Feedback, [{
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
-			var template = '<div class="feedback">' + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>';
+			var template = '<div class="feedback">' + '<div class="feedback-icon"></div>' + '<div class="feedback-text"></div>';
 
 			if (this.settings.closeButton) {
 				template += '<button name="close" type="button">X</button>';

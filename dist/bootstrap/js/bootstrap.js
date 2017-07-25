@@ -210,9 +210,9 @@ var BootstrapFeedback = function (_Feedback) {
 			}
 
 			if (this.settings.closeButton) {
-				template = feedbackWrapper + feedbackContainer + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>' + '</div>' + closeContainer + '<button type="button" name="close" class="close">&times;</button>' + '</div>' + '</div>';
+				template = feedbackWrapper + feedbackContainer + '<div class="feedback-icon"></div>' + '<div class="feedback-text"></div>' + '</div>' + closeContainer + '<button type="button" name="close" class="close">&times;</button>' + '</div>' + '</div>';
 			} else {
-				template = '<div class="feedback alert clearfix">' + noCloseContainer + '<span class="feedback-icon"></span>' + '<span class="feedback-text"></span>' + '</div>' + '</div>';
+				template = '<div class="feedback alert clearfix">' + noCloseContainer + '<div class="feedback-icon"></div>' + '<div class="feedback-text"></div>' + '</div>' + '</div>';
 			}
 
 			this._useTemplate($(template));
@@ -230,6 +230,10 @@ var BootstrapFeedback = function (_Feedback) {
 	}, {
 		key: '_createDefaultIcon',
 		value: function _createDefaultIcon(cls) {
+			// special case for processing spinner
+			if (cls === 'processing') {
+				return BootstrapFeedback.icon.processing;
+			}
 			return '<span class="glyphicon ' + BootstrapFeedback.icon[cls] + '"></span>';
 		}
 
@@ -323,7 +327,7 @@ BootstrapFeedback.icon = {
 	success: 'glyphicon-ok-sign',
 	warning: 'glyphicon-exclamation-sign',
 	info: 'glyphicon-info-sign',
-	processing: 'glyphicon-refresh glyphicon-refresh-spin'
+	processing: '<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>'
 };
 /*!
  * bootstrapFormGroup
@@ -1293,22 +1297,6 @@ var BootstrapProgress = function (_Template4) {
 			this.percent = Math.floor(percent);
 			this.$percent.html(percent + "%");
 			this.$percent.toggleClass('progress-percent-white', percent > 50);
-			this._centerPercent();
-			return this;
-		}
-
-		/**
-   * Center the percent text
-   * @returns {BootstrapProgress}
-   * @private
-   */
-
-	}, {
-		key: '_centerPercent',
-		value: function _centerPercent() {
-			// 20 px is approx the text sie of "0%"
-			var w = this.$percent.width() || 20;
-			this.$percent.css('margin-left', w / 2 * -1 + "px");
 			return this;
 		}
 
