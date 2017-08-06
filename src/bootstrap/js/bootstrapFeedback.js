@@ -58,8 +58,8 @@ class BootstrapFeedback extends Feedback {
 			template =
 				feedbackWrapper +
 					feedbackContainer +
-						'<span class="feedback-icon"></span>' +
-						'<span class="feedback-text"></span>' +
+						'<div class="feedback-icon"></div>' +
+						'<div class="feedback-text"></div>' +
 					'</div>' +
 					closeContainer +
 						'<button type="button" name="close" class="close">&times;</button>' +
@@ -70,8 +70,8 @@ class BootstrapFeedback extends Feedback {
 			template =
 				'<div class="feedback alert clearfix">' +
 					noCloseContainer +
-						'<span class="feedback-icon"></span>' +
-						'<span class="feedback-text"></span>' +
+						'<div class="feedback-icon"></div>' +
+						'<div class="feedback-text"></div>' +
 					'</div>' +
 				'</div>';
 		}
@@ -88,6 +88,10 @@ class BootstrapFeedback extends Feedback {
 	 * @private
 	 */
 	_createDefaultIcon(cls){
+                // special case for processing spinner
+                if(cls === 'processing'){
+                    return BootstrapFeedback.icon.processing;
+                }
 		return '<span class="glyphicon ' + BootstrapFeedback.icon[cls] + '"></span>';
 	}
 
@@ -168,5 +172,5 @@ BootstrapFeedback.icon = {
 	success : 'glyphicon-ok-sign',
 	warning : 'glyphicon-exclamation-sign',
 	info : 'glyphicon-info-sign',
-	processing : 'glyphicon-refresh glyphicon-refresh-spin'
+	processing : '<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>'
 };

@@ -70,19 +70,6 @@ class BootstrapProgress extends Template {
 		this.percent = Math.floor(percent);
 		this.$percent.html(percent + "%");
 		this.$percent.toggleClass('progress-percent-white', percent > 50);
-		this._centerPercent();
-		return this;
-	}
-
-	/**
-	 * Center the percent text
-	 * @returns {BootstrapProgress}
-	 * @private
-	 */
-	_centerPercent(){
-		// 20 px is approx the text sie of "0%"
-		var w = this.$percent.width() || 20;
-		this.$percent.css('margin-left', w / 2 * -1 + "px");
 		return this;
 	}
 

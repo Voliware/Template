@@ -50,8 +50,8 @@ class Feedback extends Template {
 	_useDefaultTemplate(){
 		var template =
 			'<div class="feedback">' +
-				'<span class="feedback-icon"></span>' +
-				'<span class="feedback-text"></span>';
+				'<div class="feedback-icon"></div>' +
+				'<div class="feedback-text"></div>';
 
 		if(this.settings.closeButton){
 			template += '<button name="close" type="button">X</button>';
