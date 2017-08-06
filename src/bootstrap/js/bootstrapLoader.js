@@ -145,6 +145,11 @@ class BootstrapLoader extends BootstrapProgress {
 		if(isString(arg))
 			this.setText(arg);
 
+		// arg is jquery
+		if(isJquery(arg)){
+			this.setText(arg);
+		}
+
 		// no arg
 		if(isNull(arg)){
 			step = this._getStep(this.step);

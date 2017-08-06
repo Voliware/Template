@@ -504,9 +504,16 @@ if (typeof isJquery === 'undefined') {
 		var $this = $(this);
 		$.each(data, function (i, e) {
 			var $elInput = $this.find('[name="' + i + '"]');
+			if ($elInput.length > 0 && $elInput.data('populate') !== false) {
+				$elInput.populate(e, trigger);
+				return;
+			}
+
 			var $el = $this.find('[data-name="' + i + '"]');
-			if ($elInput.length > 0 && $elInput.data('populate') !== false) $elInput.populate(e, trigger);
-			if ($el.length > 0 && $el.data('populate') !== false) $el.populate(e, trigger);
+			if ($el.length > 0 && $el.data('populate') !== false) {
+				$el.populate(e, trigger);
+				return;
+			}
 		});
 		return this;
 	};

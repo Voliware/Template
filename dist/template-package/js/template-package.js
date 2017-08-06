@@ -99,7 +99,7 @@ if(trigger)$this.trigger('change').trigger('input');return this;/**
 	 * @param {object} data
 	 * @param {boolean} [trigger=true] - whether to call change and input events
 	 * @returns {jQuery}
-	 */$.fn.populateChildren=function(data){var trigger=arguments.length>1&&arguments[1]!==undefined?arguments[1]:true;var $this=$(this);$.each(data,function(i,e){var $elInput=$this.find('[name="'+i+'"]');var $el=$this.find('[data-name="'+i+'"]');if($elInput.length>0&&$elInput.data('populate')!==false)$elInput.populate(e,trigger);if($el.length>0&&$el.data('populate')!==false)$el.populate(e,trigger);});return this;};/**
+	 */$.fn.populateChildren=function(data){var trigger=arguments.length>1&&arguments[1]!==undefined?arguments[1]:true;var $this=$(this);$.each(data,function(i,e){var $elInput=$this.find('[name="'+i+'"]');if($elInput.length>0&&$elInput.data('populate')!==false){$elInput.populate(e,trigger);return;}var $el=$this.find('[data-name="'+i+'"]');if($el.length>0&&$el.data('populate')!==false){$el.populate(e,trigger);return;}});return this;};/**
 	 * Populate an elements attributes by matching
 	 * data keys with attributes of the same name.
 	 * @param {object} data
