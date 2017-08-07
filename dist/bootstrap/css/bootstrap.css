@@ -106,7 +106,6 @@ div.input-help {
 .progress-percent{
     color:black;
     position: absolute;
-    left:50%;
     width:100%;
 }
 .progress-percent-white{

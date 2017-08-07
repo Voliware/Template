@@ -559,7 +559,7 @@ for(i=0;i<diff.length;i++){this._delete(diff[i]);}return this;}/**
 	 * Default feedback template
 	 * @returns {Feedback}
 	 * @private
-	 */_createClass(Feedback,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var template='<div class="feedback">'+'<span class="feedback-icon"></span>'+'<span class="feedback-text"></span>';if(this.settings.closeButton){template+='<button name="close" type="button">X</button>';}template+='</div>';this._useTemplate($(template));this.$wrapper.hide();return this;}/**
+	 */_createClass(Feedback,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var template='<div class="feedback">'+'<div class="feedback-icon"></div>'+'<div class="feedback-text"></div>';if(this.settings.closeButton){template+='<button name="close" type="button">X</button>';}template+='</div>';this._useTemplate($(template));this.$wrapper.hide();return this;}/**
 	 * Set the class of the feedback.
 	 * Automatically removes other "feedback-" classes
 	 * and prepends "feedback-" to the new class

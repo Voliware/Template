@@ -41,6 +41,7 @@
 }
 .feedback-icon,
 .feedback-text{
+    display:inline-block;
     padding:0 5px;
     vertical-align: middle;
 }
@@ -185,7 +186,6 @@ div.input-help {
 .progress-percent{
     color:black;
     position: absolute;
-    left:50%;
     width:100%;
 }
 .progress-percent-white{

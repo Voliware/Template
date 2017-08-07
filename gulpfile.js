@@ -238,7 +238,6 @@ function buildJsDoc(){
 
 // tasks
 gulp.task('all', function(){
-	buildJsDoc();
 	buildBootstrap();
 	buildFeedback();
 	buildForm();

@@ -559,7 +559,7 @@ for(i=0;i<diff.length;i++){this._delete(diff[i]);}return this;}/**
 	 * Default feedback template
 	 * @returns {Feedback}
 	 * @private
-	 */_createClass(Feedback,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var template='<div class="feedback">'+'<span class="feedback-icon"></span>'+'<span class="feedback-text"></span>';if(this.settings.closeButton){template+='<button name="close" type="button">X</button>';}template+='</div>';this._useTemplate($(template));this.$wrapper.hide();return this;}/**
+	 */_createClass(Feedback,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var template='<div class="feedback">'+'<div class="feedback-icon"></div>'+'<div class="feedback-text"></div>';if(this.settings.closeButton){template+='<button name="close" type="button">X</button>';}template+='</div>';this._useTemplate($(template));this.$wrapper.hide();return this;}/**
 	 * Set the class of the feedback.
 	 * Automatically removes other "feedback-" classes
 	 * and prepends "feedback-" to the new class
@@ -1461,12 +1461,13 @@ var BOOTSTRAP_VERSION=Number($.fn.tooltip.Constructor.VERSION.split('.')[0]);(fu
 	 * add an alert class to the feedback
 	 * @returns {BootstrapFeedback}
 	 * @private
-	 */_createClass(BootstrapFeedback,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var template='';var feedbackWrapper='';var feedbackContainer='';var closeContainer='';var noCloseContainer='';if(BOOTSTRAP_VERSION===4){feedbackWrapper='<div class="feedback alert row v4">';feedbackContainer='<div class="offset-1 col-10">';closeContainer='<div class="col-1">';noCloseContainer='<div class="col-12">';}else{feedbackWrapper='<div class="feedback alert clearfix">';feedbackContainer='<div class="col-xs-offset-1 col-xs-10">';closeContainer='<div class="col-xs-1">';noCloseContainer='<div class="col-xs-12">';}if(this.settings.closeButton){template=feedbackWrapper+feedbackContainer+'<span class="feedback-icon"></span>'+'<span class="feedback-text"></span>'+'</div>'+closeContainer+'<button type="button" name="close" class="close">&times;</button>'+'</div>'+'</div>';}else{template='<div class="feedback alert clearfix">'+noCloseContainer+'<span class="feedback-icon"></span>'+'<span class="feedback-text"></span>'+'</div>'+'</div>';}this._useTemplate($(template));this.$wrapper.hide();return this;}/**
+	 */_createClass(BootstrapFeedback,[{key:"_useDefaultTemplate",value:function _useDefaultTemplate(){var template='';var feedbackWrapper='';var feedbackContainer='';var closeContainer='';var noCloseContainer='';if(BOOTSTRAP_VERSION===4){feedbackWrapper='<div class="feedback alert row v4">';feedbackContainer='<div class="offset-1 col-10">';closeContainer='<div class="col-1">';noCloseContainer='<div class="col-12">';}else{feedbackWrapper='<div class="feedback alert clearfix">';feedbackContainer='<div class="col-xs-offset-1 col-xs-10">';closeContainer='<div class="col-xs-1">';noCloseContainer='<div class="col-xs-12">';}if(this.settings.closeButton){template=feedbackWrapper+feedbackContainer+'<div class="feedback-icon"></div>'+'<div class="feedback-text"></div>'+'</div>'+closeContainer+'<button type="button" name="close" class="close">&times;</button>'+'</div>'+'</div>';}else{template='<div class="feedback alert clearfix">'+noCloseContainer+'<div class="feedback-icon"></div>'+'<div class="feedback-text"></div>'+'</div>'+'</div>';}this._useTemplate($(template));this.$wrapper.hide();return this;}/**
 	 * Create a default icon based on feedback class
 	 * @param {string} cls - the alert- bootstrap class to set
 	 * @returns {string}
 	 * @private
-	 */},{key:"_createDefaultIcon",value:function _createDefaultIcon(cls){return'<span class="glyphicon '+BootstrapFeedback.icon[cls]+'"></span>';}/**
+	 */},{key:"_createDefaultIcon",value:function _createDefaultIcon(cls){// special case for processing spinner
+if(cls==='processing'){return BootstrapFeedback.icon.processing;}return'<span class="glyphicon '+BootstrapFeedback.icon[cls]+'"></span>';}/**
 	 * Set the class using of the feedback
 	 * Automatically removes other "alert-" classes
 	 * and prepends "alert-" to the new class
@@ -1490,7 +1491,7 @@ var BOOTSTRAP_VERSION=Number($.fn.tooltip.Constructor.VERSION.split('.')[0]);(fu
 	 * @param {jQuery|string} text - text to show
 	 * @param {jQuery|string} [icon] - icon to show
 	 * @returns {Feedback}
-	 */},{key:"setFeedback",value:function setFeedback(cls,text,icon){if(this.is(':hidden')){var $icon=icon?icon:this._createDefaultIcon(cls);this._setClass(cls);this.$text.html(text);this.$icon.html($icon);this.slideDown();}else{this._animateFeedback(cls,text,icon);}return this;}}]);return BootstrapFeedback;}(Feedback);BootstrapFeedback.icon={danger:'glyphicon-remove-sign',success:'glyphicon-ok-sign',warning:'glyphicon-exclamation-sign',info:'glyphicon-info-sign',processing:'glyphicon-refresh glyphicon-refresh-spin'};/*!
+	 */},{key:"setFeedback",value:function setFeedback(cls,text,icon){if(this.is(':hidden')){var $icon=icon?icon:this._createDefaultIcon(cls);this._setClass(cls);this.$text.html(text);this.$icon.html($icon);this.slideDown();}else{this._animateFeedback(cls,text,icon);}return this;}}]);return BootstrapFeedback;}(Feedback);BootstrapFeedback.icon={danger:'glyphicon-remove-sign',success:'glyphicon-ok-sign',warning:'glyphicon-exclamation-sign',info:'glyphicon-info-sign',processing:'<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>'};/*!
  * bootstrapFormGroup
  * https://github.com/Voliware/Template
  * Licensed under the MIT license.
@@ -1786,12 +1787,7 @@ var _this30=_possibleConstructorReturn(this,(BootstrapCardManager.__proto__||Obj
 	 * @param {number} percent
 	 * @returns {BootstrapProgress}
 	 * @private
-	 */},{key:"_setPercent",value:function _setPercent(percent){this.percent=Math.floor(percent);this.$percent.html(percent+"%");this.$percent.toggleClass('progress-percent-white',percent>50);this._centerPercent();return this;}/**
-	 * Center the percent text
-	 * @returns {BootstrapProgress}
-	 * @private
-	 */},{key:"_centerPercent",value:function _centerPercent(){// 20 px is approx the text sie of "0%"
-var w=this.$percent.width()||20;this.$percent.css('margin-left',w/2*-1+"px");return this;}/**
+	 */},{key:"_setPercent",value:function _setPercent(percent){this.percent=Math.floor(percent);this.$percent.html(percent+"%");this.$percent.toggleClass('progress-percent-white',percent>50);return this;}/**
 	 * Set the progress of the bar
 	 * @param {number} percent
 	 * @returns {BootstrapProgress}
