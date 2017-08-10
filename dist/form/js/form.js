@@ -755,6 +755,7 @@ var Form = function (_Template3) {
   * Constructor
   * @param {object} [options]
   * @param {boolean} [options.feedback=true] - whether to show feedback during submissions
+  * @param {function} [options.getRequest=null] - if set, a request to get form data 
   * @param {string} [options.submitUrl] - the submitUrl or path to submit the form to
   * @param {function} [options.submitRequest=null] - if set, ignores submitUrl and uses this function to submit data
   * @param {number} [options.serializeMode=0] - the mode in which to serialize data
@@ -781,6 +782,7 @@ var Form = function (_Template3) {
 
 		var defaults = {
 			useTemplate: true,
+			getRequest: null,
 			submitUrl: "",
 			submitRequest: null,
 			serializeMode: FormSerializer.serializeMode.toString,
@@ -1058,7 +1060,11 @@ var Form = function (_Template3) {
 	}, {
 		key: "_getFormData",
 		value: function _getFormData() {
-			return $.Deferred().resolve().promise();
+			if (this.settings.getRequest) {
+				return this.settings.getRequest();
+			} else {
+				return $.Deferred().resolve({}).promise();
+			}
 		}
 
 		// public
@@ -1243,6 +1249,23 @@ var Form = function (_Template3) {
 		// initializers
 
 		/**
+   * Wipe the form.
+   * Clear all data and set all inputs to blanks
+   * @returns {Form}
+   */
+
+	}, {
+		key: "wipe",
+		value: function wipe() {
+			this._cachedData = {};
+			this._processedData = {};
+			this.find('input, select').each(function (i, e) {
+				$(e).val('');
+			});
+			return this;
+		}
+
+		/**
    * Remove all data from the form and reset it
    * @returns {Form}
    */
@@ -1267,6 +1290,25 @@ var Form = function (_Template3) {
 		value: function initialize() {
 			this.clean();
 			return this;
+		}
+
+		/**
+   * Initialize by getting form data 
+   * @returns {jQuery}
+   */
+
+	}, {
+		key: "initializeWithGet",
+		value: function initializeWithGet() {
+			var self = this;
+			this.initialize();
+			this._prepare();
+			return this._getFormData().done(function (data) {
+				self.populateForm(data);
+				self._ready();
+			}).fail(function (err) {
+				self.feedback.setFeedback('danger', err.msg || 'Failed to get data');
+			});
 		}
 	}]);
 

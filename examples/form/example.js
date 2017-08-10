@@ -2,6 +2,22 @@ function submitRequest(data){
 	return $.post('backend.html', data)
 }
 
+function backendCall(){
+	var dfd = $.Deferred();
+	
+	setTimeout(function(){
+		dfd.resolve({
+			name : "Jimmy Three Shoes",
+			age : 33,
+			vegetarian : 1,
+			height : 2,
+			gender : 0
+		});
+	},2000);
+	
+	return dfd.promise();
+}
+
 var basicForm;
 var feedbackForm;
 var singleValueForm;
@@ -34,17 +50,12 @@ $(document).on('ready', function(){
 		console.log(singleValueForm._serializedData);
 	});
 	populateForm = new Form({
+		getRequest : backendCall,
 		validator : Form.validators.formValidation,
 		template : $('#populateForm'),
 		submitRequest : submitRequest
 	})
-	.populateForm({
-		name : "Jimmy Three Shoes",
-		age : 33,
-		vegetarian : 1,
-		height : 2,
-		gender : 0
-	});
+	populateForm.initializeWithGet();
 
 	buildForm = new Form({
 		validator : Form.validators.formValidation,

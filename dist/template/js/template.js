@@ -504,16 +504,9 @@ if (typeof isJquery === 'undefined') {
 		var $this = $(this);
 		$.each(data, function (i, e) {
 			var $elInput = $this.find('[name="' + i + '"]');
-			if ($elInput.length > 0 && $elInput.data('populate') !== false) {
-				$elInput.populate(e, trigger);
-				return;
-			}
-
 			var $el = $this.find('[data-name="' + i + '"]');
-			if ($el.length > 0 && $el.data('populate') !== false) {
-				$el.populate(e, trigger);
-				return;
-			}
+			if ($elInput.length > 0 && $elInput.data('populate') !== false) $elInput.populate(e, trigger);
+			if ($el.length > 0 && $el.data('populate') !== false) $el.populate(e, trigger);
 		});
 		return this;
 	};
@@ -720,10 +713,20 @@ var $Util = function () {
 				// continue if override is false
 				if (isDefined(obj[e]) && !override) return true;
 
-				obj[e] = function () {
-					var _obj$$wrapper;
+				// special cases where we shouldn't return the jquerified object
+				if (e === 'find') {
+					obj[e] = function () {
+						var _obj$$wrapper;
 
-					(_obj$$wrapper = obj.$wrapper)[e].apply(_obj$$wrapper, arguments);
+						return (_obj$$wrapper = obj.$wrapper)[e].apply(_obj$$wrapper, arguments);
+					};
+					return true;
+				}
+
+				obj[e] = function () {
+					var _obj$$wrapper2;
+
+					(_obj$$wrapper2 = obj.$wrapper)[e].apply(_obj$$wrapper2, arguments);
 					return obj;
 				};
 			});

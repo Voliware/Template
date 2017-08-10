@@ -14,6 +14,7 @@ class Form extends Template {
 	 * Constructor
 	 * @param {object} [options]
 	 * @param {boolean} [options.feedback=true] - whether to show feedback during submissions
+	 * @param {function} [options.getRequest=null] - if set, a request to get form data 
 	 * @param {string} [options.submitUrl] - the submitUrl or path to submit the form to
 	 * @param {function} [options.submitRequest=null] - if set, ignores submitUrl and uses this function to submit data
 	 * @param {number} [options.serializeMode=0] - the mode in which to serialize data
@@ -36,6 +37,7 @@ class Form extends Template {
 	constructor(options){
 		var defaults = {
 			useTemplate : true,
+			getRequest : null,
 			submitUrl: "",
 			submitRequest : null,
 			serializeMode : FormSerializer.serializeMode.toString,
@@ -301,7 +303,12 @@ class Form extends Template {
 	 * @private
 	 */
 	_getFormData(){
-		return $.Deferred().resolve().promise();
+		if(this.settings.getRequest){
+			return this.settings.getRequest();
+		}
+		else {
+			return $.Deferred().resolve({}).promise();
+		}
 	}
 
 	// public
@@ -463,6 +470,20 @@ class Form extends Template {
 	}
 
 	// initializers
+	
+	/**
+	 * Wipe the form.
+	 * Clear all data and set all inputs to blanks
+	 * @returns {Form}
+	 */
+	wipe(){
+		this._cachedData = {};
+		this._processedData = {};
+		this.find('input, select').each(function(i, e){
+			$(e).val('');
+		});
+		return this;
+	}		
 
 	/**
 	 * Remove all data from the form and reset it
@@ -483,6 +504,24 @@ class Form extends Template {
 	initialize(){
 		this.clean();
 		return this;
+	}
+	
+	/**
+	 * Initialize by getting form data 
+	 * @returns {jQuery}
+	 */
+	initializeWithGet(){
+		let self = this;
+		this.initialize();
+		this._prepare();
+		return this._getFormData()
+			.done(function(data){
+				self.populateForm(data);
+				self._ready();
+			})
+			.fail(function(err){
+				self.feedback.setFeedback('danger', err.msg || 'Failed to get data');
+			});
 	}
 }
 
