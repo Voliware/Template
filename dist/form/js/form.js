@@ -1301,7 +1301,7 @@ var Form = function (_Template3) {
 		key: "initializeWithGet",
 		value: function initializeWithGet() {
 			var self = this;
-			this.initialize();
+			this.clean();
 			this._prepare();
 			return this._getFormData().done(function (data) {
 				self.populateForm(data);

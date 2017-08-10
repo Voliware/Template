@@ -512,7 +512,7 @@ class Form extends Template {
 	 */
 	initializeWithGet(){
 		let self = this;
-		this.initialize();
+		this.clean();
 		this._prepare();
 		return this._getFormData()
 			.done(function(data){
