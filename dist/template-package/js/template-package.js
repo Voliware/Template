@@ -3985,7 +3985,7 @@ var Form = function (_Template7) {
 		});
 		_this14.validator = null;
 		_this14.feedback = null;
-		_this14.formGoupManager = new _this14.settings.formGroupManager({
+		_this14.formGroupManager = new _this14.settings.formGroupManager({
 			$wrapper: _this14.$body
 		});
 

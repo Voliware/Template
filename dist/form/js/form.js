@@ -828,7 +828,7 @@ var Form = function (_Template3) {
 		});
 		_this5.validator = null;
 		_this5.feedback = null;
-		_this5.formGoupManager = new _this5.settings.formGroupManager({
+		_this5.formGroupManager = new _this5.settings.formGroupManager({
 			$wrapper: _this5.$body
 		});
 

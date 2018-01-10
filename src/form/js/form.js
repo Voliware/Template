@@ -84,7 +84,7 @@ class Form extends Template {
 		});
 		this.validator = null;
 		this.feedback = null;
-		this.formGoupManager = new this.settings.formGroupManager({
+		this.formGroupManager = new this.settings.formGroupManager({
 			$wrapper : this.$body
 		});
 
