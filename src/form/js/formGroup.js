@@ -55,11 +55,22 @@ class FormGroup extends Template {
 	 * @returns {FormGroup}
 	 */
 	createInput(data){
-		this.input = data.tag === "input"
-			? new this.settings.formInput()
-			: new this.settings.formSelect();
+		switch(data.tag){
+			case "input":
+				this.input = new this.settings.formInput();
+				break;
+			case "select":
+				this.input = new this.settings.formSelect();
+				break;
+			case "textarea":
+				this.input = new this.settings.formInput({}, {tag:'textarea'});
+				break;
+		}
 		this.input.set(data);
 		this.setInput(this.input);
+		if(this.input.type === 'hidden'){
+			this.$wrapper.hide();
+		}
 		return this;
 	}
 

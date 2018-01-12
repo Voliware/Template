@@ -2498,6 +2498,7 @@ var Table = function (_Template4) {
 		var _this7 = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
 
 		_this7.$rows = [];
+		_this7.primaryKey = "id";
 
 		// states
 		_this7.isFirstBuild = true;
@@ -2593,7 +2594,11 @@ var Table = function (_Template4) {
 			$.each(data, function (i, e) {
 				// add a private _rowId_ for objects
 				if (isObject(e)) {
-					self._processedData[i]._rowId_ = i;
+					var _rowId_ = i;
+					if (self._cachedData[i][self.primaryKey]) {
+						_rowId_ = self._cachedData[i][self.primaryKey];
+					}
+					self._processedData[i]._rowId_ = _rowId_;
 				}
 				self._processedData[i] = self._processRow(e);
 			});
@@ -2627,9 +2632,6 @@ var Table = function (_Template4) {
 		key: "_render",
 		value: function _render(data) {
 			var self = this;
-
-			// empty the <tbody>
-			this.wipe();
 
 			if (!$.isEmptyObject(data) || Array.isArray(data) && data.length) this.toggleEmpty(false);else return this;
 
@@ -2708,6 +2710,7 @@ var Table = function (_Template4) {
 			else this.populateRow($row, data);
 
 			this.appendRow($row);
+			$row.attr('data-id', data._rowId_);
 			return this;
 		}
 
@@ -2742,6 +2745,7 @@ var Table = function (_Template4) {
 	}, {
 		key: "build",
 		value: function build(data) {
+			this.wipe();
 			this._cacheData(data);
 			this._processData(data);
 			this.toggleEmpty(false);
@@ -3186,8 +3190,12 @@ var FormInput = function (_Template5) {
   * @param {object} [options]
   * @returns {FormInput}
   */
-	function FormInput(data, options) {
+	function FormInput() {
+		var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
 		var _ret10;
+
+		var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 		_classCallCheck(this, FormInput);
 
@@ -3201,7 +3209,7 @@ var FormInput = function (_Template5) {
 		var _this10 = _possibleConstructorReturn(this, (FormInput.__proto__ || Object.getPrototypeOf(FormInput)).call(this, $Util.opts(defaults, options)));
 
 		_this10.type = "text";
-		_this10.tag = "input";
+		_this10.tag = options.tag || "input";
 		_this10.disabled = false;
 		_this10.required = false;
 		_this10.name = "input";
@@ -3241,7 +3249,7 @@ var FormInput = function (_Template5) {
 	}, {
 		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
-			var $template = $('<input class="form-input"/>');
+			var $template = $("<" + this.tag + " class=\"form-input\"/>");
 			this._useTemplate($template);
 			return this;
 		}
@@ -3331,16 +3339,17 @@ var FormSelect = function (_FormInput) {
 
 	/**
   * Constructor
+  * @param {object} [data]
   * @param {object} [options]
   * @returns {FormInput}
   */
-	function FormSelect(options) {
+	function FormSelect(data, options) {
 		var _ret11;
 
 		_classCallCheck(this, FormSelect);
 
 		// properties
-		var _this11 = _possibleConstructorReturn(this, (FormSelect.__proto__ || Object.getPrototypeOf(FormSelect)).call(this, options));
+		var _this11 = _possibleConstructorReturn(this, (FormSelect.__proto__ || Object.getPrototypeOf(FormSelect)).call(this, data, options));
 
 		_this11.tag = "select";
 		_this11.type = undefined;
@@ -3470,9 +3479,22 @@ var FormGroup = function (_Template6) {
 	}, {
 		key: "createInput",
 		value: function createInput(data) {
-			this.input = data.tag === "input" ? new this.settings.formInput() : new this.settings.formSelect();
+			switch (data.tag) {
+				case "input":
+					this.input = new this.settings.formInput();
+					break;
+				case "select":
+					this.input = new this.settings.formSelect();
+					break;
+				case "textarea":
+					this.input = new this.settings.formInput({}, { tag: 'textarea' });
+					break;
+			}
 			this.input.set(data);
 			this.setInput(this.input);
+			if (this.input.type === 'hidden') {
+				this.$wrapper.hide();
+			}
 			return this;
 		}
 

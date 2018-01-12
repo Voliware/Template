@@ -12,11 +12,12 @@ class BootstrapFormSelect extends FormSelect {
 
 	/**
 	 * Constructor
+	 * @param {object} [data]
 	 * @param {object} [options]
 	 * @returns {BootstrapFormSelect}
 	 */
-	constructor(options){
-		super(options);
+	constructor(data, options){
+		super(data, options);
 		return this;
 	}
 

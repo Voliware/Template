@@ -29,8 +29,12 @@ var FormInput = function (_Template) {
   * @param {object} [options]
   * @returns {FormInput}
   */
-	function FormInput(data, options) {
+	function FormInput() {
+		var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
 		var _ret;
+
+		var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 		_classCallCheck(this, FormInput);
 
@@ -44,7 +48,7 @@ var FormInput = function (_Template) {
 		var _this = _possibleConstructorReturn(this, (FormInput.__proto__ || Object.getPrototypeOf(FormInput)).call(this, $Util.opts(defaults, options)));
 
 		_this.type = "text";
-		_this.tag = "input";
+		_this.tag = options.tag || "input";
 		_this.disabled = false;
 		_this.required = false;
 		_this.name = "input";
@@ -84,7 +88,7 @@ var FormInput = function (_Template) {
 	}, {
 		key: "_useDefaultTemplate",
 		value: function _useDefaultTemplate() {
-			var $template = $('<input class="form-input"/>');
+			var $template = $("<" + this.tag + " class=\"form-input\"/>");
 			this._useTemplate($template);
 			return this;
 		}
@@ -174,16 +178,17 @@ var FormSelect = function (_FormInput) {
 
 	/**
   * Constructor
+  * @param {object} [data]
   * @param {object} [options]
   * @returns {FormInput}
   */
-	function FormSelect(options) {
+	function FormSelect(data, options) {
 		var _ret2;
 
 		_classCallCheck(this, FormSelect);
 
 		// properties
-		var _this2 = _possibleConstructorReturn(this, (FormSelect.__proto__ || Object.getPrototypeOf(FormSelect)).call(this, options));
+		var _this2 = _possibleConstructorReturn(this, (FormSelect.__proto__ || Object.getPrototypeOf(FormSelect)).call(this, data, options));
 
 		_this2.tag = "select";
 		_this2.type = undefined;
@@ -313,9 +318,22 @@ var FormGroup = function (_Template2) {
 	}, {
 		key: "createInput",
 		value: function createInput(data) {
-			this.input = data.tag === "input" ? new this.settings.formInput() : new this.settings.formSelect();
+			switch (data.tag) {
+				case "input":
+					this.input = new this.settings.formInput();
+					break;
+				case "select":
+					this.input = new this.settings.formSelect();
+					break;
+				case "textarea":
+					this.input = new this.settings.formInput({}, { tag: 'textarea' });
+					break;
+			}
 			this.input.set(data);
 			this.setInput(this.input);
+			if (this.input.type === 'hidden') {
+				this.$wrapper.hide();
+			}
 			return this;
 		}
 

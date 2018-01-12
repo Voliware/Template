@@ -12,11 +12,12 @@ class FormSelect extends FormInput {
 
 	/**
 	 * Constructor
+	 * @param {object} [data]
 	 * @param {object} [options]
 	 * @returns {FormInput}
 	 */
-	constructor(options){
-		super(options);
+	constructor(data, options){
+		super(data, options);
 
 		// properties
 		this.tag = "select";

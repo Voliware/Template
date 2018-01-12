@@ -38,6 +38,7 @@ class Table extends Template {
 
 		// properties
 		this.$rows = [];
+		this.primaryKey = "id";
 
 		// states
 		this.isFirstBuild = true;
@@ -131,7 +132,11 @@ class Table extends Template {
 		$.each(data, function(i, e){
 			// add a private _rowId_ for objects
 			if(isObject(e)){
-				self._processedData[i]._rowId_ = i;
+				let _rowId_ = i;
+				if(self._cachedData[i][self.primaryKey]){
+					_rowId_ = self._cachedData[i][self.primaryKey];
+				}
+				self._processedData[i]._rowId_ = _rowId_;
 			}
 			self._processedData[i] = self._processRow(e);
 		});
@@ -159,9 +164,6 @@ class Table extends Template {
 	 */
     _render(data){
 		var self = this;
-
-		// empty the <tbody>
-        this.wipe();
 
 		if(!$.isEmptyObject(data) || (Array.isArray(data) && data.length))
 			this.toggleEmpty(false);
@@ -233,6 +235,7 @@ class Table extends Template {
 			this.populateRow($row, data);
 
 		this.appendRow($row);
+		$row.attr('data-id', data._rowId_);
 		return this;
 	}
 
@@ -261,6 +264,7 @@ class Table extends Template {
 	 * @returns {Table}
 	 */
 	build(data){
+		this.wipe();
 		this._cacheData(data);
 		this._processData(data);
 		this.toggleEmpty(false);

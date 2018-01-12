@@ -16,7 +16,7 @@ class FormInput extends Template {
 	 * @param {object} [options]
 	 * @returns {FormInput}
 	 */
-	constructor(data, options){
+	constructor(data = {}, options = {}){
 		var defaults = {
 			struct : {
 				$wrapper : '.form-input'
@@ -26,7 +26,7 @@ class FormInput extends Template {
 
 		// properties
 		this.type = "text";
-		this.tag = "input";
+		this.tag = options.tag || "input";
 		this.disabled = false;
 		this.required = false;
 		this.name = "input";
@@ -59,7 +59,7 @@ class FormInput extends Template {
 	 * @private
 	 */
 	_useDefaultTemplate(){
-		var $template = $('<input class="form-input"/>');
+		var $template = $(`<${this.tag} class="form-input"/>`);
 		this._useTemplate($template);
 		return this;
 	}

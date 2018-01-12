@@ -12,11 +12,12 @@ class BootstrapFormInput extends FormInput {
 
 	/**
 	 * Constructor
+	 * @param {object} [data]
 	 * @param {object} [options]
 	 * @returns {BootstrapFormInput}
 	 */
-	constructor(options){
-		super(options);
+	constructor(data, options){
+		super(data, options);
 		return this;
 	}
 
@@ -25,7 +26,7 @@ class BootstrapFormInput extends FormInput {
 	 * @private
 	 */
 	_useDefaultTemplate(){
-		var $template = $('<input class="form-input form-control"/>');
+		var $template = $(`<${this.tag} class="form-input form-control"/>`);
 		this._useTemplate($template);
 		return this;
 	}

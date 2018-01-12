@@ -451,6 +451,7 @@ var Table = function (_Template3) {
 		var _this4 = _possibleConstructorReturn(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, $Util.opts(defaults, options)));
 
 		_this4.$rows = [];
+		_this4.primaryKey = "id";
 
 		// states
 		_this4.isFirstBuild = true;
@@ -546,7 +547,11 @@ var Table = function (_Template3) {
 			$.each(data, function (i, e) {
 				// add a private _rowId_ for objects
 				if (isObject(e)) {
-					self._processedData[i]._rowId_ = i;
+					var _rowId_ = i;
+					if (self._cachedData[i][self.primaryKey]) {
+						_rowId_ = self._cachedData[i][self.primaryKey];
+					}
+					self._processedData[i]._rowId_ = _rowId_;
 				}
 				self._processedData[i] = self._processRow(e);
 			});
@@ -580,9 +585,6 @@ var Table = function (_Template3) {
 		key: '_render',
 		value: function _render(data) {
 			var self = this;
-
-			// empty the <tbody>
-			this.wipe();
 
 			if (!$.isEmptyObject(data) || Array.isArray(data) && data.length) this.toggleEmpty(false);else return this;
 
@@ -661,6 +663,7 @@ var Table = function (_Template3) {
 			else this.populateRow($row, data);
 
 			this.appendRow($row);
+			$row.attr('data-id', data._rowId_);
 			return this;
 		}
 
@@ -695,6 +698,7 @@ var Table = function (_Template3) {
 	}, {
 		key: 'build',
 		value: function build(data) {
+			this.wipe();
 			this._cacheData(data);
 			this._processData(data);
 			this.toggleEmpty(false);

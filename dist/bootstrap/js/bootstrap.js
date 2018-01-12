@@ -433,15 +433,16 @@ var BootstrapFormInput = function (_FormInput) {
 
 	/**
   * Constructor
+  * @param {object} [data]
   * @param {object} [options]
   * @returns {BootstrapFormInput}
   */
-	function BootstrapFormInput(options) {
+	function BootstrapFormInput(data, options) {
 		var _ret5;
 
 		_classCallCheck(this, BootstrapFormInput);
 
-		var _this5 = _possibleConstructorReturn(this, (BootstrapFormInput.__proto__ || Object.getPrototypeOf(BootstrapFormInput)).call(this, options));
+		var _this5 = _possibleConstructorReturn(this, (BootstrapFormInput.__proto__ || Object.getPrototypeOf(BootstrapFormInput)).call(this, data, options));
 
 		return _ret5 = _this5, _possibleConstructorReturn(_this5, _ret5);
 	}
@@ -455,7 +456,7 @@ var BootstrapFormInput = function (_FormInput) {
 	_createClass(BootstrapFormInput, [{
 		key: '_useDefaultTemplate',
 		value: function _useDefaultTemplate() {
-			var $template = $('<input class="form-input form-control"/>');
+			var $template = $('<' + this.tag + ' class="form-input form-control"/>');
 			this._useTemplate($template);
 			return this;
 		}
@@ -480,15 +481,16 @@ var BootstrapFormSelect = function (_FormSelect) {
 
 	/**
   * Constructor
+  * @param {object} [data]
   * @param {object} [options]
   * @returns {BootstrapFormSelect}
   */
-	function BootstrapFormSelect(options) {
+	function BootstrapFormSelect(data, options) {
 		var _ret6;
 
 		_classCallCheck(this, BootstrapFormSelect);
 
-		var _this6 = _possibleConstructorReturn(this, (BootstrapFormSelect.__proto__ || Object.getPrototypeOf(BootstrapFormSelect)).call(this, options));
+		var _this6 = _possibleConstructorReturn(this, (BootstrapFormSelect.__proto__ || Object.getPrototypeOf(BootstrapFormSelect)).call(this, data, options));
 
 		return _ret6 = _this6, _possibleConstructorReturn(_this6, _ret6);
 	}
