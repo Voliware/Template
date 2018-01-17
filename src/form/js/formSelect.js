@@ -22,7 +22,6 @@ class FormSelect extends FormInput {
 		// properties
 		this.tag = "select";
 		this.type = undefined;
-
 		return this;
 	}
 

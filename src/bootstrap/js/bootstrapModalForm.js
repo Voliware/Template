@@ -62,8 +62,9 @@ class BootstrapModalForm extends BootstrapModal {
 	 * @private
 	 */
 	_onCreateForm(){
-		this._attachFormHandlers()
-			.modal('show');
+		this._attachFormHandlers();
+		this.form.initialize();
+		this.modal('show');
 		return this;
 	}
 

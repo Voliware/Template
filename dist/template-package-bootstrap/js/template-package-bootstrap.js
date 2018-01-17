@@ -2594,11 +2594,7 @@ var Table = function (_Template4) {
 			$.each(data, function (i, e) {
 				// add a private _rowId_ for objects
 				if (isObject(e)) {
-					var _rowId_ = i;
-					if (self._cachedData[i][self.primaryKey]) {
-						_rowId_ = self._cachedData[i][self.primaryKey];
-					}
-					self._processedData[i]._rowId_ = _rowId_;
+					self._processedData[i]._rowId_ = i;
 				}
 				self._processedData[i] = self._processRow(e);
 			});
@@ -2710,7 +2706,13 @@ var Table = function (_Template4) {
 			else this.populateRow($row, data);
 
 			this.appendRow($row);
-			$row.attr('data-id', data._rowId_);
+			if (!isDefined(data._rowId_)) {
+				data._rowId_ = this.$rows.length;
+			}
+			$row.attr('data-rowid', data._rowId_);
+			if (data[this.primaryKey]) {
+				$row.attr('data-pkeyid', data[this.primaryKey]);
+			}
 			return this;
 		}
 
@@ -2779,10 +2781,30 @@ var Table = function (_Template4) {
 	}, {
 		key: "deleteRow",
 		value: function deleteRow(index) {
+			// delete row html
 			if (this.$rows[index]) {
 				this.$rows[index].remove();
-				this.$rows.splice(index, 1);
+				this.$rows[index] = null;
 			}
+
+			// delete cached data
+			if (this._cachedData[index]) {
+				if (Array.isArray(this._cacheData)) {
+					this._cachedData.splice(index, 1);
+				} else {
+					delete this._cachedData[index];
+				}
+			}
+
+			// delete processed data 
+			if (this._processedData[index]) {
+				if (Array.isArray(this._processedData)) {
+					this._processedData.splice(index, 1);
+				} else {
+					delete this._processedData[index];
+				}
+			}
+
 			// check if all rows were deleted
 			if (this._isEmptyTable()) {
 				this.toggleEmpty();
@@ -3219,6 +3241,7 @@ var FormInput = function (_Template5) {
 		_this10.placeholder = null;
 		_this10.step = undefined;
 		_this10.value = null;
+		_this10.class = undefined;
 
 		_this10.set(data);
 
@@ -3287,6 +3310,9 @@ var FormInput = function (_Template5) {
 				step: this.step,
 				type: this.type
 			});
+			if (this.class) {
+				this.$wrapper.addClass(this.class);
+			}
 			return this;
 		}
 
@@ -3353,7 +3379,6 @@ var FormSelect = function (_FormInput) {
 
 		_this11.tag = "select";
 		_this11.type = undefined;
-
 		return _ret11 = _this11, _possibleConstructorReturn(_this11, _ret11);
 	}
 
@@ -3494,6 +3519,9 @@ var FormGroup = function (_Template6) {
 			this.setInput(this.input);
 			if (this.input.type === 'hidden') {
 				this.$wrapper.hide();
+			}
+			if (this.input.tag === 'select') {
+				this.input.addToSelect(data.selectOptions);
 			}
 			return this;
 		}
@@ -4318,14 +4346,19 @@ var Form = function (_Template7) {
 		/**
    * Slide toggle the form body
    * @param {boolean} state
+      * @param {function} cb - callback when slide is done
    * @returns {Form}
    */
 
 	}, {
 		key: "slideToggleForm",
-		value: function slideToggleForm(state) {
+		value: function slideToggleForm(state, cb) {
 			this.$body.slideToggleState(state);
-			this.$footer.slideToggleState(state);
+			this.$footer.slideToggleState(state, function () {
+				if (cb) {
+					cb();
+				}
+			});
 			return this;
 		}
 
@@ -5833,7 +5866,9 @@ var BootstrapModalForm = function (_BootstrapModal) {
 	}, {
 		key: "_onCreateForm",
 		value: function _onCreateForm() {
-			this._attachFormHandlers().modal('show');
+			this._attachFormHandlers();
+			this.form.initialize();
+			this.modal('show');
 			return this;
 		}
 

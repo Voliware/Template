@@ -71,6 +71,9 @@ class FormGroup extends Template {
 		if(this.input.type === 'hidden'){
 			this.$wrapper.hide();
 		}
+		if(this.input.tag === 'select'){
+			this.input.addToSelect(data.selectOptions);
+		}
 		return this;
 	}
 

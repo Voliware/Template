@@ -547,11 +547,7 @@ var Table = function (_Template3) {
 			$.each(data, function (i, e) {
 				// add a private _rowId_ for objects
 				if (isObject(e)) {
-					var _rowId_ = i;
-					if (self._cachedData[i][self.primaryKey]) {
-						_rowId_ = self._cachedData[i][self.primaryKey];
-					}
-					self._processedData[i]._rowId_ = _rowId_;
+					self._processedData[i]._rowId_ = i;
 				}
 				self._processedData[i] = self._processRow(e);
 			});
@@ -663,7 +659,13 @@ var Table = function (_Template3) {
 			else this.populateRow($row, data);
 
 			this.appendRow($row);
-			$row.attr('data-id', data._rowId_);
+			if (!isDefined(data._rowId_)) {
+				data._rowId_ = this.$rows.length;
+			}
+			$row.attr('data-rowid', data._rowId_);
+			if (data[this.primaryKey]) {
+				$row.attr('data-pkeyid', data[this.primaryKey]);
+			}
 			return this;
 		}
 
@@ -732,10 +734,30 @@ var Table = function (_Template3) {
 	}, {
 		key: 'deleteRow',
 		value: function deleteRow(index) {
+			// delete row html
 			if (this.$rows[index]) {
 				this.$rows[index].remove();
-				this.$rows.splice(index, 1);
+				this.$rows[index] = null;
 			}
+
+			// delete cached data
+			if (this._cachedData[index]) {
+				if (Array.isArray(this._cacheData)) {
+					this._cachedData.splice(index, 1);
+				} else {
+					delete this._cachedData[index];
+				}
+			}
+
+			// delete processed data 
+			if (this._processedData[index]) {
+				if (Array.isArray(this._processedData)) {
+					this._processedData.splice(index, 1);
+				} else {
+					delete this._processedData[index];
+				}
+			}
+
 			// check if all rows were deleted
 			if (this._isEmptyTable()) {
 				this.toggleEmpty();

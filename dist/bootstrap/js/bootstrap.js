@@ -721,7 +721,9 @@ var BootstrapModalForm = function (_BootstrapModal) {
 	}, {
 		key: '_onCreateForm',
 		value: function _onCreateForm() {
-			this._attachFormHandlers().modal('show');
+			this._attachFormHandlers();
+			this.form.initialize();
+			this.modal('show');
 			return this;
 		}
 

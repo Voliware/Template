@@ -36,6 +36,7 @@ class FormInput extends Template {
 		this.placeholder = null;
 		this.step = undefined;
 		this.value = null;
+		this.class = undefined;
 		
 		this.set(data);
 
@@ -93,6 +94,9 @@ class FormInput extends Template {
 			step : this.step,
 			type : this.type
 		});
+		if(this.class){
+			this.$wrapper.addClass(this.class);
+		}
 		return this;
 	}
 

@@ -375,11 +375,16 @@ class Form extends Template {
 	/**
 	 * Slide toggle the form body
 	 * @param {boolean} state
+     * @param {function} cb - callback when slide is done
 	 * @returns {Form}
 	 */
-	slideToggleForm(state){
+	slideToggleForm(state, cb){
 		this.$body.slideToggleState(state);
-		this.$footer.slideToggleState(state);
+		this.$footer.slideToggleState(state, function(){
+			if(cb){
+				cb();
+			}
+		});
 		return this;
 	}
 

@@ -58,6 +58,7 @@ var FormInput = function (_Template) {
 		_this.placeholder = null;
 		_this.step = undefined;
 		_this.value = null;
+		_this.class = undefined;
 
 		_this.set(data);
 
@@ -126,6 +127,9 @@ var FormInput = function (_Template) {
 				step: this.step,
 				type: this.type
 			});
+			if (this.class) {
+				this.$wrapper.addClass(this.class);
+			}
 			return this;
 		}
 
@@ -192,7 +196,6 @@ var FormSelect = function (_FormInput) {
 
 		_this2.tag = "select";
 		_this2.type = undefined;
-
 		return _ret2 = _this2, _possibleConstructorReturn(_this2, _ret2);
 	}
 
@@ -333,6 +336,9 @@ var FormGroup = function (_Template2) {
 			this.setInput(this.input);
 			if (this.input.type === 'hidden') {
 				this.$wrapper.hide();
+			}
+			if (this.input.tag === 'select') {
+				this.input.addToSelect(data.selectOptions);
 			}
 			return this;
 		}
@@ -1157,14 +1163,19 @@ var Form = function (_Template3) {
 		/**
    * Slide toggle the form body
    * @param {boolean} state
+      * @param {function} cb - callback when slide is done
    * @returns {Form}
    */
 
 	}, {
 		key: "slideToggleForm",
-		value: function slideToggleForm(state) {
+		value: function slideToggleForm(state, cb) {
 			this.$body.slideToggleState(state);
-			this.$footer.slideToggleState(state);
+			this.$footer.slideToggleState(state, function () {
+				if (cb) {
+					cb();
+				}
+			});
 			return this;
 		}
 
