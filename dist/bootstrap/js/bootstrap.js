@@ -713,6 +713,19 @@ var BootstrapModalForm = function (_BootstrapModal) {
 		}
 
 		/**
+   * Populate the form
+   * @param {object} data 
+   * @return {BootstrapModalForm}
+   */
+
+	}, {
+		key: 'populateForm',
+		value: function populateForm(data) {
+			this.form.populateForm(data);
+			return this;
+		}
+
+		/**
    * A function to call after the form is created
    * @returns {BootstrapModalForm}
    * @private

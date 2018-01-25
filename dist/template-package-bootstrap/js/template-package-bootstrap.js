@@ -584,36 +584,36 @@ if (typeof isJquery === 'undefined') {
 					}
 				}
 		}
-		// case: single object argument
-		else if (isObject(arguments[0])) {
-				// case: well formed single object
-				if (arguments[0].hasOwnProperty('value')) {
-					options = [arguments[0]];
-				}
-				// case: object of objects
-				else if (Object.keys(arguments[0]).length > 1) {
-						$.each(arguments[0], function (i, e) {
-							// case: objects are named
-							if (isObject(e)) {
-								options.push(e);
-							}
-							// case: objects are simple key/values
-							else {
-									options.push({
-										value: i,
-										text: e
-									});
-								}
-						});
-					}
-					// case: single object
-					else {
-							options = [arguments[0]];
-						}
+		// case: array of objects
+		else if (Array.isArray(arguments[0])) {
+				options = arguments[0];
 			}
-			// case: array of objects
-			else if (Array.isArray(arguments[0])) {
-					options = arguments[0];
+			// case: single object argument
+			else if (isObject(arguments[0])) {
+					// case: well formed single object
+					if (arguments[0].hasOwnProperty('value')) {
+						options = [arguments[0]];
+					}
+					// case: object of objects
+					else if (Object.keys(arguments[0]).length > 1) {
+							$.each(arguments[0], function (i, e) {
+								// case: objects are named
+								if (isObject(e)) {
+									options.push(e);
+								}
+								// case: objects are simple key/values
+								else {
+										options.push({
+											value: i,
+											text: e
+										});
+									}
+							});
+						}
+						// case: single object
+						else {
+								options = [arguments[0]];
+							}
 				}
 
 		// add options
@@ -5854,6 +5854,19 @@ var BootstrapModalForm = function (_BootstrapModal) {
 				self.form.slideToggleForm(true);
 				self.form.toggleButtons(true);
 			});
+			return this;
+		}
+
+		/**
+   * Populate the form
+   * @param {object} data 
+   * @return {BootstrapModalForm}
+   */
+
+	}, {
+		key: "populateForm",
+		value: function populateForm(data) {
+			this.form.populateForm(data);
 			return this;
 		}
 

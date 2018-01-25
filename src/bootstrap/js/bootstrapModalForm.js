@@ -55,6 +55,16 @@ class BootstrapModalForm extends BootstrapModal {
 			});
 		return this;
 	}
+	
+	/**
+	 * Populate the form
+	 * @param {object} data 
+	 * @return {BootstrapModalForm}
+	 */
+	populateForm(data){
+		this.form.populateForm(data);
+		return this;
+	}
 
 	/**
 	 * A function to call after the form is created
