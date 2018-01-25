@@ -241,6 +241,15 @@ class Wizard extends Form {
 	}
 
 	/**
+	 * Get the first nav
+	 * @returns {jQuery}
+	 * @private
+	 */
+	_getFirstNav(){
+		return $(this.$navs.get(0));
+	}
+
+	/**
 	 * Get the previous nav
 	 * @returns {jQuery}
 	 * @private
@@ -265,6 +274,15 @@ class Wizard extends Form {
 	 */
 	_getNextNav(){
 		return $(this.$navs.get(this.step + 1));
+	}
+
+	/**
+	 * Get the last nav
+	 * @returns {jQuery}
+	 * @private
+	 */
+	_getLastNav(){
+		return $(this.$navs.get(this.stepCount - 1));
 	}
 
 	/**
@@ -320,6 +338,24 @@ class Wizard extends Form {
 		return this.step > 0
 			? $(this.$tabs.get(this.step - 1))
 			: null;
+	}
+
+	// manual navigation
+
+	moveStart(){
+		return this._getFirstNav().click();
+	}
+
+	moveNext(){
+		return this._getNextNav().click();
+	}
+
+	movePrev(){
+		return this._getPreviousNav().click();
+	}
+
+	moveEnd(){
+		return this._getLastNav().click();
 	}
 
 	// validation
